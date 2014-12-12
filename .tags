@@ -1,0 +1,336 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ARCHITECTURE_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	298;"	d	file:
+ARCHITECTURE_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	301;"	d	file:
+ARCHITECTURE_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	304;"	d	file:
+ARCHITECTURE_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	307;"	d	file:
+ARCHITECTURE_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	310;"	d	file:
+ARCHITECTURE_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	313;"	d	file:
+ARCHITECTURE_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	316;"	d	file:
+ARCHITECTURE_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	320;"	d	file:
+ARGLIST_TO_SL	.\src\fnutil\util.c	22;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	107;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	112;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	119;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	122;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	125;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	133;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	13;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	152;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	160;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	165;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	170;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	177;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	194;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	197;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	200;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	24;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	32;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	38;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	44;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	50;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	56;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	70;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	77;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	85;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	88;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	90;"	d	file:
+COMPILER_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	99;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	100;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	108;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	114;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	126;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	135;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	154;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	15;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	172;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	180;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	185;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	25;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	33;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	39;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	46;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	52;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	59;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	64;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	72;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	79;"	d	file:
+COMPILER_VERSION_MAJOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	93;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	101;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	109;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	115;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	127;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	136;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	155;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	16;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	173;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	181;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	186;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	26;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	34;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	40;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	47;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	53;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	60;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	65;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	73;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	80;"	d	file:
+COMPILER_VERSION_MINOR	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	94;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	103;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	116;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	129;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	140;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	143;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	156;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	174;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	17;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	182;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	187;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	28;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	35;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	41;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	61;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	66;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	74;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	81;"	d	file:
+COMPILER_VERSION_PATCH	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	95;"	d	file:
+COMPILER_VERSION_TWEAK	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	147;"	d	file:
+COMPILER_VERSION_TWEAK	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	20;"	d	file:
+DBGPARAM	.\include\fnutil\util.h	16;"	d
+DEC	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	324;"	d	file:
+DEFINE_TEST	.\include\fnutil\util.h	26;"	d
+FILELINE	.\include\fnutil\util.h	15;"	d
+FNBASE_UTIL_H	.\include\fnutil\util.h	2;"	d
+FNTEST_H	.\tests\fntest.h	2;"	d
+FNUTIL_CVECTOR_H	.\include\fnutil\cvector.h	2;"	d
+FN_H	.\include\fn.h	2;"	d
+FOR_SPLST_END	.\include\fnutil\util.h	61;"	d
+FOR_SPLST_END	.\src\fnutil\util.c	33;"	d	file:
+FOR_SPLST_START	.\include\fnutil\util.h	59;"	d
+FOR_SPLST_START	.\src\fnutil\util.c	31;"	d	file:
+HEX	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	335;"	d	file:
+ID_VOID_MAIN	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	9;"	d	file:
+MEMDBG_ALIGNSIZE	.\include\fnutil\util.h	179;"	d
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	212;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	215;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	218;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	221;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	224;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	227;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	230;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	233;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	236;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	239;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	242;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	245;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	248;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	251;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	254;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	257;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	260;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	263;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	266;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	269;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	272;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	275;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	278;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	281;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	284;"	d	file:
+PLATFORM_ID	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	287;"	d	file:
+SECOND	.\include\fnutil\util.h	37;"	d
+SPLST_DEFNEXT	.\include\fnutil\util.h	55;"	d
+SPLST_INITVAL	.\include\fnutil\util.h	54;"	d
+START_TEST	.\tests\util_check.c	/^START_TEST(test_malloc_debug)$/;"	f
+START_TEST	.\tests\util_check.c	/^START_TEST(test_normal)$/;"	f
+START_TEST	.\tests\util_check.c	/^START_TEST(test_sp_list)$/;"	f
+START_TEST	.\tests\util_check.c	/^START_TEST(test_thread_atomic)$/;"	f
+START_TEST	.\tests\util_check.c	/^START_TEST(test_thread_cond)$/;"	f
+START_TEST	.\tests\util_check.c	/^START_TEST(test_thread_mutex)$/;"	f
+START_TEST	.\tests\util_check.c	/^START_TEST(test_time)$/;"	f
+STRING	.\include\fnutil\util.h	25;"	d
+THREAD_FUNC_END	.\include\fnutil\util.h	75;"	d
+THREAD_FUNC_START	.\include\fnutil\util.h	74;"	d
+THREAD_FUNC_START	.\tests\util_check.c	/^THREAD_FUNC_START(cond_thread, arg) {$/;"	f
+THREAD_FUNC_START	.\tests\util_check.c	/^THREAD_FUNC_START(mutex_thread, arg) {$/;"	f
+TIMESTR_LEN	.\include\fnutil\util.h	38;"	d
+US_ONE_SEC	.\include\fnutil\util.h	36;"	d
+_cached_time	.\src\fnutil\util.c	/^static __thread fntime_t _cached_time = 0;$/;"	v	file:
+_is_time_cache	.\src\fnutil\util.c	/^static int _is_time_cache = 1;$/;"	v	file:
+_tag_cond_if	.\include\fnutil\util.h	/^typedef struct _tag_cond_if {$/;"	s
+_tag_condmtx_t	.\include\fnutil\util.h	/^typedef struct _tag_condmtx_t {$/;"	s
+_tag_mem_if	.\include\fnutil\util.h	/^typedef struct _tag_mem_if {$/;"	s
+_tag_mem_ifd	.\include\fnutil\util.h	/^typedef struct _tag_mem_ifd {$/;"	s
+_tag_memdbg_rec	.\src\fnutil\util.c	/^typedef struct _tag_memdbg_rec {$/;"	s	file:
+_tag_mtxdbg_rec	.\src\fnutil\util.c	/^typedef struct _tag_mtxdbg_rec {$/;"	s	file:
+_tag_mutex_if	.\include\fnutil\util.h	/^typedef struct _tag_mutex_if {$/;"	s
+_tag_mutex_ifd	.\include\fnutil\util.h	/^typedef struct _tag_mutex_ifd {$/;"	s
+_tag_source_location	.\include\fnutil\util.h	/^typedef struct _tag_source_location {$/;"	s
+_tag_splst	.\include\fnutil\util.h	/^typedef struct _tag_splst{$/;"	s
+_tag_test_lst	.\tests\util_check.c	/^typedef struct _tag_test_lst {$/;"	s	file:
+_tag_vector_if	.\include\fnutil\cvector.h	/^typedef struct _tag_vector_if {$/;"	s
+_tag_vector_t	.\include\fnutil\cvector.h	/^typedef struct _tag_vector_t {$/;"	s
+at	.\include\fnutil\cvector.h	/^	void* (*at)(vector_t*, int);$/;"	m	struct:_tag_vector_if
+atomic16_t	.\include\fnutil\util.h	/^typedef volatile int16_t atomic16_t;$/;"	t
+atomic32_t	.\include\fnutil\util.h	/^typedef volatile int32_t atomic32_t;$/;"	t
+atomic64_t	.\include\fnutil\util.h	/^typedef volatile int64_t atomic64_t;$/;"	t
+atomic8_t	.\include\fnutil\util.h	/^typedef volatile int8_t atomic8_t;$/;"	t
+atomic_add_get	.\include\fnutil\util.h	87;"	d
+atomic_decrement	.\include\fnutil\util.h	89;"	d
+atomic_get	.\include\fnutil\util.h	85;"	d
+atomic_get_add	.\include\fnutil\util.h	86;"	d
+atomic_increment	.\include\fnutil\util.h	88;"	d
+block	.\src\fnutil\util.c	/^    char *block;$/;"	m	struct:_tag_memdbg_rec	file:
+block	.\src\fnutil\util.c	/^    char *block;$/;"	m	struct:_tag_mtxdbg_rec	file:
+calloc	.\include\fnutil\util.h	/^	void* (*calloc)(size_t, size_t);$/;"	m	struct:_tag_mem_if
+calloc	.\include\fnutil\util.h	/^	void* (*calloc)(size_t, size_t, ...);$/;"	m	struct:_tag_mem_ifd
+capacity	.\include\fnutil\cvector.h	/^	int capacity;$/;"	m	struct:_tag_vector_t
+clear	.\include\fnutil\cvector.h	/^	void (*clear)(vector_t*);$/;"	m	struct:_tag_vector_if
+cm	.\tests\util_check.c	/^condmtx_t cm;$/;"	v
+cond	.\include\fnutil\util.h	/^	cond_t cond;$/;"	m	struct:_tag_condmtx_t
+cond_broadcast	.\include\fnutil\util.h	142;"	d
+cond_destroy	.\include\fnutil\util.h	140;"	d
+cond_if	.\include\fnutil\util.h	/^}cond_if;$/;"	t	typeref:struct:_tag_cond_if
+cond_init	.\include\fnutil\util.h	139;"	d
+cond_lock	.\include\fnutil\util.h	145;"	d
+cond_signal	.\include\fnutil\util.h	141;"	d
+cond_t	.\include\fnutil\util.h	/^typedef void* cond_t;$/;"	t
+cond_unlock	.\include\fnutil\util.h	146;"	d
+cond_wait	.\include\fnutil\util.h	143;"	d
+cond_waittimed	.\include\fnutil\util.h	144;"	d
+condmtx_t	.\include\fnutil\util.h	/^}*condmtx_t;$/;"	t	typeref:struct:_tag_condmtx_t
+count	.\src\fnutil\util.c	/^    int count;$/;"	m	struct:_tag_mtxdbg_rec	file:
+cr_thread_id	.\src\fnutil\util.c	/^__thread int cr_thread_id = 0;$/;"	v
+data	.\include\fnutil\cvector.h	/^	void *data;$/;"	m	struct:_tag_vector_t
+default_cond_if	.\src\fnutil\util.c	/^cond_if default_cond_if =  {$/;"	v
+default_mem_if	.\src\fnutil\util.c	/^mem_if default_mem_if = {$/;"	v
+default_mem_ifd	.\src\fnutil\util.c	/^mem_ifd default_mem_ifd = {$/;"	v
+default_mutex_if	.\src\fnutil\util.c	/^mutex_if default_mutex_if = {$/;"	v
+default_mutex_ifd	.\src\fnutil\util.c	/^mutex_ifd default_mutex_ifd = {$/;"	v
+destroy	.\include\fnutil\util.h	/^	void (*destroy)(condmtx_t);$/;"	m	struct:_tag_cond_if
+destroy	.\include\fnutil\util.h	/^	void (*destroy)(mutex_t);$/;"	m	struct:_tag_mutex_if
+destroy	.\include\fnutil\util.h	/^	void (*destroy)(mutex_t, ...);$/;"	m	struct:_tag_mutex_ifd
+disable_time_cache	.\src\fnutil\util.c	/^void disable_time_cache() {$/;"	f
+enable_time_cache	.\src\fnutil\util.c	/^void enable_time_cache() {$/;"	f
+file	.\include\fnutil\util.h	/^	const char* file;$/;"	m	struct:_tag_source_location
+fn_calloc	.\include\fnutil\util.h	171;"	d
+fn_calloc	.\include\fnutil\util.h	176;"	d
+fn_calloc_dbg	.\src\fnutil\util.c	/^void* fn_calloc_dbg(size_t count, size_t size, ...) {$/;"	f
+fn_cond_destroy	.\src\fnutil\util.c	/^void fn_cond_destroy(condmtx_t cm) {$/;"	f
+fn_cond_init	.\src\fnutil\util.c	/^condmtx_t fn_cond_init(void* attr) {$/;"	f
+fn_cond_signal	.\src\fnutil\util.c	/^int fn_cond_signal(condmtx_t cm, int type) {$/;"	f
+fn_cond_wait	.\src\fnutil\util.c	/^int fn_cond_wait(condmtx_t cm, fntime_t timeout_us) {$/;"	f
+fn_free	.\include\fnutil\util.h	169;"	d
+fn_free	.\include\fnutil\util.h	174;"	d
+fn_free_dbg	.\src\fnutil\util.c	/^void fn_free_dbg(void *ptr, ...) {$/;"	f
+fn_malloc	.\include\fnutil\util.h	168;"	d
+fn_malloc	.\include\fnutil\util.h	173;"	d
+fn_malloc_dbg	.\src\fnutil\util.c	/^void* fn_malloc_dbg(size_t size, ...) {$/;"	f
+fn_memdbg_alloc	.\src\fnutil\util.c	/^void *fn_memdbg_alloc(void *ptr, size_t size , source_location *sl, int init) {$/;"	f
+fn_memdbg_get_recnum	.\src\fnutil\util.c	/^int fn_memdbg_get_recnum() {$/;"	f
+fn_memdbg_print_rec	.\src\fnutil\util.c	/^void fn_memdbg_print_rec() {$/;"	f
+fn_mtxdbg_print_rec	.\src\fnutil\util.c	/^void fn_mtxdbg_print_rec() {$/;"	f
+fn_mutex_destroy	.\src\fnutil\util.c	/^void fn_mutex_destroy(mutex_t mutex) {$/;"	f
+fn_mutex_destroy_dbg	.\src\fnutil\util.c	/^void fn_mutex_destroy_dbg(mutex_t mutex, ...) {$/;"	f
+fn_mutex_init	.\src\fnutil\util.c	/^mutex_t fn_mutex_init(void *attr) {$/;"	f
+fn_mutex_init_dbg	.\src\fnutil\util.c	/^mutex_t fn_mutex_init_dbg(void *attr, ...) {$/;"	f
+fn_mutex_lock	.\src\fnutil\util.c	/^int fn_mutex_lock(mutex_t mutex) {$/;"	f
+fn_mutex_lock_dbg	.\src\fnutil\util.c	/^int fn_mutex_lock_dbg(mutex_t mutex, ...) {$/;"	f
+fn_mutex_unlock	.\src\fnutil\util.c	/^int fn_mutex_unlock(mutex_t mutex) {$/;"	f
+fn_mutex_unlock_dbg	.\src\fnutil\util.c	/^int fn_mutex_unlock_dbg(mutex_t mutex, ...) {$/;"	f
+fn_realloc	.\include\fnutil\util.h	170;"	d
+fn_realloc	.\include\fnutil\util.h	175;"	d
+fn_realloc_dbg	.\src\fnutil\util.c	/^void* fn_realloc_dbg(void *ptr, size_t size, ...) {$/;"	f
+fnsleep	.\src\fnutil\util.c	/^fntime_t fnsleep(fntime_t sleepus) {$/;"	f
+fntime_t	.\include\fnutil\util.h	/^typedef int64_t fntime_t;$/;"	t
+free	.\include\fnutil\util.h	/^	void (*free)(void*);$/;"	m	struct:_tag_mem_if
+free	.\include\fnutil\util.h	/^	void (*free)(void*, ...);$/;"	m	struct:_tag_mem_ifd
+get_catime	.\src\fnutil\util.c	/^fntime_t get_catime() {$/;"	f
+get_catime_str	.\src\fnutil\util.c	/^fntime_t get_catime_str(char *buf, int len) {$/;"	f
+get_time	.\src\fnutil\util.c	/^fntime_t get_time() {$/;"	f
+get_time_str	.\src\fnutil\util.c	/^fntime_t get_time_str(char *buf, int len) {$/;"	f
+info_arch	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	/^char const* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";$/;"	v
+info_compiler	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	/^char const* info_compiler = "INFO" ":" "compiler[" COMPILER_ID "]";$/;"	v
+info_platform	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	/^char const* info_platform = "INFO" ":" "platform[" PLATFORM_ID "]";$/;"	v
+info_version	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	/^char const info_version[] = {$/;"	v
+init	.\include\fnutil\util.h	/^	condmtx_t (*init)(void*);$/;"	m	struct:_tag_cond_if
+init	.\include\fnutil\util.h	/^	mutex_t (*init)(void*);$/;"	m	struct:_tag_mutex_if
+init	.\include\fnutil\util.h	/^	mutex_t (*init)(void*, ...);$/;"	m	struct:_tag_mutex_ifd
+insert	.\include\fnutil\cvector.h	/^	void (*insert)(vector_t*, int, ...);$/;"	m	struct:_tag_vector_if
+line	.\include\fnutil\util.h	/^	int line;$/;"	m	struct:_tag_source_location
+lock	.\include\fnutil\util.h	/^	int (*lock)(mutex_t);$/;"	m	struct:_tag_mutex_if
+lock	.\include\fnutil\util.h	/^	int (*lock)(mutex_t, ...);$/;"	m	struct:_tag_mutex_ifd
+main	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	/^int main(int argc, char* argv[])$/;"	f
+main	.\build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	/^void main() {}$/;"	f
+main	.\main.c	/^int main(int argc, char *argv[]) {$/;"	f
+main	.\tests\main.c	/^int main(int argc, char* argv[]) {$/;"	f
+malloc	.\include\fnutil\util.h	/^	void* (*malloc)(size_t);$/;"	m	struct:_tag_mem_if
+malloc	.\include\fnutil\util.h	/^	void* (*malloc)(size_t, ...);$/;"	m	struct:_tag_mem_ifd
+max	.\include\fnutil\util.h	28;"	d
+max_int	.\src\fnutil\util.c	/^int max_int(int x, int y) {$/;"	f
+mem_if	.\include\fnutil\util.h	/^}mem_if;$/;"	t	typeref:struct:_tag_mem_if
+mem_ifd	.\include\fnutil\util.h	/^}mem_ifd;$/;"	t	typeref:struct:_tag_mem_ifd
+memdbg_rec	.\src\fnutil\util.c	/^}memdbg_rec;$/;"	t	typeref:struct:_tag_memdbg_rec	file:
+memdbg_rec_head	.\src\fnutil\util.c	/^memdbg_rec *memdbg_rec_head = NULL;$/;"	v
+min	.\include\fnutil\util.h	29;"	d
+min_int	.\src\fnutil\util.c	/^int min_int(int x, int y) {$/;"	f
+mtxdbg_rec	.\src\fnutil\util.c	/^}mtxdbg_rec;$/;"	t	typeref:struct:_tag_mtxdbg_rec	file:
+mtxdbg_rec_head	.\src\fnutil\util.c	/^mtxdbg_rec *mtxdbg_rec_head = NULL;$/;"	v
+mutex	.\include\fnutil\util.h	/^	mutex_t mutex;$/;"	m	struct:_tag_condmtx_t
+mutex_destroy	.\include\fnutil\util.h	112;"	d
+mutex_destroy	.\include\fnutil\util.h	117;"	d
+mutex_if	.\include\fnutil\util.h	/^}mutex_if;$/;"	t	typeref:struct:_tag_mutex_if
+mutex_ifd	.\include\fnutil\util.h	/^}mutex_ifd;$/;"	t	typeref:struct:_tag_mutex_ifd
+mutex_init	.\include\fnutil\util.h	111;"	d
+mutex_init	.\include\fnutil\util.h	116;"	d
+mutex_lock	.\include\fnutil\util.h	113;"	d
+mutex_lock	.\include\fnutil\util.h	118;"	d
+mutex_t	.\include\fnutil\util.h	/^typedef void* mutex_t;$/;"	t
+mutex_test_array	.\tests\util_check.c	/^char mutex_test_array[20];$/;"	v
+mutex_test_array_pos	.\tests\util_check.c	/^int mutex_test_array_pos = 0;$/;"	v
+mutex_unlock	.\include\fnutil\util.h	114;"	d
+mutex_unlock	.\include\fnutil\util.h	119;"	d
+new_vector	.\include\fnutil\cvector.h	27;"	d
+next	.\include\fnutil\util.h	/^	struct _tag_splst *next;$/;"	m	struct:_tag_splst	typeref:struct:_tag_splst::_tag_splst
+pop_back	.\include\fnutil\cvector.h	/^	void (*pop_back)(vector_t*);$/;"	m	struct:_tag_vector_if
+ptr	.\src\fnutil\util.c	/^    char *ptr;$/;"	m	struct:_tag_memdbg_rec	file:
+push_back	.\include\fnutil\cvector.h	/^	void (*push_back)(vector_t*, ...);$/;"	m	struct:_tag_vector_if
+realloc	.\include\fnutil\util.h	/^	void* (*realloc)(void*, size_t);$/;"	m	struct:_tag_mem_if
+realloc	.\include\fnutil\util.h	/^	void* (*realloc)(void*, size_t, ...);$/;"	m	struct:_tag_mem_ifd
+signal	.\include\fnutil\util.h	/^	int (*signal)(condmtx_t, int);$/;"	m	struct:_tag_cond_if
+size	.\include\fnutil\cvector.h	/^	int size;$/;"	m	struct:_tag_vector_t
+size	.\src\fnutil\util.c	/^    size_t size;$/;"	m	struct:_tag_memdbg_rec	file:
+sl	.\src\fnutil\util.c	/^    source_location sl;$/;"	m	struct:_tag_memdbg_rec	file:
+sl	.\src\fnutil\util.c	/^    source_location sl;$/;"	m	struct:_tag_mtxdbg_rec	file:
+source_location	.\include\fnutil\util.h	/^}source_location;$/;"	t	typeref:struct:_tag_source_location
+splst	.\include\fnutil\util.h	/^}splst;$/;"	t	typeref:struct:_tag_splst
+splst_add	.\src\fnutil\util.c	/^void splst_add(splst **head, splst *elm) {$/;"	f
+splst_del	.\src\fnutil\util.c	/^void splst_del(splst **head, splst *elm) {$/;"	f
+splst_empty	.\include\fnutil\util.h	64;"	d
+splst_init	.\include\fnutil\util.h	63;"	d
+splst_len	.\src\fnutil\util.c	/^int splst_len(splst **p_head) {$/;"	f
+test_lst	.\tests\util_check.c	/^}test_lst;$/;"	t	typeref:struct:_tag_test_lst	file:
+thread_detach	.\include\fnutil\util.h	79;"	d
+thread_id	.\src\fnutil\util.c	/^int thread_id() {$/;"	f
+thread_join	.\include\fnutil\util.h	78;"	d
+thread_start	.\include\fnutil\util.h	77;"	d
+thread_t	.\include\fnutil\util.h	/^typedef pthread_t thread_t;$/;"	t
+time_to_str	.\src\fnutil\util.c	/^void time_to_str(fntime_t us_now, char *buf, int len) {$/;"	f
+unlock	.\include\fnutil\util.h	/^	int (*unlock)(mutex_t);$/;"	m	struct:_tag_mutex_if
+unlock	.\include\fnutil\util.h	/^	int (*unlock)(mutex_t, ...);$/;"	m	struct:_tag_mutex_ifd
+update_catime	.\src\fnutil\util.c	/^fntime_t update_catime() {$/;"	f
+using_cond_if	.\src\fnutil\util.c	/^cond_if *using_cond_if = &default_cond_if;$/;"	v
+using_mem_if	.\src\fnutil\util.c	/^mem_if  *using_mem_if  = &default_mem_if;$/;"	v
+using_mem_ifd	.\src\fnutil\util.c	/^mem_ifd *using_mem_ifd = &default_mem_ifd;$/;"	v
+using_mutex_if	.\src\fnutil\util.c	/^mutex_if  *using_mutex_if  = &default_mutex_if;$/;"	v
+using_mutex_ifd	.\src\fnutil\util.c	/^mutex_ifd *using_mutex_ifd = &default_mutex_ifd;$/;"	v
+util_test_suite	.\tests\util_check.c	/^Suite *util_test_suite() {$/;"	f
+val	.\tests\util_check.c	/^	int val;$/;"	m	struct:_tag_test_lst	file:
+vector_if	.\include\fnutil\cvector.h	/^} vector_if;$/;"	t	typeref:struct:_tag_vector_if
+vector_t	.\include\fnutil\cvector.h	/^typedef struct _tag_vector_t vector_t;$/;"	t	typeref:struct:_tag_vector_t
+vector_t	.\include\fnutil\cvector.h	/^} vector_t;$/;"	t	typeref:struct:_tag_vector_t
+vif	.\include\fnutil\cvector.h	/^	vector_if *vif;$/;"	m	struct:_tag_vector_t
+wait	.\include\fnutil\util.h	/^	int (*wait)(condmtx_t, fntime_t);$/;"	m	struct:_tag_cond_if
