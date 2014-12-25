@@ -11,6 +11,7 @@ extern "C" {
 #include <stdarg.h>
 #include <sys/syscall.h>
 #include <pthread.h>
+#include <assert.h>
 
 #ifdef DEBUG
 #define DBG_PARAM , __FILE__, __LINE__
@@ -37,6 +38,18 @@ typedef struct _tag_source_location {
 int max_int(int x, int y);
 int min_int(int x, int y);
 
+typedef size_t bool_t;
+#define true   1
+#define false  0
+
+#define RETURN_IF(x, arg...)\
+    if ((x)) return arg;
+
+#define RETURN_IF_NULL(x, arg...)   \
+    if ((x) == NULL) return arg;
+
+#define container_of(ptr, type, member) ({                      \
+        (type *)( (char *)(ptr) - offsetof(type,member) );})
 
 /* === time operation === */
 typedef int64_t fntime_t;

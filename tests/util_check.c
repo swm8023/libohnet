@@ -268,7 +268,7 @@ START_TEST(test_thread_cond)
 END_TEST
 
 Suite *util_test_suite() {
-	Suite *s = suite_create("Util Test");
+	Suite *s = suite_create("=== Util Test ===");
 	TCase *tc_core = tcase_create("TC core");
 	tcase_set_timeout(tc_core, 10);
 

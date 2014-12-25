@@ -1,14 +1,17 @@
 cmake_minimum_required(VERSION 2.8.9)
-project(libfastnet C)
+project(libfastnet C CXX)
 
 set(ENTEST true)
-set(DEBUG true)
+set(DEBUG  true)
 
 if (ENTEST)
 	add_definitions(-DENTEST)
 endif()
 if (DEBUG)
+    set(CMAKE_BUILD_TYPE DEBUG)
 	add_definitions(-DDEBUG)
+else()
+    add_definitions(-DNDEBUG)
 endif()
 
 include_directories(include)

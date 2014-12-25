@@ -6,7 +6,10 @@ extern "C" {
 #endif
 
 #include <fnutil/util.h>
+#include <fnutil/citerator.h>
 #include <fnutil/cvector.h>
+#include <fnutil/clist.h>
+#include <fnutil/cheap.h>
 
 #ifdef __cplusplus
 }
