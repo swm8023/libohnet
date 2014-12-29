@@ -13,18 +13,15 @@ extern "C" {
 
 typedef bool_t (*_heap_less)(const void*, const void*);
 typedef struct _tag_heap_t {
-    vector_t _container;
-    _heap_less _less;
+    vector_t container;
+    _heap_less less;
 } heap_t;
 
-
-
-#define _HEAP_TYPE_SIZE(hp) _CTR_CTYPE_SIZE(hp)
-#define _HEAP_CVEC(hp)      (&(hp)->_container)
-#define _HEAP_SIZE(hp)      vector_size(_HEAP_CVEC(hp))
-#define _HEAP_LESS(hp)      (hp->_less)
-#define _HEAP_CTYPE(hp)     _CTR_CTYPE(_HEAP_CVEC(hp))
-
+#define _HEAP_CVEC(hp)  (&(hp)->container)
+#define _HEAP_CTYPE(hp)      _CTR_CTYPE(_HEAP_CVEC(hp))
+#define _HEAP_CTYPE_SIZE(hp) _TYPE_SIZE(_HEAP_CTYPE(hp))
+#define _HEAP_SIZE(hp)       vector_size(_HEAP_CVEC(hp))
+#define _HEAP_LESS(hp)       (hp->less)
 
 #define _HEAP_PARENT(pos)   (((pos) - 1) >> 1)
 #define _HEAP_LCHILD(pos)   (((pos) << 1) + 1)

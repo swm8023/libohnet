@@ -31,8 +31,7 @@ static _iterator_if _default_list_iter_if = {
 
 /* list operation functions */
 
-static void _list_append_node(list_t*, _listnode_t *, _listnode_t *);
-static void _list_erase_node(list_t *, _listnode_t*);
+
 
 list_t* _new_list(const char* typestr) {
     assert(typestr != NULL);
@@ -40,27 +39,46 @@ list_t* _new_list(const char* typestr) {
     list_t* lst = (list_t*)fn_malloc(sizeof(list_t));
     RETURN_IF_NULL(lst, NULL);
 
-    _CTR_STYPE(lst)  = _get_type_bystr(_LIST_TYPE_NAME);
-    _CTR_CTYPE(lst)  = _get_type_bystr(typestr);
-    _CTR_ITERIF(lst) = &_default_list_iter_if;
-
-    lst->_size = 0;
-    lst->_guard = (_listnode_t*)fn_malloc(_LISTNODE_SIZE(_CTR_CTYPE(lst)));
-    if (lst->_guard == NULL) {
+    if (_init_list(lst, typestr) < 0) {
         fn_free(lst);
         return NULL;
     }
-    lst->_guard->_lst  = lst;
-    lst->_guard->_pre  = lst->_guard;
-    lst->_guard->_next = lst->_guard;
+
     return lst;
+}
+
+int _init_list(list_t* lst, const char* typestr) {
+    assert(lst != NULL);
+    assert(typestr != NULL);
+
+    /* init container base attr */
+    _CTR_INIT(lst, _get_type_bystr(_LIST_TYPE_NAME), typestr, &_default_list_iter_if);
+
+    /* list attr*/
+    lst->size = 0;
+    lst->guard = (_listnode_t*)fn_malloc(_LISTNODE_SIZE(_CTR_CTYPE(lst)));
+    if (lst->guard == NULL) {
+        fn_free(lst);
+        return -1;
+    }
+    lst->guard->lst  = lst;
+    lst->guard->pre  = lst->guard;
+    lst->guard->next = lst->guard;
+}
+
+void destroy_list(list_t* lst) {
+    assert(lst != NULL);
+
+    list_clear(lst);
+    fn_free(lst->guard);
+
+    _CTR_DESTROY(lst);
 }
 
 void delete_list(list_t* lst) {
     assert(lst != NULL);
 
-    list_clear(lst);
-    fn_free(lst->_guard);
+    destroy_list(lst);
     fn_free(lst);
 }
 
@@ -68,66 +86,49 @@ void* list_front(list_t* lst) {
     assert(lst != NULL);
 
     RETURN_IF(_LIST_SIZE(lst) == 0, NULL);
-    return _LISTNODE_DATAP(_LIST_GUARD(lst)->_next);
+    return _LISTNODE_DATAP(_LIST_GUARD(lst)->next);
 }
 
 void* list_back(list_t* lst) {
     assert(lst != NULL);
 
     RETURN_IF(_LIST_SIZE(lst) == 0, NULL);
-    return _LISTNODE_DATAP(_LIST_GUARD(lst)->_pre);
+    return _LISTNODE_DATAP(_LIST_GUARD(lst)->pre);
 }
 
 void list_push_back(list_t* lst, ...) {
-    va_list elm_arg;
-    _listnode_t *newnode;
+    va_list arg;
 
     assert(lst != NULL);
 
-    /* allocate new node */
-    newnode = (_listnode_t*)fn_malloc(_LISTNODE_SIZE(_CTR_CTYPE(lst)));
-    RETURN_IF_NULL(newnode);
-
     /* append new node to tail, guard->pre is the last element */
-    _list_append_node(lst, _LIST_GUARD(lst)->_pre, newnode);
-
-    /* set new node's attr and data */
-    newnode->_lst = lst;
-    va_start(elm_arg, lst);
-    _get_varg_value_bytype(_CTR_CTYPE(lst), elm_arg, _LISTNODE_DATAP(newnode));
-    va_end(elm_arg);
+    va_start(arg, lst);
+    _list_append_node_varg(lst, _LIST_GUARD(lst)->pre, arg);
+    va_end(arg);
 }
 
 
 void list_push_front(list_t* lst, ...) {
-    va_list elm_arg;
-    _listnode_t *newnode;
+    va_list arg;
 
     assert(lst != NULL);
-    /* allocate new node */
-    newnode = (_listnode_t*)fn_malloc(_LISTNODE_SIZE(_CTR_CTYPE(lst)));
-    RETURN_IF_NULL(newnode);
 
     /* add new node before head, guard->next is the first element */
-    _list_append_node(lst, _LIST_GUARD(lst), newnode);
-
-    /* set new node's attr and data */
-    newnode->_lst = lst;
-    va_start(elm_arg, lst);
-    _get_varg_value_bytype(_CTR_CTYPE(lst), elm_arg, _LISTNODE_DATAP(newnode));
-    va_end(elm_arg);
+    va_start(arg, lst);
+    _list_append_node_varg(lst, _LIST_GUARD(lst), arg);
+    va_end(arg);
 }
 
 void list_pop_back(list_t* lst) {
     assert(lst != NULL);
 
-    _list_erase_node(lst, _LIST_GUARD(lst)->_pre);
+    _list_erase_node(lst, _LIST_GUARD(lst)->pre);
 }
 
 void list_pop_front(list_t* lst) {
     assert(lst != NULL);
 
-    _list_erase_node(lst, _LIST_GUARD(lst)->_next);
+    _list_erase_node(lst, _LIST_GUARD(lst)->next);
 }
 
 
@@ -138,33 +139,41 @@ void list_clear(list_t* lst) {
 }
 
 
-void _list_append_node(list_t *lst, _listnode_t *node_p, _listnode_t *newnode) {
+void _list_append_node_varg(list_t *lst, _listnode_t *prenode, va_list arg) {
     assert(lst != NULL);
-    assert(newnode != NULL);
-    assert(node_p  != NULL);
+    assert(prenode  != NULL);
 
-    newnode->_pre  = node_p;
-    newnode->_next = node_p->_next;
-    newnode->_next->_pre = newnode;
-    newnode->_pre->_next = newnode;
+    /* allocate newnode memory */
+    _listnode_t *newnode = (_listnode_t*)fn_malloc(_LISTNODE_SIZE(_CTR_CTYPE(lst)));
+    RETURN_IF_NULL(newnode);
 
-    lst->_size++;
+    /* set attrbution of newnode*/
+    newnode->lst = lst;
+    newnode->pre  = prenode;
+    newnode->next = prenode->next;
+    newnode->next->pre = newnode;
+    newnode->pre->next = newnode;
+
+    /* init and copy from arg */
+    _type_init(_CTR_CTYPE(lst), _LISTNODE_DATAP(newnode), _CTR_CTNODE(lst));
+    _get_varg_value_bytype(_CTR_CTYPE(lst), arg, _LISTNODE_DATAP(newnode));
+
+    lst->size++;
 }
 
 void _list_erase_node(list_t *lst, _listnode_t *node) {
     assert(lst != NULL);
-    assert(node != NULL);
     assert(node != _LIST_GUARD(lst));
 
-    /* delete node and free node */
-    node->_pre->_next = node->_next;
-    node->_next->_pre = node->_pre;
+    /* delete the node */
+    node->pre->next = node->next;
+    node->next->pre = node->pre;
 
-    lst->_size--;
-
-    /* free item memory */
+    /* destroy and free memory */
     _type_destroy(_CTR_CTYPE(lst), _LISTNODE_DATAP(node));
     fn_free(node);
+
+    lst->size--;
 }
 
 iterator_t list_begin(list_t* lst) {
@@ -174,7 +183,7 @@ iterator_t list_begin(list_t* lst) {
 
     _ITER_INIT(iter);
     _ITER_CONTAINER(iter) = lst;
-    _ITER_LPTR(iter) = (char*)(_LIST_GUARD(lst)->_next);
+    _ITER_LPTR(iter) = (char*)(_LIST_GUARD(lst)->next);
     return iter;
 }
 
@@ -190,26 +199,18 @@ iterator_t list_end(list_t* lst) {
 }
 
 iterator_t list_insert(list_t* lst, iterator_t iter, ...) {
-    va_list elm_arg;
-    _listnode_t *newnode;
+    va_list arg;
 
     assert(_iter_is_vaild(iter));
     assert(lst != NULL);
 
-    newnode = (_listnode_t*)fn_malloc(_LISTNODE_SIZE(_CTR_CTYPE(lst)));
-    if (newnode == NULL) {
-        return iter;
-    }
-    /* insert element before iterator postion */
-    _list_append_node(lst, ((_listnode_t*)_ITER_LPTR(iter))->_pre, newnode);
+    /* the node which iterator point will be the next node of newnode*/
+    va_start(arg, iter);
+    _list_append_node_varg(lst, ((_listnode_t*)_ITER_LPTR(iter))->pre, arg);
+    va_end(arg);
 
-    newnode->_lst = lst;
-    va_start(elm_arg, iter);
-    _get_varg_value_bytype(_CTR_CTYPE(lst), elm_arg, _LISTNODE_DATAP(newnode));
-    va_end(elm_arg);
-
-    /* iterator's pointer point to the first newly insert element */
-    _ITER_LPTR(iter) = (char*)newnode;
+    /* iterator point the first inserted node */
+    _ITER_LPTR(iter) = (char*)(((_listnode_t*)_ITER_LPTR(iter))->pre);
     return iter;
 
 }
@@ -221,7 +222,7 @@ iterator_t list_erase(list_t* lst, iterator_t iter) {
 
     /* iterator point to the node after erase node */
     eranode = ((_listnode_t*)_ITER_LPTR(iter));
-    _ITER_LPTR(iter) = (char*)(eranode->_next);
+    _ITER_LPTR(iter) = (char*)(eranode->next);
 
     _list_erase_node(lst, eranode);
 
@@ -234,7 +235,7 @@ iterator_t _list_iter_next(iterator_t iter) {
     assert(_iter_is_vaild(iter));
     assert(!iter_equal(iter, list_end(_ITER_CONTAIN_LIST(iter))));
 
-    _ITER_LPTR(iter) = (char*)((_listnode_t*)_ITER_LPTR(iter))->_next;
+    _ITER_LPTR(iter) = (char*)((_listnode_t*)_ITER_LPTR(iter))->next;
     return iter;
 }
 
@@ -242,7 +243,7 @@ iterator_t _list_iter_pre(iterator_t iter) {
     assert(_iter_is_vaild(iter));
     assert(!iter_equal(iter, list_begin(_ITER_CONTAIN_LIST(iter))));
 
-    _ITER_LPTR(iter) = (char*)((_listnode_t*)_ITER_LPTR(iter))->_pre;
+    _ITER_LPTR(iter) = (char*)((_listnode_t*)_ITER_LPTR(iter))->pre;
     return iter;
 }
 
@@ -271,18 +272,14 @@ bool_t _list_iter_equal(iterator_t iter0, iterator_t iter1) {
 }
 
 int   _list_iter_distance(iterator_t iter0, iterator_t iter1) {
-    int dist;
-    iterator_t iteru;
-    list_t *lst;
-
     assert(_iter_is_vaild(iter0));
     assert(_iter_is_vaild(iter0));
     assert(_iter_is_same(iter0, iter1));
 
-    lst = _ITER_CONTAIN_LIST(iter0);
+    list_t *lst = _ITER_CONTAIN_LIST(iter0);
     /* guess iter0 < iter1 first */
-    dist = 0;
-    iteru = iter0;
+    int dist = 0;
+    iterator_t iteru = iter0;
     while (!iter_equal(iteru, list_end(lst)) && !iter_equal(iter1, iteru)) {
         dist++;
         iteru = iter_next(iteru);
@@ -328,15 +325,13 @@ void  _list_iter_set_value(iterator_t iter, void* elmp) {
 }
 
 bool_t _list_iter_is_vaild(iterator_t iter) {
-    list_t *lst;
-    _listnode_t *node;
-
     /* !! can't call iter_is_vaild here*/
-    lst = _ITER_CONTAIN_LIST(iter);
-    for (node = lst->_guard->_next;
-        node != lst->_guard; node = node->_next) {
+    list_t *lst = _ITER_CONTAIN_LIST(iter);
+    _listnode_t *node;
+    for (node = lst->guard->next;
+        node != lst->guard; node = node->next) {
         if ((char*)node == _ITER_LPTR(iter))
             return true;
     }
-    return node == lst->_guard ? true : false;
+    return node == lst->guard ? true : false;
 }

@@ -19,7 +19,7 @@ START_TEST(test_newlist)
     lst = new_list(vector_t<int>);
     ck_assert_str_eq(_CTR_CTYPE(lst)->name, "vector_t");
     delete_list(lst);
-    fn_memdbg_print_rec();
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -69,7 +69,7 @@ START_TEST(test_listop_cbuiltin)
 
     delete_list(lst);
 
-    fn_memdbg_print_rec();
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -152,7 +152,7 @@ START_TEST(test_listop_userdef)
     delete_list(lstp);
 
     type_unregist(op_t);
-    fn_memdbg_print_rec();
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 
 }
 END_TEST
@@ -162,7 +162,7 @@ END_TEST
 START_TEST(test_listeffec)
 {
     srand((unsigned)time(NULL));
-    int num = 1000, i;
+    int num = 100000, i;
 
     op_t *op;
     op = (op_t*)fn_malloc(num * sizeof(op_t));
@@ -205,7 +205,7 @@ START_TEST(test_listeffec)
     }
 
     delta = get_time() - delta;
-    printf("C Vector Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
+    printf("C List Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
 
     //test c++ list
     delta = get_time();
@@ -231,7 +231,7 @@ START_TEST(test_listeffec)
         }
     }
     delta = get_time() - delta;
-    printf("STL Vector Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
+    printf("STL List Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
 
     // check
     ck_assert_int_eq(list_size(lst), slist.size());
@@ -250,7 +250,7 @@ START_TEST(test_listeffec)
     list<int> sslist;
     list<int>::iterator it2;
 
-    int pnum = 5000000;
+    int pnum = 1000000;
     int *pnums = (int*)fn_malloc(sizeof(int) * pnum);
     int *xnums = (int*)fn_malloc(sizeof(int) * pnum);
     int *ynums = (int*)fn_malloc(sizeof(int) * pnum);
@@ -267,7 +267,7 @@ START_TEST(test_listeffec)
         iter_get_value(it0, &xnums[ind++]);
     }
     delta = get_time() - delta;
-    printf("C Vector Read Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
+    printf("C List Read Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
 
     delta = get_time();
     for (i = 0; i < pnum; i++) {
@@ -279,10 +279,11 @@ START_TEST(test_listeffec)
         ynums[ind++] = *it2;
     }
     delta = get_time() - delta;
-    printf("STL Vector Read Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
+    printf("STL List Read Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
     // for (i = 0 ;i < pnum; i++) {
     //     ck_assert_int_eq(xnums[i], ynums[i]);
     // }
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -367,7 +368,7 @@ START_TEST(test_listop_iterator)
     }
 
     delete_list(lst);
-    fn_memdbg_print_rec();
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -382,8 +383,9 @@ Suite *clist_test_suite() {
     tcase_add_test(tc_core, test_listop_cbuiltin);
     tcase_add_test(tc_core, test_listop_userdef);
     tcase_add_test(tc_core, test_listop_iterator);
-    //tcase_add_test(tc_core, test_listeffec);
-
+#ifdef ENEFFTEST
+    tcase_add_test(tc_core, test_listeffec);
+#endif
     suite_add_tcase(s, tc_core);
     return s;
 }

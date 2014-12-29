@@ -17,17 +17,13 @@ heap_t* _new_heap(const char* typestr, _heap_less lessfunc) {
 int _init_heap(heap_t* heap, const char* typestr, _heap_less lessfunc) {
     assert(heap != NULL);
     assert(typestr != NULL);
+    assert(_get_type_bystr(typestr) != NULL);
 
-    /* container base attr */
-    heap->_less = lessfunc;
-
-    /* use default type less function if lessfunc is NULL */
-    if (lessfunc == NULL) {
-        heap->_less = _get_type_bystr(typestr)->less;
-    }
+    /* set less function, use typed less functin if not specified */
+    heap->less = lessfunc ? lessfunc : _get_type_bystr(typestr)->less;
 
     /* less function must be set */
-    RETURN_IF_NULL(heap->_less, -1);
+    RETURN_IF_NULL(heap->less, -1);
 
     /* init contain vector */
     RETURN_IF(_init_vector(_HEAP_CVEC(heap), typestr) < 0, -1);
@@ -63,16 +59,16 @@ void heap_top_val(heap_t* heap, void *pelm) {
 }
 
 void heap_push(heap_t* heap , ...) {
-    va_list elm_arg;
+    va_list arg;
 
     assert(heap != NULL);
 
     /* append new element to the last, then fix the heap */
-    va_start(elm_arg, heap);
-    _vector_push_back_varg(_HEAP_CVEC(heap), elm_arg);
-    va_end(elm_arg);
+    va_start(arg, heap);
+    _vector_insert_varg(_HEAP_CVEC(heap), _VECT_DATA_END(_HEAP_CVEC(heap)), arg);
+    va_end(arg);
 
-    _heap_fix_up(heap, heap_size(heap) - 1);
+    _heap_fix_up(heap, _HEAP_SIZE(heap) - 1);
 
 }
 
@@ -80,8 +76,7 @@ void heap_pop(heap_t* heap) {
     assert(heap != NULL);
     assert(!heap_empty(heap));
 
-    /* swap the first and last element,
-       then remove last element and fix the heap*/
+    /* swap the first and last element, then remove last element and fix the heap*/
     _heap_swap(heap, 0, heap_size(heap) - 1);
     vector_pop_back(_HEAP_CVEC(heap));
 
@@ -90,11 +85,12 @@ void heap_pop(heap_t* heap) {
     }
 }
 
-/* private function */
+/* private functions */
 void _heap_fix_up(heap_t* heap, int pos) {
     assert(heap != NULL);
     assert(heap_size(heap) > pos);
-    while (pos > 0 && heap->_less(_HEAP_AT(heap, pos),
+
+    while (pos > 0 && heap->less(_HEAP_AT(heap, pos),
         _HEAP_AT(heap, _HEAP_PARENT(pos)))) {
         _heap_swap(heap, pos, _HEAP_PARENT(pos));
         pos = _HEAP_PARENT(pos);
@@ -109,8 +105,8 @@ void _heap_fix_down(heap_t* heap, int pos) {
     while (_HEAP_LCHILD(pos) < heap_size(heap)) {
         int npos = _HEAP_LCHILD(pos);
         npos += (npos + 1 < heap_size(heap) &&
-            heap->_less(_HEAP_AT(heap, npos + 1), _HEAP_AT(heap, npos)) ? 1 : 0);
-        if (heap->_less(_HEAP_AT(heap, pos), _HEAP_AT(heap, npos))) {
+            heap->less(_HEAP_AT(heap, npos + 1), _HEAP_AT(heap, npos)) ? 1 : 0);
+        if (heap->less(_HEAP_AT(heap, pos), _HEAP_AT(heap, npos))) {
             break;
         }
         _heap_swap(heap, pos, npos);

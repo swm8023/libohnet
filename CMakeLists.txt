@@ -2,16 +2,27 @@ cmake_minimum_required(VERSION 2.8.9)
 project(libfastnet C CXX)
 
 set(ENTEST true)
-set(DEBUG  true)
+set(ENEFFTEST true)
+set(DEBUG  false)
+set(ENGPROF false)
+
 
 if (ENTEST)
 	add_definitions(-DENTEST)
+    if (ENEFFTEST)
+        add_definitions(-DENEFFTEST)
+    endif()
 endif()
+
 if (DEBUG)
     set(CMAKE_BUILD_TYPE DEBUG)
 	add_definitions(-DDEBUG)
 else()
     add_definitions(-DNDEBUG)
+endif()
+
+if (ENGPROF)
+    add_compile_options(-pg)
 endif()
 
 include_directories(include)
@@ -32,6 +43,6 @@ set(extra_libs
 
 
 link_directories(${PROJECT_BINARY_DIR}/lib)
-add_executable(main main.c)
+add_executable(main main.cpp)
 add_dependencies(main fastnet fastnet_so)
 target_link_libraries(main ${extra_libs})

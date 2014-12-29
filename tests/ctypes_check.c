@@ -70,6 +70,22 @@ START_TEST(test_getvargvalue)
 }
 END_TEST
 
+START_TEST(test_gettypenode)
+{
+
+    type_node *node = _get_type_node(_get_type_bystr(_VECT_TYPE_NAME), "float");
+    //_type_node_debug(node, 0);
+    _free_type_node(node);
+    node = _get_type_node(_get_type_bystr(_VECT_TYPE_NAME), "pair_t<int, double>");
+    //_type_node_debug(node, 0);
+    _free_type_node(node);
+    node = _get_type_node(_get_type_bystr(_PAIR_TYPE_NAME), "vector_t<pair_t<int, double>>, list_t<vector_t<int>>");
+    //_type_node_debug(node, 0);
+    _free_type_node(node);
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
+}
+END_TEST
+
 
 Suite *ctypes_test_suite() {
     Suite *s = suite_create("=== Ctypes Test ===");
@@ -78,6 +94,7 @@ Suite *ctypes_test_suite() {
 
     tcase_add_test(tc_core, test_gettype);
     tcase_add_test(tc_core, test_getvargvalue);
+    tcase_add_test(tc_core, test_gettypenode);
     suite_add_tcase(s, tc_core);
     return s;
 }

@@ -21,6 +21,8 @@ START_TEST(test_newheap)
     init_heap(&hp2, int);
     ck_assert_str_eq(_HEAP_CTYPE(&hp2)->name, "int32_t");
     destroy_heap(&hp2);
+
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -78,6 +80,8 @@ START_TEST(test_heapop_cbuiltin)
     ck_assert_int_eq(heap_empty(hp), true);
     ck_assert_int_eq(heap_size(hp), 0);
     delete_heap(hp);
+
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -109,6 +113,8 @@ START_TEST(test_heaop_userdef)
     delete_heap(hp);
 
     type_unregist(op_t);
+
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -117,14 +123,14 @@ END_TEST
 START_TEST(test_heapeffec)
 {
     srand((unsigned)time(NULL));
-    int num = 10000000, i;
+    int num = 10000000, i, val;
 
     op_t *op;
     op = (op_t*)fn_malloc(num * sizeof(op_t));
 
     int size = 0;
     for(i = 0; i < num; i++) {
-        op[i].type = i < num/3 ? 0 : rand()%1;
+        op[i].type = i < num/3 ? 0 : rand()%2;
         switch(op[i].type) {
             // push
             case 0: op[i].num = (long long)rand()*rand()%1000000; break;
@@ -151,7 +157,7 @@ START_TEST(test_heapeffec)
 
     //test c++ priority queue
     delta = get_time();
-    priority_queue<int> shp;
+    priority_queue<int, vector<int>, greater<int> > shp;
     for (i = 0; i < num; i++) {
         switch(op[i].type) {
             case 0: shp.push(op[i].num); break;
@@ -164,8 +170,16 @@ START_TEST(test_heapeffec)
     // check
     ck_assert_int_eq(shp.size(), heap_size(&hp));
 
+    while(!heap_empty(&hp) && !shp.empty()) {
+        heap_top_val(&hp, &val);
+        ck_assert_int_eq(*(int*)heap_top(&hp), shp.top());
+        ck_assert_int_eq(val, shp.top());
+        heap_pop(&hp);
+        shp.pop();
+    }
+    ck_assert_int_eq(heap_empty(&hp), true);
 
-
+    fn_free(op);
     destroy_heap(&hp);
     // read time
     // list_t *lst2 = new_list(int);
@@ -205,6 +219,7 @@ START_TEST(test_heapeffec)
     // for (i = 0 ;i < pnum; i++) {
     //     ck_assert_int_eq(xnums[i], ynums[i]);
     // }
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -218,8 +233,9 @@ Suite *cheap_test_suite() {
     tcase_add_test(tc_core, test_newheap);
     tcase_add_test(tc_core, test_heapop_cbuiltin);
     tcase_add_test(tc_core, test_heaop_userdef);
+#ifdef ENEFFTEST
     tcase_add_test(tc_core, test_heapeffec);
-
+#endif
     suite_add_tcase(s, tc_core);
     return s;
 }

@@ -28,12 +28,12 @@ START_TEST(test_newvector)
     vector_t *vec;
 
     vec = new_vector(int);
-    ck_assert_str_eq(vec->_contain_type->name, "int32_t");
+    ck_assert_str_eq(_CTR_CTYPE(vec)->name, "int32_t");
     delete_vector(vec);
     vec = new_vector(vector_t<int>);
-    ck_assert_str_eq(vec->_contain_type->name, "vector_t");
+    ck_assert_str_eq(_CTR_CTYPE(vec)->name, "vector_t");
     delete_vector(vec);
-    fn_memdbg_print_rec();
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -77,10 +77,10 @@ START_TEST(test_vectorop_cbuiltin)
     vector_clear(vec);
     ck_assert_int_eq(vector_size(vec), 0);
     ck_assert_int_eq(vector_empty(vec), true);
-    ck_assert_ptr_eq((int*)vector_front(vec), NULL);
-    ck_assert_ptr_eq((int*)vector_back(vec), NULL);
 
     delete_vector(vec);
+
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -151,6 +151,7 @@ START_TEST(test_vectoreffec)
         ck_assert_int_eq(opp.num, svec[i].num);
     }
 
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -225,6 +226,8 @@ START_TEST(test_vector_iterator)
     }
 
     delete_vector(vec);
+
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -260,6 +263,9 @@ START_TEST(test_vector_swapelem) {
         ck_assert_int_eq(op->num, op1[i].num);
     }
     delete_vector(vec);
+
+    type_unregist(op_t);
+    ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
 
@@ -272,8 +278,9 @@ Suite *cvector_test_suite() {
     tcase_add_test(tc_core, test_vectorop_cbuiltin);
     tcase_add_test(tc_core, test_vector_iterator);
     tcase_add_test(tc_core, test_vector_swapelem);
-    //tcase_add_test(tc_core, test_vectoreffec);
-
+#ifdef ENEFFTEST
+    tcase_add_test(tc_core, test_vectoreffec);
+#endif
 
 	suite_add_tcase(s, tc_core);
 	return s;

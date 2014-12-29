@@ -48,44 +48,51 @@ int _init_vector(vector_t* vec, const char* typestr) {
     assert(vec != NULL);
     assert(typestr != NULL);
 
-    /* container base attr*/
-    _CTR_STYPE(vec)  = _get_type_bystr(_VECTOR_TYPE_NAME);
-    _CTR_CTYPE(vec)  = _get_type_bystr(typestr);
-    _CTR_ITERIF(vec) = &_default_vector_iter_if;
+    /* init container base attr*/
+    _CTR_INIT(vec, _get_type_bystr(_VECT_TYPE_NAME), typestr, &_default_vector_iter_if);
 
     /* check if type rigth*/
     assert(_CTR_STYPE(vec) != NULL);
     assert(_CTR_CTYPE(vec) != NULL);
 
     /* vector attr */
-    vec->_capacity   = VECTOR_INIT_CAPACITY;
-    vec->_size       = 0;
-    vec->_data       = (char*)fn_malloc(_VECTOR_CAPACITY(vec) * _VECTOR_TYPE_SIZE(vec));
+    vec->capacity   = _VECT_INIT_CAPACITY;
+    vec->size       = 0;
+    vec->data       = (char*)fn_malloc(_VECT_CAPACITY(vec) * _VECT_TYPE_SIZE(vec));
 
-    if (vec->_data == NULL) {
-        return -1;
-    }
-
-
-    return 0;
+    return _VECT_DATA(vec) ? 0 : -1;
 }
-
+#include <stdio.h>
 void vector_reserve(vector_t* vec, size_t newcap) {
     assert (vec != NULL);
 
     /* if vec->capactity >= newcap, just return */
-    RETURN_IF(_VECTOR_CAPACITY(vec) >= newcap);
+    RETURN_IF(_VECT_CAPACITY(vec) >= newcap);
 
-    while (_VECTOR_CAPACITY(vec) < newcap)
-        vec->_capacity *= 2;
-    vec->_data = fn_realloc(vec->_data, _VECTOR_CAPACITY(vec) * _VECTOR_TYPE_SIZE(vec));
+    while (_VECT_CAPACITY(vec) < newcap) {
+        vec->capacity *= 2;
+    }
+
+    vec->data = fn_realloc(vec->data, _VECT_CAPACITY(vec) * _VECT_TYPE_SIZE(vec));
+
+}
+
+void vector_clear(vector_t* vec) {
+    assert(vec != NULL);
+
+    while (!vector_empty(vec))
+        vector_pop_back(vec);
 }
 
 void destroy_vector(vector_t* vec) {
     assert(vec != NULL);
 
     vector_clear(vec);
-    if (vec->_data) fn_free(vec->_data);
+    if (_VECT_DATA(vec)) {
+        fn_free(_VECT_DATA(vec));
+    }
+
+    _CTR_DESTROY(vec);
 }
 
 void delete_vector(vector_t* vec) {
@@ -97,156 +104,104 @@ void delete_vector(vector_t* vec) {
 
 void* vector_at(vector_t* vec, int pos) {
     assert(vec != NULL);
-    assert(pos >= 0 && pos < _VECTOR_SIZE(vec));
+    assert(pos >= 0 && pos < _VECT_SIZE(vec));
 
-    return _VECTOR_DATA_OFFSET(vec, pos);
+    return _VECT_DATA_OFFSET(vec, pos);
 }
 
 void* vector_front(vector_t* vec) {
     assert(vec != NULL);
+    assert(!vector_empty(vec));
 
-    RETURN_IF(_VECTOR_SIZE(vec) == 0, NULL);
     return vector_at(vec, 0);
 }
 
 void* vector_back(vector_t* vec) {
     assert(vec != NULL);
+    assert(!vector_empty(vec));
 
-    RETURN_IF(_VECTOR_SIZE(vec) == 0, NULL);
-    return vector_at(vec, _VECTOR_SIZE(vec) - 1);
+    return vector_at(vec, _VECT_SIZE(vec) - 1);
 }
 
 void vector_push_back(vector_t* vec, ...) {
-    va_list elm_arg;
+    va_list arg;
 
     assert(vec != NULL);
 
-    va_start(elm_arg, vec);
-    _vector_push_back_varg(vec, elm_arg);
-    va_end(elm_arg);
-}
-
-void _vector_push_back_varg(vector_t *vec, va_list elm_arg) {
-    char *ins_ptr;
-
-    assert(vec != NULL);
-
-    vector_reserve(vec, _VECTOR_SIZE(vec) + 1);
-
-    ins_ptr = _VECTOR_DATA_OFFSET(vec, _VECTOR_SIZE(vec));
-    _get_varg_value_bytype(_CTR_CTYPE(vec), elm_arg, ins_ptr);
-    vec->_size++;
+    /* insert at the end of the vector */
+    va_start(arg, vec);
+    _vector_insert_varg(vec, _VECT_DATA_OFFSET(vec, _VECT_SIZE(vec)), arg);
+    va_end(arg);
 }
 
 void vector_pop_back(vector_t* vec) {
-    vector_erase_pos(vec, _VECTOR_SIZE(vec)- 1);
+    assert(vec != NULL);
+
+    /* erase the last element */
+    _vector_erase(vec, _VECT_DATA_OFFSET(vec, _VECT_SIZE(vec) - 1));
 }
 
 void vector_update(vector_t* vec, int pos, ...) {
-    va_list elm_arg;
-    char *upd_ptr;
+    va_list arg;
 
     assert(vec != NULL);
-    assert(pos >= 0 && pos < _VECTOR_SIZE(vec));
+    assert(pos >= 0 && pos < _VECT_SIZE(vec));
 
-    /* destroy old element and set new element*/
-    upd_ptr = _VECTOR_DATA_OFFSET(vec, pos);
-    _type_destroy(_CTR_CTYPE(vec), upd_ptr);
-
-    va_start(elm_arg, pos);
-    _get_varg_value_bytype(_CTR_CTYPE(vec), elm_arg, upd_ptr);
-    va_end(elm_arg);
+    /* just update, don't need call init */
+    va_start(arg, pos);
+    _get_varg_value_bytype(_CTR_CTYPE(vec), arg, _VECT_DATA_OFFSET(vec, pos));
+    va_end(arg);
 }
 
 void vector_insert_pos(vector_t* vec, int pos, ...) {
-    va_list elm_arg;
-    int typesize;
-    char *ins_ptr;
+    va_list arg;
 
     assert(vec != NULL);
-    assert(pos >= 0 && pos <= _VECTOR_SIZE(vec));
+    assert(pos >= 0 && pos <= _VECT_SIZE(vec));
 
-    vector_reserve(vec, _VECTOR_SIZE(vec) + 1);
-
-    /* leave space to put element */
-    typesize = _VECTOR_TYPE_SIZE(vec);
-    ins_ptr =  _VECTOR_DATA_OFFSET(vec, pos);
-    memmove(ins_ptr + typesize, ins_ptr, _VECTOR_DATA_END(vec) - ins_ptr);
-
-    /* insert element */
-    va_start(elm_arg, pos);
-    _get_varg_value_bytype(_CTR_CTYPE(vec), elm_arg, ins_ptr);
-    va_end(elm_arg);
-    vec->_size++;
+    /* insert at this pos */
+    va_start(arg, pos);
+    _vector_insert_varg(vec, _VECT_DATA_OFFSET(vec, pos), arg);
+    va_end(arg);
 }
 
 void vector_erase_pos(vector_t* vec, int pos) {
-    int typesize;
-    char *era_ptr;
-
     assert(vec != NULL);
-    assert(pos >= 0 && pos < _VECTOR_SIZE(vec));
+    assert(pos >= 0 && pos < _VECT_SIZE(vec));
 
-    /* destroy and remove element */
-    typesize = _VECTOR_TYPE_SIZE(vec);
-    era_ptr = _VECTOR_DATA_OFFSET(vec, pos);
-    _type_destroy(_CTR_CTYPE(vec), era_ptr);
-    memmove(era_ptr, era_ptr + typesize, _VECTOR_DATA_END(vec) - era_ptr - typesize);
-    vec->_size--;
-}
-
-void vector_clear(vector_t* vec) {
-    while (!vector_empty(vec))
-        vector_pop_back(vec);
+    /* erase at this pos */
+    _vector_erase(vec, _VECT_DATA_OFFSET(vec, pos));
 }
 
 iterator_t vector_insert(vector_t* vec, iterator_t iter, ...) {
-    va_list elm_arg;
-    char *old_data = NULL;
-    char *ins_ptr   = NULL;
-    int  typesize  = 0;
+    va_list arg;
 
     assert(vec != NULL);
     assert(_iter_is_vaild(iter));
 
     /* iterator maybe invaild after vector_reserve*/
-    old_data = _VECTOR_DATA(vec);
-    vector_reserve(vec, _VECTOR_SIZE(vec) + 1);
-    _ITER_VPTR(iter) = _VECTOR_DATA(vec) + (_ITER_VPTR(iter) - old_data);
+    int dist = _ITER_VPTR(iter) - _VECT_DATA_BEGIN(vec);
 
-    /* leave space to put element */
-    typesize = _VECTOR_TYPE_SIZE(vec);
-    ins_ptr   = _ITER_VPTR(iter);
-    memmove(ins_ptr + typesize, ins_ptr, _VECTOR_DATA_END(vec) - ins_ptr);
+    /* insert element at thie pos */
+    va_start(arg, iter);
+    _vector_insert_varg(vec, _ITER_VPTR(iter), arg);
+    va_end(arg);
 
-    /* insert element */
-    va_start(elm_arg, iter);
-    _get_varg_value_bytype(_CTR_CTYPE(vec), elm_arg, ins_ptr);
-    va_end(elm_arg);
-    vec->_size++;
-
-    /* iterator pos not changed */
+    /* iterator point to first inserted element */
+    _ITER_VPTR(iter) = _VECT_DATA_BEGIN(vec) + dist;
     return iter;
 }
 
 
 iterator_t vector_erase(vector_t* vec, iterator_t iter) {
-    va_list elm_arg;
-    char *era_ptr   = NULL;
-    int  typesize  = 0;
-
     assert(vec != NULL);
     assert(_iter_is_vaild(iter));
-    assert(!iter_equal(iter, vector_end(_ITER_CONTAIN_VECTOR(iter))));
+    assert(!iter_equal(iter, vector_end(_ITER_CONTAIN_VECT(iter))));
 
     /* destroy and remove element */
-    typesize = _VECTOR_TYPE_SIZE(vec);
-    era_ptr   = _ITER_VPTR(iter);
-    _type_destroy(_CTR_CTYPE(vec), era_ptr);
-    memmove(era_ptr, era_ptr + typesize, _VECTOR_DATA_END(vec) - era_ptr - typesize);
-    vec->_size--;
+    _vector_erase(vec, _ITER_VPTR(iter));
 
-    /* iterator pos not changed */
+    /* iterator point to the element after last erased element */
     return iter;
 }
 
@@ -257,7 +212,7 @@ iterator_t vector_begin(vector_t* vec) {
 
     _ITER_INIT(iter);
     _ITER_CONTAINER(iter) = vec;
-    _ITER_VPTR(iter) = _VECTOR_DATA_BEGIN(vec);
+    _ITER_VPTR(iter) = _VECT_DATA_BEGIN(vec);
     return iter;
 }
 
@@ -268,8 +223,45 @@ iterator_t vector_end(vector_t* vec) {
 
     _ITER_INIT(iter);
     _ITER_CONTAINER(iter) = vec;
-    _ITER_VPTR(iter) = _VECTOR_DATA_END(vec);
+    _ITER_VPTR(iter) = _VECT_DATA_END(vec);
     return iter;
+}
+
+/* private insert and erase functions */
+void _vector_insert_varg(vector_t *vec, char* insptr, va_list arg) {
+    assert(vec != NULL);
+    assert(insptr != NULL);
+    assert(insptr >= _VECT_DATA_BEGIN(vec));
+    assert(insptr <= _VECT_DATA_END(vec));
+
+    /* !!! insptr may be changed after vector reserve */
+    int dist = insptr - _VECT_DATA_BEGIN(vec);
+    vector_reserve(vec, _VECT_SIZE(vec) + 1);
+    insptr = _VECT_DATA_BEGIN(vec) + dist;
+
+    /* insert pointer is not the end of vector, leave space to put new element*/
+    if (insptr != _VECT_DATA_END(vec)) {
+        int tpsize = _VECT_TYPE_SIZE(vec);
+        memmove(insptr + tpsize, insptr, _VECT_DATA_END(vec) - insptr);
+    }
+
+    vec->size ++;
+    _type_init(_CTR_CTYPE(vec), insptr, _CTR_CTNODE(vec));
+    _get_varg_value_bytype(_CTR_CTYPE(vec), arg, insptr);
+}
+
+void _vector_erase(vector_t *vec, char *eraptr) {
+    assert(vec != NULL);
+    assert(eraptr != NULL);
+
+    _type_destroy(_CTR_CTYPE(vec), eraptr);
+    vec->size --;
+
+    /* erase pointer is not the last element of vector */
+    if (eraptr != _VECT_DATA_END(vec)) {
+        int tpsize = _VECT_TYPE_SIZE(vec);
+        memmove(eraptr, eraptr + tpsize, _VECT_DATA_END(vec) - eraptr);
+    }
 }
 
 
@@ -277,25 +269,20 @@ iterator_t vector_end(vector_t* vec) {
 iterator_t _vector_iter_next(iterator_t iter) {
     assert(_iter_is_vaild(iter));
 
-    _ITER_VPTR(iter) += _VECTOR_TYPE_SIZE(_ITER_CONTAIN_VECTOR(iter));
-    /* check if iterator vaild after change */
-    assert(_iter_is_vaild(iter));
-    return iter;
+    return _vector_iter_next_n(iter, 1);
 }
 
 iterator_t _vector_iter_pre(iterator_t iter) {
     assert(_iter_is_vaild(iter));
 
-    _ITER_VPTR(iter) -= _VECTOR_TYPE_SIZE(_ITER_CONTAIN_VECTOR(iter));
-    /* check if iterator vaild after change */
-    assert(_iter_is_vaild(iter));
-    return iter;
+    return _vector_iter_next_n(iter, -1);
 }
 
 iterator_t _vector_iter_next_n(iterator_t iter, int step) {
     assert(_iter_is_vaild(iter));
 
-    _ITER_VPTR(iter) += step * _VECTOR_TYPE_SIZE(_ITER_CONTAIN_VECTOR(iter));
+    _ITER_VPTR(iter) += step * _VECT_TYPE_SIZE(_ITER_CONTAIN_VECT(iter));
+
     /* check if iterator vaild after change */
     assert(_iter_is_vaild(iter));
     return iter;
@@ -304,10 +291,7 @@ iterator_t _vector_iter_next_n(iterator_t iter, int step) {
 iterator_t _vector_iter_pre_n(iterator_t iter, int step) {
     assert(_iter_is_vaild(iter));
 
-    _ITER_VPTR(iter) -= step * _VECTOR_TYPE_SIZE(_ITER_CONTAIN_VECTOR(iter));
-    /* check if iterator vaild after change */
-    assert(_iter_is_vaild(iter));
-    return iter;
+    return _vector_iter_next_n(iter, -step);
 }
 
 bool_t _vector_iter_equal(iterator_t iter0, iterator_t iter1) {
@@ -317,13 +301,13 @@ bool_t _vector_iter_equal(iterator_t iter0, iterator_t iter1) {
     return _ITER_VPTR(iter0)  == _ITER_VPTR(iter1) ? true : false;
 }
 
-int   _vector_iter_distance(iterator_t iter0, iterator_t iter1) {
+int _vector_iter_distance(iterator_t iter0, iterator_t iter1) {
     assert(_iter_is_vaild(iter0));
     assert(_iter_is_vaild(iter1));
 
-    size_t delta = _ITER_VPTR(iter1)  - _ITER_VPTR(iter0);
-    assert(delta %  _VECTOR_TYPE_SIZE(_ITER_CONTAIN_VECTOR(iter0)) == 0);
-    return delta / _VECTOR_TYPE_SIZE(_ITER_CONTAIN_VECTOR(iter0));
+    size_t dist = _ITER_VPTR(iter1)  - _ITER_VPTR(iter0);
+    assert(dist %  _VECT_TYPE_SIZE(_ITER_CONTAIN_VECT(iter0)) == 0);
+    return dist / _VECT_TYPE_SIZE(_ITER_CONTAIN_VECT(iter0));
 }
 
 void* _vector_iter_get_pointer(iterator_t iter) {
@@ -335,43 +319,40 @@ void* _vector_iter_get_pointer(iterator_t iter) {
 void  _vector_iter_get_value(iterator_t iter, void* elmp) {
     assert(elmp != NULL);
     assert(_iter_is_vaild(iter));
-    assert(!iter_equal(iter, vector_end(_ITER_CONTAIN_VECTOR(iter))));
+    assert(!iter_equal(iter, vector_end(_ITER_CONTAIN_VECT(iter))));
 
-    _type_copy(_CTR_CTYPE(_ITER_CONTAIN_VECTOR(iter)), elmp, _ITER_VPTR(iter));
+    _type_copy(_CTR_CTYPE(_ITER_CONTAIN_VECT(iter)), elmp, _ITER_VPTR(iter));
 }
 
 void  _vector_iter_set_value(iterator_t iter, void* elmp) {
     assert(elmp != NULL);
     assert(_iter_is_vaild(iter));
-    assert(!iter_equal(iter, vector_end(_ITER_CONTAIN_VECTOR(iter))));
+    assert(!iter_equal(iter, vector_end(_ITER_CONTAIN_VECT(iter))));
 
-    _type_copy(_CTR_CTYPE(_ITER_CONTAIN_VECTOR(iter)), _ITER_VPTR(iter), elmp);
+    _type_copy(_CTR_CTYPE(_ITER_CONTAIN_VECT(iter)), _ITER_VPTR(iter), elmp);
 }
 
 bool_t _vector_iter_is_vaild(iterator_t iter) {
     /* !! can't call iter_is_vaild here*/
-    vector_t *vec = _ITER_CONTAIN_VECTOR(iter);
+    vector_t *vec = _ITER_CONTAIN_VECT(iter);
     RETURN_IF_NULL(vec, false);
-    RETURN_IF(_ITER_VPTR(iter) < _VECTOR_DATA_BEGIN(vec) , false);
-    RETURN_IF(_ITER_VPTR(iter) > _VECTOR_DATA_END(vec), false);
+    RETURN_IF(_ITER_VPTR(iter) < _VECT_DATA_BEGIN(vec) , false);
+    RETURN_IF(_ITER_VPTR(iter) > _VECT_DATA_END(vec), false);
     return true;
 }
 
-/* not standard function */
+/* not standard functions */
 void _vector_swap_elem(vector_t* vec, int p1, int p2) {
-    int typesize, vecsize;
-
     assert(vec != NULL);
 
     /* use vector's data memory to avoid alloc new memory*/
-
-    vector_reserve(vec, _VECTOR_SIZE(vec) + 1);
+    vector_reserve(vec, _VECT_SIZE(vec) + 1);
     vector_reserve(vec, p1 + 1);
     vector_reserve(vec, p2 + 1);
 
-    typesize = _VECTOR_TYPE_SIZE(vec);
-    vecsize  = _VECTOR_SIZE(vec);
-    memmove(_VECTOR_DATA_OFFSET(vec, vecsize), _VECTOR_DATA_OFFSET(vec, p1), typesize);
-    memmove(_VECTOR_DATA_OFFSET(vec, p1), _VECTOR_DATA_OFFSET(vec, p2), typesize);
-    memmove(_VECTOR_DATA_OFFSET(vec, p2), _VECTOR_DATA_OFFSET(vec, vecsize), typesize);
+    int typesize = _VECT_TYPE_SIZE(vec);
+    int vecsize  = _VECT_SIZE(vec);
+    memmove(_VECT_DATA_OFFSET(vec, vecsize), _VECT_DATA_OFFSET(vec, p1), typesize);
+    memmove(_VECT_DATA_OFFSET(vec, p1), _VECT_DATA_OFFSET(vec, p2), typesize);
+    memmove(_VECT_DATA_OFFSET(vec, p2), _VECT_DATA_OFFSET(vec, vecsize), typesize);
 }
