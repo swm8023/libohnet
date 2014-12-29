@@ -104,7 +104,7 @@ void delete_vector(vector_t* vec) {
 
 void* vector_at(vector_t* vec, int pos) {
     assert(vec != NULL);
-    assert(pos >= 0 && pos < _VECT_SIZE(vec));
+    assert(pos >= 0 && pos <= _VECT_SIZE(vec));
 
     return _VECT_DATA_OFFSET(vec, pos);
 }
@@ -355,4 +355,15 @@ void _vector_swap_elem(vector_t* vec, int p1, int p2) {
     memmove(_VECT_DATA_OFFSET(vec, vecsize), _VECT_DATA_OFFSET(vec, p1), typesize);
     memmove(_VECT_DATA_OFFSET(vec, p1), _VECT_DATA_OFFSET(vec, p2), typesize);
     memmove(_VECT_DATA_OFFSET(vec, p2), _VECT_DATA_OFFSET(vec, vecsize), typesize);
+}
+
+void _vector_copy_elem(vector_t* vec, int p1, int p2) {
+    assert(vec != NULL);
+
+    /* use vector's data memory to avoid alloc new memory*/
+    vector_reserve(vec, _VECT_SIZE(vec) + 1);
+    vector_reserve(vec, p1 + 1);
+    vector_reserve(vec, p2 + 1);
+
+    memmove(_VECT_DATA_OFFSET(vec, p1), _VECT_DATA_OFFSET(vec, p2), _VECT_TYPE_SIZE(vec));
 }

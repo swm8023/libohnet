@@ -19,17 +19,7 @@ int _init_pair(pair_t *pair, const char* tpstr) {
     assert(pair   != NULL);
     assert(tpstr != NULL);
 
-    pair->tpnode = _get_type_node(_get_type_bystr(_PAIR_TYPE_NAME), tpstr);
-
-    assert(_CTR_STYPE(pair) != NULL);
-
-    int i;
-    for (i = 0; i < 2; i++) {
-        assert(_PAIR_CTYPE(pair, i) != NULL);
-
-        pair->ptr[i]  = fn_malloc(_PAIR_CTYPE(pair, i)->size);
-        _type_init(_PAIR_CTYPE(pair, i), pair->ptr[i], _PAIR_CTNODE(pair, i));
-    }
+    _pair_init_node(pair, _get_type_node(_get_type_bystr(_PAIR_TYPE_NAME), tpstr));
 
     return 0;
 }
@@ -57,14 +47,46 @@ void delete_pair(pair_t *pair) {
     fn_free(pair);
 }
 
+void _pair_init_node(pair_t *pair, type_node *node) {
+    assert(pair != NULL);
+    assert(_TPNODE_TYPE(node) == _get_type_bystr(_PAIR_TYPE_NAME));
+    assert(_TPNODE_LCNODE(node) != NULL);
+    assert(_TPNODE_RCNODE(node) != NULL);
 
-void pair_assign(pair_t *pair1, pair_t *pair2) {
+    pair->tpnode = node;
+
+    int i;
+    for (i = 0; i < 2; i++) {
+        pair->ptr[i]  = fn_malloc(_PAIR_CTYPE(pair, i)->size);
+        _type_init(_PAIR_CTYPE(pair, i), pair->ptr[i], _PAIR_CTNODE(pair, i));
+    }
+
 
 }
 
-bool_t pair_less(pair_t *pair1, pair_t *pair2) {
+void pair_assign(pair_t *pair1, const pair_t *pair2) {
+    assert(pair1 != NULL);
+    assert(pair2 != NULL);
+    assert(_PAIR_CTYPE(pair1, 0) == _PAIR_CTYPE(pair2, 0));
+    assert(_PAIR_CTYPE(pair1, 1) == _PAIR_CTYPE(pair2, 1));
+
+    _type_copy(_PAIR_CTYPE(pair1, 0), _PAIR_LPTR(pair1), _PAIR_LPTR(pair2));
+    _type_copy(_PAIR_CTYPE(pair1, 1), _PAIR_RPTR(pair1), _PAIR_RPTR(pair2));
+}
+
+bool_t _pair_less(const pair_t *pair1, const pair_t *pair2) {
+    assert(pair1 != NULL);
+    assert(pair2 != NULL);
+    assert(_PAIR_CTYPE(pair1, 0) == _PAIR_CTYPE(pair2, 0));
+    assert(_PAIR_CTYPE(pair1, 1) == _PAIR_CTYPE(pair2, 1));
+
+
+    return _type_less(_PAIR_CTYPE(pair1, 0), _PAIR_LPTR(pair1), _PAIR_LPTR(pair2)) || (
+           _type_equal(_PAIR_CTYPE(pair1, 0), _PAIR_LPTR(pair1), _PAIR_LPTR(pair2)) &&
+           _type_less(_PAIR_CTYPE(pair1, 1), _PAIR_RPTR(pair1), _PAIR_RPTR(pair2)));
 
 }
+
 
 void _pair_make_elem(pair_t *pair, int index, ...) {
     va_list arg;

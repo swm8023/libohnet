@@ -53,6 +53,7 @@ void heap_pop(heap_t*);
 void _heap_fix_up(heap_t*, int);
 void _heap_fix_down(heap_t*, int);
 void _heap_swap(heap_t*, int, int);
+void _heap_copy(heap_t*, int, int);
 
 #ifdef __cplusplus
 }

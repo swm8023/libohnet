@@ -10,6 +10,7 @@ extern "C" {
 #include <fnutil/cvector.h>
 #include <fnutil/clist.h>
 #include <fnutil/cheap.h>
+#include <fnutil/cpair.h>
 
 #ifdef __cplusplus
 }

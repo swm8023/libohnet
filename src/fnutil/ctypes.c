@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <float.h>
 #include <assert.h>
 
 #include <fnutil/ctypes.h>
@@ -85,86 +86,85 @@ _cbuiltin_varg_copy _cbuiltin_varg_copy_funcs[11] = {
 
 
 /* for C-builtin functions */
-#define EPS 1e-9
+#define _FUNC_CBUILTIN_INIT(type)                               \
+static bool_t _##type##_init(void *t1, type_node *node) {       \
+    return (*(type*)t1 = 0, true);                              \
+}
 
-#define _CTYPE_FUNC_COPY(type)                                  \
-static bool_t _##type##_copy(const void* t1, const void* t2) {  \
+#define _FUNC_CBUILTIN_DESTROY(type)                            \
+static bool_t _##type##_destroy(void *t1) {               \
+    return (*(type*)t1 = 0, true);                              \
+}
+
+#define _FUNC_CBUILTIN_LESS(type, val)                          \
+static bool_t _##type##_less(const void* t1, const void* t2) {  \
+    return *(type*)t1 - *(type*)t2 < (val) ? true : false;      \
+}
+
+#define _FUNC_CBUILTIN_COPY(type)                               \
+static bool_t _##type##_copy(void* t1, const void* t2) {        \
     return (*(type*)t1 = *(type*)t2, true);                     \
 }
 
-#define _CTYPE_FUNC_INTLESS(type)                              \
-static bool_t _##type##_less(const void* t1, const void* t2) {  \
-    return *(type*)t1 < *(type*)t2 ? true : false;              \
-}
+#define _FUNC_CBUILTIN_ALL(type, val)   \
+    _FUNC_CBUILTIN_INIT(type);          \
+    _FUNC_CBUILTIN_DESTROY(type);       \
+    _FUNC_CBUILTIN_LESS(type, val);     \
+    _FUNC_CBUILTIN_COPY(type);
 
-#define _CTYPE_FUNC_DBLLESS(type)                              \
-static bool_t _##type##_less(const void* t1, const void* t2) {  \
-    return *(type*)t1 - *(type*)t2 < -EPS ? true : false;       \
-}
 
-#define _CTYPE_PROPERTY_DECLARE(type) \
-   {#type, _typeid_##type, sizeof(type), _TYPE_C, _##type##_copy, _##type##_less, NULL, NULL}
+// /* == c-builtin type == */
+_FUNC_CBUILTIN_ALL(int8_t,  0);
+_FUNC_CBUILTIN_ALL(uint8_t, 0);
+_FUNC_CBUILTIN_ALL(int16_t, 0);
+_FUNC_CBUILTIN_ALL(uint16_t,0);
+_FUNC_CBUILTIN_ALL(int32_t, 0);
+_FUNC_CBUILTIN_ALL(uint32_t,0);
+_FUNC_CBUILTIN_ALL(int64_t, 0);
+_FUNC_CBUILTIN_ALL(uint64_t,0);
+_FUNC_CBUILTIN_ALL(float,   -DBL_EPSILON);
+_FUNC_CBUILTIN_ALL(double,  -FLT_EPSILON);
+_FUNC_CBUILTIN_ALL(pointer, 0);
 
-/* == c-builtin type == */
-_CTYPE_FUNC_COPY(int8_t);
-_CTYPE_FUNC_COPY(uint8_t);
-_CTYPE_FUNC_COPY(int16_t);
-_CTYPE_FUNC_COPY(uint16_t);
-_CTYPE_FUNC_COPY(int32_t);
-_CTYPE_FUNC_COPY(uint32_t);
-_CTYPE_FUNC_COPY(int64_t);
-_CTYPE_FUNC_COPY(uint64_t);
-_CTYPE_FUNC_COPY(float);
-_CTYPE_FUNC_COPY(double);
-_CTYPE_FUNC_INTLESS(int8_t);
-_CTYPE_FUNC_INTLESS(uint8_t);
-_CTYPE_FUNC_INTLESS(int16_t);
-_CTYPE_FUNC_INTLESS(uint16_t);
-_CTYPE_FUNC_INTLESS(int32_t);
-_CTYPE_FUNC_INTLESS(uint32_t);
-_CTYPE_FUNC_INTLESS(int64_t);
-_CTYPE_FUNC_INTLESS(uint64_t);
-_CTYPE_FUNC_DBLLESS(float);
-_CTYPE_FUNC_DBLLESS(double);
-
-_CTYPE_FUNC_COPY(pointer);
-_CTYPE_FUNC_INTLESS(pointer);
+#define _CBUILTIN_TYEP_DECLARE(type)                              \
+    {#type, _typeid_##type, sizeof(type), _TYPE_C,                \
+        _##type##_copy, _##type##_less, _##type##_init, NULL}
 
 
 /* == fn-builtin type == */
 /* pair */
-bool_t _pair_t_copy(const void* ptr1, const void* ptr2) {
+static bool_t _pair_t_copy(void* ptr1, const void* ptr2) {
     pair_assign((pair_t*)ptr1, (pair_t*)ptr2);
     return true;
 }
 
-bool_t _pair_t_less(const void* ptr1, const void* ptr2) {
-    return pair_less((pair_t*)ptr1, (pair_t*)ptr2);
+static bool_t _pair_t_less(const void* ptr1, const void* ptr2) {
+    return _pair_less((pair_t*)ptr1, (pair_t*)ptr2);
 }
 
-bool_t _pair_t_init(const void* ptr, const type_node* ipr) {
-//    _pair_init_params((pair_t*)ptr, ipr);
+static bool_t _pair_t_init(void* ptr, type_node* ipr) {
+    _pair_init_node((pair_t*)ptr, ipr);
     return true;
 }
 
-bool_t _pair_t_destroy(const void* ptr) {
+static bool_t _pair_t_destroy(void* ptr) {
     destroy_pair((pair_t*)ptr);
     return true;
 }
 
 _type_t _builtin_types[] = {
     /* C-Builtin types */
-    _CTYPE_PROPERTY_DECLARE(int8_t),
-    _CTYPE_PROPERTY_DECLARE(uint8_t),
-    _CTYPE_PROPERTY_DECLARE(int16_t),
-    _CTYPE_PROPERTY_DECLARE(uint16_t),
-    _CTYPE_PROPERTY_DECLARE(int32_t),
-    _CTYPE_PROPERTY_DECLARE(uint32_t),
-    _CTYPE_PROPERTY_DECLARE(int64_t),
-    _CTYPE_PROPERTY_DECLARE(uint64_t),
-    _CTYPE_PROPERTY_DECLARE(float),
-    _CTYPE_PROPERTY_DECLARE(double),
-    _CTYPE_PROPERTY_DECLARE(pointer),
+    _CBUILTIN_TYEP_DECLARE(int8_t),
+    _CBUILTIN_TYEP_DECLARE(uint8_t),
+    _CBUILTIN_TYEP_DECLARE(int16_t),
+    _CBUILTIN_TYEP_DECLARE(uint16_t),
+    _CBUILTIN_TYEP_DECLARE(int32_t),
+    _CBUILTIN_TYEP_DECLARE(uint32_t),
+    _CBUILTIN_TYEP_DECLARE(int64_t),
+    _CBUILTIN_TYEP_DECLARE(uint64_t),
+    _CBUILTIN_TYEP_DECLARE(float),
+    _CBUILTIN_TYEP_DECLARE(double),
+    _CBUILTIN_TYEP_DECLARE(pointer),
 
     /* Fn-builtin types */
     {"vector_t", _typeid_vector_t, sizeof(vector_t), _TYPE_FN, NULL, NULL, NULL, NULL},
@@ -178,8 +178,8 @@ _type_t _builtin_types[] = {
     {NULL, _typeid_invaild, 0, 0, NULL, NULL, NULL, NULL},
 };
 
-_type_lst *_userdef_types = NULL;
 
+_type_lst *_userdef_types = NULL;
 
 _type_t* _get_type_bystr(const char* typestr) {
     /**
@@ -239,7 +239,7 @@ void _get_varg_value_bytype(_type_t *type, va_list varg, void *retp) {
 
 
 void _type_regist(const char *name, size_t size,
-    _tfunc2 fcopy, _tfunc2 fless, _tfunc3 finit, _tfunc1 fdestroy) {
+    _tfunc_copy fcopy, _tfunc_less fless, _tfunc_init finit, _tfunc_destroy fdestroy) {
     _type_lst *type_new, *elml;
     /* already regist */
     FOR_SPLST_START(_userdef_types, elml)
@@ -273,7 +273,7 @@ void _type_unregist(const char *name) {
     }
 }
 
-bool_t _type_copy(_type_t* type, const void *t1, const void *t2) {
+bool_t _type_copy(_type_t* type, void *t1, const void *t2) {
     assert(type != NULL);
     assert(t1 != NULL);
     assert(t2 != NULL);
@@ -289,14 +289,14 @@ bool_t _type_less(_type_t* type, const void *t1, const void *t2) {
     return type->less ? type->less(t1, t2) : true;
 }
 
-bool_t _type_init(_type_t* type, const void *t1, const type_node* node) {
+bool_t _type_init(_type_t* type, void *t1, type_node* node) {
     assert(type != NULL);
     assert(t1 != NULL);
 
     return type->init ? type->init(t1, node) : true;
 }
 
-bool_t _type_destroy(_type_t* type, const void* t1) {
+bool_t _type_destroy(_type_t* type, void* t1) {
     assert(type != NULL);
     assert(t1 != NULL);
 
@@ -311,7 +311,7 @@ bool_t _type_equal(_type_t* type, const void *t1, const void *t2) {
     return type->less ? (!type->less(t1, t2) && !type->less(t2, t1)): true;
 }
 
-bool_t _type_great(_type_t* type, const void *t1, const void *t2) {
+bool_t _type_greater(_type_t* type, const void *t1, const void *t2) {
     assert(type != NULL);
     assert(t1 != NULL);
     assert(t2 != NULL);

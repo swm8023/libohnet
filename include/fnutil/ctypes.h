@@ -85,20 +85,20 @@ typedef struct _tag_type_node {
 
 
 /* callback function used to define a type */
-typedef bool_t (*_tfunc1)(const void*);
-typedef bool_t (*_tfunc2)(const void*, const void*);
-typedef bool_t (*_tfunc3)(const void*, const type_node*);
-
+typedef bool_t (*_tfunc_destroy)(void*);
+typedef bool_t (*_tfunc_less)(const void*, const void*);
+typedef bool_t (*_tfunc_init)(void*, type_node*);
+typedef bool_t (*_tfunc_copy)(void*, const void*);
 /* define struct type and type_list */
 typedef struct _tag_type_t {
     const char *name;
     _type_id_t type_id;
     size_t size;
     _typestyle_t style;
-    bool_t (*copy)(const void*, const void*);
-    bool_t (*less)(const void*, const void*);
-    bool_t (*init)(const void*, const type_node*);
-    bool_t (*destroy)(const void*);
+    _tfunc_copy copy;
+    _tfunc_less less;
+    _tfunc_init init;
+    _tfunc_destroy destroy;
 } _type_t;
 
 #define _TYPE_NAME(tp)          ((tp)->name)
@@ -127,7 +127,7 @@ extern _type_lst *_userdef_types;
 #define type_unregist(type) _type_unregist(#type)
 
 void _type_unregist(const char*);
-void _type_regist(const char *, size_t, _tfunc2, _tfunc2, _tfunc3, _tfunc1);
+void _type_regist(const char *, size_t, _tfunc_copy, _tfunc_less, _tfunc_init, _tfunc_destroy);
 
 /* get type tree by special string  */
 type_node* _get_type_node(_type_t *, const char*);
@@ -141,10 +141,13 @@ _type_t* _get_type_bystr(const char*);
 void _get_varg_value_bytype(_type_t *, va_list, void *);
 
 /* avoid check whether callback fucntion exist or not*/
-bool_t _type_copy(_type_t*, const void *, const void *);
+bool_t _type_copy(_type_t*, void *, const void *);
 bool_t _type_less(_type_t*, const void *, const void *);
-bool_t _type_init(_type_t*, const void *, const type_node*);
-bool_t _type_destroy(_type_t*, const void*);
+bool_t _type_init(_type_t*, void *, type_node*);
+bool_t _type_destroy(_type_t*, void*);
+
+bool_t _type_greater(_type_t*, const void*, const void*);
+bool_t _type_equal(_type_t*, const void*, const void*);
 
 
 #ifdef __cplusplus

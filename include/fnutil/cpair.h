@@ -16,16 +16,13 @@ typedef struct _tag_pair_t {
     void *ptr[2];
 } pair_t;
 
-#define PAIR_LEFT  0
-#define PAIR_RIGHT 1
-
 #define _PAIR_STNODE(pr)      _CTR_STNODE((pr))
 #define _PAIR_CTNODE(pr, ind) (_PAIR_STNODE((pr))->conttype[(ind)])
 #define _PAIR_CTYPE(pr, ind)  (_PAIR_CTNODE((pr), (ind))->type)
 #define _PAIR_CPTR(pr, ind)   ((pr)->ptr[(ind)])
 
-#define PAIR_LPTR(pr)  ((pr)->ptr[0])
-#define PAIR_RPTR(Pr)  ((pr)->ptr[1])
+#define _PAIR_LPTR(pr)  ((pr)->ptr[0])
+#define _PAIR_RPTR(pr)  ((pr)->ptr[1])
 
 #define new_pair(...) _new_pair(#__VA_ARGS__)
 #define init_pair(pr, ...) _init_pair(pr, #__VA_ARGS__)
@@ -53,13 +50,13 @@ typedef struct _tag_pair_t {
 
 pair_t* _new_pair(const char*);
 int _init_pair(pair_t*, const char*);
-int _pair_init_params(pair_t*, const type_node*);
 
 void destroy_pair(pair_t*);
 void delete_pair(pair_t*);
 
-void pair_assign(pair_t *pr1, pair_t *pr2);
-bool_t pair_less(pair_t *pt1, pair_t *pr2);
+void _pair_init_node(pair_t*, type_node *);
+void pair_assign(pair_t *,const pair_t *);
+bool_t _pair_less(const pair_t *,const pair_t *);
 
 /* private function */
 void* _pair_get(pair_t*, int);

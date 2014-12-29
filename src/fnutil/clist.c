@@ -248,19 +248,31 @@ iterator_t _list_iter_pre(iterator_t iter) {
 }
 
 iterator_t _list_iter_next_n(iterator_t iter, int step) {
-    /* not used, instead by iterator_advance */
+    assert(_iter_is_vaild(iter));
+
     list_t *lst = _ITER_CONTAIN_LIST(iter);
 
     /* optimize , often start from begin */
-    if (iter_equal(iter, list_begin(lst)) && step > list_size(lst)) {
-        return iter_advance(list_end(lst), step - list_size(lst));
+    if (iter_equal(iter, list_begin(lst)) && step > list_size(lst) - step) {
+        step = step - list_size(lst);
     }
-    return iter_advance(iter, step);
+
+    _listnode_t *node = (_listnode_t*)_ITER_LPTR(iter);
+    if (step > 0) {
+        for (; step && node != _LIST_GUARD(lst); node = node->next, step--);
+    } else if (step < 0) {
+        for (; step && node != _LIST_GUARD(lst)->next; node = node->pre, step++);
+    }
+
+    assert(step == 0);
+
+    _ITER_LPTR(iter) = (char*)node;
+    return iter;
 }
 
 iterator_t _list_iter_pre_n(iterator_t iter, int step) {
     /* not used, instead by iterator_advance */
-    return iter_advance(iter, - step);
+    return _list_iter_next_n(iter, -step);
 }
 
 bool_t _list_iter_equal(iterator_t iter0, iterator_t iter1) {

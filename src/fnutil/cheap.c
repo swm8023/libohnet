@@ -90,11 +90,14 @@ void _heap_fix_up(heap_t* heap, int pos) {
     assert(heap != NULL);
     assert(heap_size(heap) > pos);
 
-    while (pos > 0 && heap->less(_HEAP_AT(heap, pos),
+    int lastpos = _HEAP_SIZE(heap);
+    _heap_copy(heap, lastpos, pos);
+    while (pos > 0 && heap->less(_HEAP_AT(heap, lastpos),
         _HEAP_AT(heap, _HEAP_PARENT(pos)))) {
-        _heap_swap(heap, pos, _HEAP_PARENT(pos));
+        _heap_copy(heap, pos, _HEAP_PARENT(pos));
         pos = _HEAP_PARENT(pos);
     }
+    _heap_copy(heap, pos, lastpos);
 }
 
 
@@ -102,16 +105,27 @@ void _heap_fix_down(heap_t* heap, int pos) {
     assert(heap != NULL);
     assert(heap_size(heap) > pos);
 
+    int lastpos = _HEAP_SIZE(heap);
+    _heap_copy(heap, lastpos, pos);
     while (_HEAP_LCHILD(pos) < heap_size(heap)) {
         int npos = _HEAP_LCHILD(pos);
         npos += (npos + 1 < heap_size(heap) &&
             heap->less(_HEAP_AT(heap, npos + 1), _HEAP_AT(heap, npos)) ? 1 : 0);
-        if (heap->less(_HEAP_AT(heap, pos), _HEAP_AT(heap, npos))) {
+        if (heap->less(_HEAP_AT(heap, lastpos), _HEAP_AT(heap, npos))) {
             break;
         }
-        _heap_swap(heap, pos, npos);
+        _heap_copy(heap, pos, npos);
         pos = npos;
     }
+    _heap_copy(heap, pos, lastpos);
+}
+
+void _heap_copy(heap_t* heap, int p1, int p2) {
+    assert(heap != NULL);
+    assert(heap_size(heap) >= p1);
+    assert(heap_size(heap) >= p2);
+
+    _vector_copy_elem(_HEAP_CVEC(heap), p1, p2);
 }
 
 void _heap_swap(heap_t* heap, int p1, int p2) {

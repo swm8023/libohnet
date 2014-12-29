@@ -17,13 +17,16 @@ endif()
 if (DEBUG)
     set(CMAKE_BUILD_TYPE DEBUG)
 	add_definitions(-DDEBUG)
+    add_compile_options(-g -O0)
 else()
     add_definitions(-DNDEBUG)
+    add_compile_options(-O2)
 endif()
 
 if (ENGPROF)
     add_compile_options(-pg)
 endif()
+
 
 include_directories(include)
 

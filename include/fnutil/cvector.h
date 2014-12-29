@@ -70,6 +70,7 @@ iterator_t vector_end(vector_t*);
 
 /* not standard function */
 void _vector_swap_elem(vector_t*, int, int);
+void _vector_copy_elem(vector_t*, int, int);
 
 
 #ifdef __cplusplus

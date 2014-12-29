@@ -255,64 +255,168 @@ info_version	build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	/^char con
 main	build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	/^int main(int argc, char* argv[])$/;"	f
 main	build\CMakeFiles\2.8.12.2\CompilerIdC\CMakeCCompilerId.c	/^void main() {}$/;"	f
 FN_H	include\fn.h	2;"	d
-FNUTIL_CLITERATOR_H	include\fnutil\citerator.h	2;"	d
-_ITER_CHECK_FLAG	include\fnutil\citerator.h	23;"	d
-_check_flag	include\fnutil\citerator.h	/^    char _check_flag;$/;"	m	struct:_tag_iterator_t
-_container	include\fnutil\citerator.h	/^    void *_container;$/;"	m	struct:_tag_iterator_t
-_it_pos	include\fnutil\citerator.h	/^    }_it_pos;$/;"	m	struct:_tag_iterator_t	typeref:union:_tag_iterator_t::__anon1
-_ptr_pos	include\fnutil\citerator.h	/^        char *_ptr_pos; \/* for list and vector *\/$/;"	m	union:_tag_iterator_t::__anon1
+FNUTIL_CHEAP_H	include\fnutil\cheap.h	2;"	d
+_HEAP_AT	include\fnutil\cheap.h	29;"	d
+_HEAP_CTYPE	include\fnutil\cheap.h	21;"	d
+_HEAP_CTYPE_SIZE	include\fnutil\cheap.h	22;"	d
+_HEAP_CVEC	include\fnutil\cheap.h	20;"	d
+_HEAP_LCHILD	include\fnutil\cheap.h	27;"	d
+_HEAP_LESS	include\fnutil\cheap.h	24;"	d
+_HEAP_PARENT	include\fnutil\cheap.h	26;"	d
+_HEAP_RCHILD	include\fnutil\cheap.h	28;"	d
+_HEAP_SIZE	include\fnutil\cheap.h	23;"	d
+_heap_less	include\fnutil\cheap.h	/^typedef bool_t (*_heap_less)(const void*, const void*);$/;"	t
+_tag_heap_t	include\fnutil\cheap.h	/^typedef struct _tag_heap_t {$/;"	s
+container	include\fnutil\cheap.h	/^    vector_t container;$/;"	m	struct:_tag_heap_t
+heap_empty	include\fnutil\cheap.h	43;"	d
+heap_size	include\fnutil\cheap.h	44;"	d
+heap_t	include\fnutil\cheap.h	/^} heap_t;$/;"	t	typeref:struct:_tag_heap_t
+init_heap	include\fnutil\cheap.h	33;"	d
+init_heap_if	include\fnutil\cheap.h	34;"	d
+less	include\fnutil\cheap.h	/^    _heap_less less;$/;"	m	struct:_tag_heap_t
+new_heap	include\fnutil\cheap.h	31;"	d
+new_heap_if	include\fnutil\cheap.h	32;"	d
+FNUTIL_CITERATOR_H	include\fnutil\citerator.h	2;"	d
+_CONTAINER_BASE	include\fnutil\citerator.h	/^    _CONTAINER_BASE;$/;"	m	struct:_tag_container_base
+_CONTAINER_BASE	include\fnutil\citerator.h	15;"	d
+_CTR_CTNODE	include\fnutil\citerator.h	31;"	d
+_CTR_CTYPE	include\fnutil\citerator.h	35;"	d
+_CTR_CTYPE_SIZE	include\fnutil\citerator.h	39;"	d
+_CTR_DESTROY	include\fnutil\citerator.h	50;"	d
+_CTR_INIT	include\fnutil\citerator.h	45;"	d
+_CTR_ITERIF	include\fnutil\citerator.h	43;"	d
+_CTR_LTNODE	include\fnutil\citerator.h	32;"	d
+_CTR_LTYPE	include\fnutil\citerator.h	36;"	d
+_CTR_LTYPE_SIZE	include\fnutil\citerator.h	40;"	d
+_CTR_RTNODE	include\fnutil\citerator.h	33;"	d
+_CTR_RTYPE	include\fnutil\citerator.h	37;"	d
+_CTR_RTYPE_SIZE	include\fnutil\citerator.h	41;"	d
+_CTR_STNODE	include\fnutil\citerator.h	30;"	d
+_CTR_STYPE	include\fnutil\citerator.h	34;"	d
+_CTR_STYPE_SIZE	include\fnutil\citerator.h	38;"	d
+_ITER_CONTAINER	include\fnutil\citerator.h	80;"	d
+_ITER_CONTAINER_BASE	include\fnutil\citerator.h	81;"	d
+_ITER_IF	include\fnutil\citerator.h	83;"	d
+_ITER_INIT	include\fnutil\citerator.h	89;"	d
+_ITER_LPTR	include\fnutil\citerator.h	85;"	d
+_ITER_TYPE	include\fnutil\citerator.h	82;"	d
+_ITER_VPTR	include\fnutil\citerator.h	84;"	d
+_container_base	include\fnutil\citerator.h	/^} _container_base;$/;"	t	typeref:struct:_tag_container_base
+_iterator_if	include\fnutil\citerator.h	/^} _iterator_if;$/;"	t	typeref:struct:_tag_iterator_if
+_tag_container_base	include\fnutil\citerator.h	/^typedef struct _tag_container_base {$/;"	s
+_tag_iterator_if	include\fnutil\citerator.h	/^typedef struct _tag_iterator_if {$/;"	s
 _tag_iterator_t	include\fnutil\citerator.h	/^typedef struct _tag_iterator_t {$/;"	s
-_type	include\fnutil\citerator.h	/^    _type_t *_type;$/;"	m	struct:_tag_iterator_t
+container	include\fnutil\citerator.h	/^    void *container;$/;"	m	struct:_tag_iterator_t
+distance	include\fnutil\citerator.h	/^    int (*distance)(iterator_t, iterator_t);$/;"	m	struct:_tag_iterator_if
+equal	include\fnutil\citerator.h	/^    bool_t (*equal)(iterator_t, iterator_t);$/;"	m	struct:_tag_iterator_if
+get_pointer	include\fnutil\citerator.h	/^    void* (*get_pointer)(iterator_t);$/;"	m	struct:_tag_iterator_if
+get_value	include\fnutil\citerator.h	/^    void (*get_value)(iterator_t, void*);$/;"	m	struct:_tag_iterator_if
+is_vaild	include\fnutil\citerator.h	/^    bool_t (*is_vaild)(iterator_t);$/;"	m	struct:_tag_iterator_if
 iterator_t	include\fnutil\citerator.h	/^} iterator_t;$/;"	t	typeref:struct:_tag_iterator_t
+itpos	include\fnutil\citerator.h	/^    }itpos;$/;"	m	struct:_tag_iterator_t	typeref:union:_tag_iterator_t::__anon1
+next	include\fnutil\citerator.h	/^    iterator_t (*next)(iterator_t);$/;"	m	struct:_tag_iterator_if
+next_n	include\fnutil\citerator.h	/^    iterator_t (*next_n)(iterator_t, int);$/;"	m	struct:_tag_iterator_if
+pre	include\fnutil\citerator.h	/^    iterator_t (*pre)(iterator_t);$/;"	m	struct:_tag_iterator_if
+pre_n	include\fnutil\citerator.h	/^    iterator_t (*pre_n)(iterator_t, int);$/;"	m	struct:_tag_iterator_if
+ptr	include\fnutil\citerator.h	/^        char *ptr; \/* for list and vector *\/$/;"	m	union:_tag_iterator_t::__anon1
+set_value	include\fnutil\citerator.h	/^    void (*set_value)(iterator_t, void*);$/;"	m	struct:_tag_iterator_if
 FNUTIL_CLIST_H	include\fnutil\clist.h	2;"	d
-_LISTNDDE_CONTAINER	include\fnutil\clist.h	35;"	d
-_LISTNDOE_PROTECT_CHAR	include\fnutil\clist.h	33;"	d
-_LISTNODE_DATA	include\fnutil\clist.h	34;"	d
-_LISTNODE_SIZE	include\fnutil\clist.h	36;"	d
+_CONTAINER_BASE	include\fnutil\clist.h	/^    _CONTAINER_BASE;$/;"	m	struct:_tag_list_t
+_ITER_CONTAIN_LIST	include\fnutil\clist.h	36;"	d
+_LISTNDDE_BEGINP	include\fnutil\clist.h	33;"	d
+_LISTNODE_DATAP	include\fnutil\clist.h	32;"	d
+_LISTNODE_SIZE	include\fnutil\clist.h	34;"	d
+_LIST_GUARD	include\fnutil\clist.h	30;"	d
+_LIST_SIZE	include\fnutil\clist.h	29;"	d
+_LIST_TYPE_SIZE	include\fnutil\clist.h	28;"	d
 _listnode_t	include\fnutil\clist.h	/^} _listnode_t;$/;"	t	typeref:struct:_tag_listnode_t
 _tag_list_t	include\fnutil\clist.h	/^typedef struct _tag_list_t {$/;"	s
 _tag_listnode_t	include\fnutil\clist.h	/^typedef struct _tag_listnode_t {$/;"	s
-data	include\fnutil\clist.h	/^    char data[1];$/;"	m	struct:_tag_listnode_t
-head	include\fnutil\clist.h	/^    _listnode_t *head;$/;"	m	struct:_tag_list_t
-list_empty	include\fnutil\clist.h	42;"	d
-list_size	include\fnutil\clist.h	43;"	d
+data	include\fnutil\clist.h	/^    char data[0];$/;"	m	struct:_tag_listnode_t
+guard	include\fnutil\clist.h	/^    _listnode_t *guard;$/;"	m	struct:_tag_list_t
+init_list	include\fnutil\clist.h	39;"	d
+list_empty	include\fnutil\clist.h	47;"	d
+list_size	include\fnutil\clist.h	48;"	d
 list_t	include\fnutil\clist.h	/^} list_t;$/;"	t	typeref:struct:_tag_list_t
 lst	include\fnutil\clist.h	/^    struct _tag_list_t* lst;$/;"	m	struct:_tag_listnode_t	typeref:struct:_tag_listnode_t::_tag_list_t
 new_list	include\fnutil\clist.h	38;"	d
 next	include\fnutil\clist.h	/^    struct _tag_listnode_t* next;$/;"	m	struct:_tag_listnode_t	typeref:struct:_tag_listnode_t::_tag_listnode_t
 pre	include\fnutil\clist.h	/^    struct _tag_listnode_t* pre;$/;"	m	struct:_tag_listnode_t	typeref:struct:_tag_listnode_t::_tag_listnode_t
-protect	include\fnutil\clist.h	/^    char protect;$/;"	m	struct:_tag_listnode_t
 size	include\fnutil\clist.h	/^    size_t size;$/;"	m	struct:_tag_list_t
-tail	include\fnutil\clist.h	/^    _listnode_t *tail;$/;"	m	struct:_tag_list_t
-type	include\fnutil\clist.h	/^    _type_t *type;$/;"	m	struct:_tag_list_t
+FNUTIL_CPAIR_H	include\fnutil\cpair.h	2;"	d
+PAIR_LEFT	include\fnutil\cpair.h	19;"	d
+PAIR_LPTR	include\fnutil\cpair.h	27;"	d
+PAIR_RIGHT	include\fnutil\cpair.h	20;"	d
+PAIR_RPTR	include\fnutil\cpair.h	28;"	d
+_PAIR_CPTR	include\fnutil\cpair.h	25;"	d
+_PAIR_CTNODE	include\fnutil\cpair.h	23;"	d
+_PAIR_CTYPE	include\fnutil\cpair.h	24;"	d
+_PAIR_STNODE	include\fnutil\cpair.h	22;"	d
+_tag_pair_t	include\fnutil\cpair.h	/^typedef struct _tag_pair_t {$/;"	s
+init_pair	include\fnutil\cpair.h	31;"	d
+new_pair	include\fnutil\cpair.h	30;"	d
+pair_first	include\fnutil\cpair.h	51;"	d
+pair_first_value	include\fnutil\cpair.h	45;"	d
+pair_make	include\fnutil\cpair.h	35;"	d
+pair_second	include\fnutil\cpair.h	52;"	d
+pair_second_value	include\fnutil\cpair.h	48;"	d
+pair_t	include\fnutil\cpair.h	/^} pair_t;$/;"	t	typeref:struct:_tag_pair_t
+pair_value	include\fnutil\cpair.h	40;"	d
+ptr	include\fnutil\cpair.h	/^    void *ptr[2];$/;"	m	struct:_tag_pair_t
+tpnode	include\fnutil\cpair.h	/^    type_node *tpnode;$/;"	m	struct:_tag_pair_t
 FNUTIL_CTYPES_H	include\fnutil\ctypes.h	2;"	d
-_TYPEID_CBUILTIN_END	include\fnutil\ctypes.h	51;"	d
-_TYPEID_CBUILTIN_START	include\fnutil\ctypes.h	50;"	d
-_TYPEID_FNBUILTIN_END	include\fnutil\ctypes.h	54;"	d
-_TYPEID_FNBUILTIN_START	include\fnutil\ctypes.h	53;"	d
+_HEAP_TYPE_NAME	include\fnutil\ctypes.h	63;"	d
+_LIST_TYPE_NAME	include\fnutil\ctypes.h	62;"	d
+_MAP_TYPE_NAME	include\fnutil\ctypes.h	65;"	d
+_PAIR_TYPE_NAME	include\fnutil\ctypes.h	66;"	d
+_SET_TYPE_NAME	include\fnutil\ctypes.h	64;"	d
+_TPNODE_LCNODE	include\fnutil\ctypes.h	83;"	d
+_TPNODE_RCNODE	include\fnutil\ctypes.h	84;"	d
+_TPNODE_TYPE	include\fnutil\ctypes.h	82;"	d
+_TYPEID_CBUILTIN_END	include\fnutil\ctypes.h	56;"	d
+_TYPEID_CBUILTIN_START	include\fnutil\ctypes.h	55;"	d
+_TYPEID_FNBUILTIN_END	include\fnutil\ctypes.h	59;"	d
+_TYPEID_FNBUILTIN_START	include\fnutil\ctypes.h	58;"	d
 _TYPE_C	include\fnutil\ctypes.h	/^    _TYPE_C,$/;"	e	enum:_tag_typestyle_t
 _TYPE_FN	include\fnutil\ctypes.h	/^    _TYPE_FN,$/;"	e	enum:_tag_typestyle_t
+_TYPE_FUNC_COPY	include\fnutil\ctypes.h	109;"	d
+_TYPE_FUNC_DESTROY	include\fnutil\ctypes.h	111;"	d
+_TYPE_FUNC_INIT	include\fnutil\ctypes.h	110;"	d
+_TYPE_FUNC_LESS	include\fnutil\ctypes.h	108;"	d
+_TYPE_ID	include\fnutil\ctypes.h	105;"	d
 _TYPE_INVAILD	include\fnutil\ctypes.h	/^    _TYPE_INVAILD = 0,$/;"	e	enum:_tag_typestyle_t
-_TYPE_NAME_SIZE	include\fnutil\ctypes.h	13;"	d
+_TYPE_NAME	include\fnutil\ctypes.h	104;"	d
+_TYPE_NAME_SIZE	include\fnutil\ctypes.h	14;"	d
+_TYPE_NODE_INIT	include\fnutil\ctypes.h	76;"	d
+_TYPE_SIZE	include\fnutil\ctypes.h	106;"	d
+_TYPE_STYLE	include\fnutil\ctypes.h	107;"	d
 _TYPE_USER	include\fnutil\ctypes.h	/^    _TYPE_USER,$/;"	e	enum:_tag_typestyle_t
+_VECT_TYPE_NAME	include\fnutil\ctypes.h	61;"	d
+_tag_type_node	include\fnutil\ctypes.h	/^typedef struct _tag_type_node {$/;"	s
 _tag_type_t	include\fnutil\ctypes.h	/^typedef struct _tag_type_t {$/;"	s
 _tag_type_t_lst	include\fnutil\ctypes.h	/^typedef struct _tag_type_t_lst {$/;"	s
 _tag_typeid_t	include\fnutil\ctypes.h	/^typedef enum _tag_typeid_t {$/;"	g
 _tag_typestyle_t	include\fnutil\ctypes.h	/^typedef enum _tag_typestyle_t {$/;"	g
 _tfunc1	include\fnutil\ctypes.h	/^typedef bool_t (*_tfunc1)(const void*);$/;"	t
 _tfunc2	include\fnutil\ctypes.h	/^typedef bool_t (*_tfunc2)(const void*, const void*);$/;"	t
+_tfunc3	include\fnutil\ctypes.h	/^typedef bool_t (*_tfunc3)(const void*, const type_node*);$/;"	t
 _type_id_t	include\fnutil\ctypes.h	/^} _type_id_t;$/;"	t	typeref:enum:_tag_typeid_t
 _type_lst	include\fnutil\ctypes.h	/^} _type_lst;$/;"	t	typeref:struct:_tag_type_t_lst
+_type_t	include\fnutil\ctypes.h	/^typedef struct _tag_type_t _type_t;$/;"	t	typeref:struct:_tag_type_t
 _type_t	include\fnutil\ctypes.h	/^} _type_t;$/;"	t	typeref:struct:_tag_type_t
 _typeid_double	include\fnutil\ctypes.h	/^    _typeid_double,$/;"	e	enum:_tag_typeid_t
 _typeid_float	include\fnutil\ctypes.h	/^    _typeid_float,$/;"	e	enum:_tag_typeid_t
+_typeid_heap_t	include\fnutil\ctypes.h	/^    _typeid_heap_t,$/;"	e	enum:_tag_typeid_t
 _typeid_int16_t	include\fnutil\ctypes.h	/^    _typeid_int16_t,$/;"	e	enum:_tag_typeid_t
 _typeid_int32_t	include\fnutil\ctypes.h	/^    _typeid_int32_t,$/;"	e	enum:_tag_typeid_t
 _typeid_int64_t	include\fnutil\ctypes.h	/^    _typeid_int64_t,$/;"	e	enum:_tag_typeid_t
 _typeid_int8_t	include\fnutil\ctypes.h	/^    _typeid_int8_t = 0,$/;"	e	enum:_tag_typeid_t
 _typeid_invaild	include\fnutil\ctypes.h	/^    _typeid_invaild,$/;"	e	enum:_tag_typeid_t
 _typeid_list_t	include\fnutil\ctypes.h	/^    _typeid_list_t,$/;"	e	enum:_tag_typeid_t
+_typeid_map_t	include\fnutil\ctypes.h	/^    _typeid_map_t,$/;"	e	enum:_tag_typeid_t
+_typeid_pair_t	include\fnutil\ctypes.h	/^    _typeid_pair_t,$/;"	e	enum:_tag_typeid_t
 _typeid_pointer	include\fnutil\ctypes.h	/^    _typeid_pointer,$/;"	e	enum:_tag_typeid_t
+_typeid_set_t	include\fnutil\ctypes.h	/^    _typeid_set_t,$/;"	e	enum:_tag_typeid_t
 _typeid_uint16_t	include\fnutil\ctypes.h	/^    _typeid_uint16_t,$/;"	e	enum:_tag_typeid_t
 _typeid_uint32_t	include\fnutil\ctypes.h	/^    _typeid_uint32_t,$/;"	e	enum:_tag_typeid_t
 _typeid_uint64_t	include\fnutil\ctypes.h	/^    _typeid_uint64_t,$/;"	e	enum:_tag_typeid_t
@@ -320,29 +424,42 @@ _typeid_uint8_t	include\fnutil\ctypes.h	/^    _typeid_uint8_t,$/;"	e	enum:_tag_t
 _typeid_userdef	include\fnutil\ctypes.h	/^    _typeid_userdef,$/;"	e	enum:_tag_typeid_t
 _typeid_vector_t	include\fnutil\ctypes.h	/^    _typeid_vector_t,$/;"	e	enum:_tag_typeid_t
 _typestyle_t	include\fnutil\ctypes.h	/^} _typestyle_t;$/;"	t	typeref:enum:_tag_typestyle_t
+conttype	include\fnutil\ctypes.h	/^    struct _tag_type_node *conttype[2];$/;"	m	struct:_tag_type_node	typeref:struct:_tag_type_node::_tag_type_node
 copy	include\fnutil\ctypes.h	/^    bool_t (*copy)(const void*, const void*);$/;"	m	struct:_tag_type_t
 destroy	include\fnutil\ctypes.h	/^    bool_t (*destroy)(const void*);$/;"	m	struct:_tag_type_t
-init	include\fnutil\ctypes.h	/^    bool_t (*init)(const void*);$/;"	m	struct:_tag_type_t
+init	include\fnutil\ctypes.h	/^    bool_t (*init)(const void*, const type_node*);$/;"	m	struct:_tag_type_t
 less	include\fnutil\ctypes.h	/^    bool_t (*less)(const void*, const void*);$/;"	m	struct:_tag_type_t
 name	include\fnutil\ctypes.h	/^    const char *name;$/;"	m	struct:_tag_type_t
 pointer	include\fnutil\ctypes.h	/^typedef void* pointer;$/;"	t
 size	include\fnutil\ctypes.h	/^    size_t size;$/;"	m	struct:_tag_type_t
 style	include\fnutil\ctypes.h	/^    _typestyle_t style;$/;"	m	struct:_tag_type_t
+type	include\fnutil\ctypes.h	/^    _type_t *type;$/;"	m	struct:_tag_type_node
 type	include\fnutil\ctypes.h	/^    _type_t type;$/;"	m	struct:_tag_type_t_lst
 type_id	include\fnutil\ctypes.h	/^    _type_id_t type_id;$/;"	m	struct:_tag_type_t
-type_regist	include\fnutil\ctypes.h	82;"	d
-type_unregist	include\fnutil\ctypes.h	84;"	d
+type_node	include\fnutil\ctypes.h	/^} type_node;$/;"	t	typeref:struct:_tag_type_node
+type_regist	include\fnutil\ctypes.h	125;"	d
+type_unregist	include\fnutil\ctypes.h	127;"	d
 FNUTIL_CVECTOR_H	include\fnutil\cvector.h	2;"	d
-VECTOR_INIT_CAPACITY	include\fnutil\cvector.h	12;"	d
+_CONTAINER_BASE	include\fnutil\cvector.h	/^    _CONTAINER_BASE;$/;"	m	struct:_tag_vector_t
+_ITER_CONTAIN_VECT	include\fnutil\cvector.h	31;"	d
+_VECT_CAPACITY	include\fnutil\cvector.h	25;"	d
+_VECT_DATA	include\fnutil\cvector.h	26;"	d
+_VECT_DATA_BEGIN	include\fnutil\cvector.h	28;"	d
+_VECT_DATA_END	include\fnutil\cvector.h	29;"	d
+_VECT_DATA_OFFSET	include\fnutil\cvector.h	27;"	d
+_VECT_INIT_CAPACITY	include\fnutil\cvector.h	13;"	d
+_VECT_SIZE	include\fnutil\cvector.h	24;"	d
+_VECT_TYPE_SIZE	include\fnutil\cvector.h	22;"	d
 _tag_vector_t	include\fnutil\cvector.h	/^typedef struct _tag_vector_t {$/;"	s
-capacity	include\fnutil\cvector.h	/^	int capacity;$/;"	m	struct:_tag_vector_t
-data	include\fnutil\cvector.h	/^	char *data;$/;"	m	struct:_tag_vector_t
-new_vector	include\fnutil\cvector.h	23;"	d
+capacity	include\fnutil\cvector.h	/^	int    capacity;$/;"	m	struct:_tag_vector_t
+data	include\fnutil\cvector.h	/^	char   *data;$/;"	m	struct:_tag_vector_t
+init_vector	include\fnutil\cvector.h	35;"	d
+new_vector	include\fnutil\cvector.h	34;"	d
 size	include\fnutil\cvector.h	/^	size_t size;$/;"	m	struct:_tag_vector_t
-type	include\fnutil\cvector.h	/^    _type_t *type;$/;"	m	struct:_tag_vector_t
-vector_capacity	include\fnutil\cvector.h	29;"	d
-vector_empty	include\fnutil\cvector.h	27;"	d
-vector_size	include\fnutil\cvector.h	28;"	d
+vector_capacity	include\fnutil\cvector.h	45;"	d
+vector_data	include\fnutil\cvector.h	46;"	d
+vector_empty	include\fnutil\cvector.h	43;"	d
+vector_size	include\fnutil\cvector.h	44;"	d
 vector_t	include\fnutil\cvector.h	/^} vector_t;$/;"	t	typeref:struct:_tag_vector_t
 DBG_PARAM	include\fnutil\util.h	17;"	d
 DBG_PARAM	include\fnutil\util.h	21;"	d
@@ -434,11 +551,32 @@ thread_t	include\fnutil\util.h	/^typedef pthread_t thread_t;$/;"	t
 true	include\fnutil\util.h	42;"	d
 unlock	include\fnutil\util.h	/^    int (*unlock)(mutex_t, ...);$/;"	m	struct:_tag_mutex_if
 wait	include\fnutil\util.h	/^    int (*wait)(cond_t, fntime_t);$/;"	m	struct:_tag_cond_if
-main	main.c	/^int main(int argc, char *argv[]) {$/;"	f
+_op_t	main.cpp	/^typedef struct _op_t {long long type; int num;} op_t;$/;"	s	file:
+_op_t_copy_func	main.cpp	/^bool_t _op_t_copy_func(const void* t1, const void* t2) {$/;"	f
+_op_t_less_func	main.cpp	/^bool_t _op_t_less_func(const void *t1, const void* t2) {$/;"	f
+fff	main.cpp	21;"	d	file:
+ggg	main.cpp	20;"	d	file:
+main	main.cpp	/^int main(int argc, char *argv[]) {$/;"	f
+num	main.cpp	/^typedef struct _op_t {long long type; int num;} op_t;$/;"	m	struct:_op_t	file:
+op_t	main.cpp	/^typedef struct _op_t {long long type; int num;} op_t;$/;"	t	typeref:struct:_op_t	file:
+type	main.cpp	/^typedef struct _op_t {long long type; int num;} op_t;$/;"	m	struct:_op_t	file:
+_heap_fix_down	src\fnutil\cheap.c	/^void _heap_fix_down(heap_t* heap, int pos) {$/;"	f
+_heap_fix_up	src\fnutil\cheap.c	/^void _heap_fix_up(heap_t* heap, int pos) {$/;"	f
+_heap_swap	src\fnutil\cheap.c	/^void _heap_swap(heap_t* heap, int p1, int p2) {$/;"	f
+_init_heap	src\fnutil\cheap.c	/^int _init_heap(heap_t* heap, const char* typestr, _heap_less lessfunc) {$/;"	f
+_new_heap	src\fnutil\cheap.c	/^heap_t* _new_heap(const char* typestr, _heap_less lessfunc) {$/;"	f
+delete_heap	src\fnutil\cheap.c	/^void delete_heap(heap_t* heap) {$/;"	f
+destroy_heap	src\fnutil\cheap.c	/^void destroy_heap(heap_t* heap) {$/;"	f
+heap_pop	src\fnutil\cheap.c	/^void heap_pop(heap_t* heap) {$/;"	f
+heap_push	src\fnutil\cheap.c	/^void heap_push(heap_t* heap , ...) {$/;"	f
+heap_top	src\fnutil\cheap.c	/^void* heap_top(heap_t* heap) {$/;"	f
+heap_top_val	src\fnutil\cheap.c	/^void heap_top_val(heap_t* heap, void *pelm) {$/;"	f
+_iter_is_contained	src\fnutil\citerator.c	/^bool_t _iter_is_contained(iterator_t iter, void *ptr) {$/;"	f
+_iter_is_same	src\fnutil\citerator.c	/^bool_t _iter_is_same(iterator_t iter0, iterator_t iter1) {$/;"	f
 _iter_is_vaild	src\fnutil\citerator.c	/^bool_t _iter_is_vaild(iterator_t iter) {$/;"	f
 iter_advance	src\fnutil\citerator.c	/^iterator_t iter_advance(iterator_t iter, int step) {$/;"	f
 iter_distance	src\fnutil\citerator.c	/^int iter_distance(iterator_t iter0, iterator_t iter1) {$/;"	f
-iter_equal	src\fnutil\citerator.c	/^iterator_t iter_equal(iterator_t iter0, iterator_t iter1) {$/;"	f
+iter_equal	src\fnutil\citerator.c	/^bool_t iter_equal(iterator_t iter0, iterator_t iter1) {$/;"	f
 iter_get_pointer	src\fnutil\citerator.c	/^void* iter_get_pointer(iterator_t iter) {$/;"	f
 iter_get_value	src\fnutil\citerator.c	/^void iter_get_value(iterator_t iter, void* pelm) {$/;"	f
 iter_next	src\fnutil\citerator.c	/^iterator_t iter_next(iterator_t iter) {$/;"	f
@@ -446,84 +584,108 @@ iter_next_n	src\fnutil\citerator.c	/^iterator_t iter_next_n(iterator_t iter, int
 iter_pre	src\fnutil\citerator.c	/^iterator_t iter_pre(iterator_t iter) {$/;"	f
 iter_pre_n	src\fnutil\citerator.c	/^iterator_t iter_pre_n(iterator_t iter, int step) {$/;"	f
 iter_set_value	src\fnutil\citerator.c	/^void iter_set_value(iterator_t iter, void* pelm) {$/;"	f
+_default_list_iter_if	src\fnutil\clist.c	/^static _iterator_if _default_list_iter_if = {$/;"	v	file:
+_init_list	src\fnutil\clist.c	/^int _init_list(list_t* lst, const char* typestr) {$/;"	f
+_list_append_node_varg	src\fnutil\clist.c	/^void _list_append_node_varg(list_t *lst, _listnode_t *prenode, va_list arg) {$/;"	f
 _list_erase_node	src\fnutil\clist.c	/^void _list_erase_node(list_t *lst, _listnode_t *node) {$/;"	f
-_listnode_add_after	src\fnutil\clist.c	/^void _listnode_add_after(_listnode_t *node_p, _listnode_t *newnode) {$/;"	f
-_listnode_add_before	src\fnutil\clist.c	/^void _listnode_add_before(_listnode_t *node_p, _listnode_t *newnode) {$/;"	f
+_list_iter_distance	src\fnutil\clist.c	/^int   _list_iter_distance(iterator_t iter0, iterator_t iter1) {$/;"	f
+_list_iter_equal	src\fnutil\clist.c	/^bool_t _list_iter_equal(iterator_t iter0, iterator_t iter1) {$/;"	f
+_list_iter_get_pointer	src\fnutil\clist.c	/^void* _list_iter_get_pointer(iterator_t iter) {$/;"	f
+_list_iter_get_value	src\fnutil\clist.c	/^void  _list_iter_get_value(iterator_t iter, void* elmp) {$/;"	f
+_list_iter_is_vaild	src\fnutil\clist.c	/^bool_t _list_iter_is_vaild(iterator_t iter) {$/;"	f
+_list_iter_next	src\fnutil\clist.c	/^iterator_t _list_iter_next(iterator_t iter) {$/;"	f
+_list_iter_next_n	src\fnutil\clist.c	/^iterator_t _list_iter_next_n(iterator_t iter, int step) {$/;"	f
+_list_iter_pre	src\fnutil\clist.c	/^iterator_t _list_iter_pre(iterator_t iter) {$/;"	f
+_list_iter_pre_n	src\fnutil\clist.c	/^iterator_t _list_iter_pre_n(iterator_t iter, int step) {$/;"	f
+_list_iter_set_value	src\fnutil\clist.c	/^void  _list_iter_set_value(iterator_t iter, void* elmp) {$/;"	f
 _new_list	src\fnutil\clist.c	/^list_t* _new_list(const char* typestr) {$/;"	f
 delete_list	src\fnutil\clist.c	/^void delete_list(list_t* lst) {$/;"	f
+destroy_list	src\fnutil\clist.c	/^void destroy_list(list_t* lst) {$/;"	f
 list_back	src\fnutil\clist.c	/^void* list_back(list_t* lst) {$/;"	f
+list_begin	src\fnutil\clist.c	/^iterator_t list_begin(list_t* lst) {$/;"	f
 list_clear	src\fnutil\clist.c	/^void list_clear(list_t* lst) {$/;"	f
-list_erase	src\fnutil\clist.c	/^void list_erase(list_t *lst, ...) {$/;"	f
-list_erase_pos	src\fnutil\clist.c	/^void list_erase_pos(list_t* lst, int pos) {$/;"	f
+list_end	src\fnutil\clist.c	/^iterator_t list_end(list_t* lst) {$/;"	f
+list_erase	src\fnutil\clist.c	/^iterator_t list_erase(list_t* lst, iterator_t iter) {$/;"	f
 list_front	src\fnutil\clist.c	/^void* list_front(list_t* lst) {$/;"	f
-list_insert	src\fnutil\clist.c	/^void list_insert(list_t *lst, ...) {$/;"	f
-list_insert_pos	src\fnutil\clist.c	/^void list_insert_pos(list_t* lst, int pos, ...) {$/;"	f
-list_merge	src\fnutil\clist.c	/^void list_merge(list_t* lst1, list_t* lst2) {$/;"	f
-list_next	src\fnutil\clist.c	/^void* list_next(list_t* lst, ...) {$/;"	f
+list_insert	src\fnutil\clist.c	/^iterator_t list_insert(list_t* lst, iterator_t iter, ...) {$/;"	f
 list_pop_back	src\fnutil\clist.c	/^void list_pop_back(list_t* lst) {$/;"	f
 list_pop_front	src\fnutil\clist.c	/^void list_pop_front(list_t* lst) {$/;"	f
 list_push_back	src\fnutil\clist.c	/^void list_push_back(list_t* lst, ...) {$/;"	f
 list_push_front	src\fnutil\clist.c	/^void list_push_front(list_t* lst, ...) {$/;"	f
-list_remove	src\fnutil\clist.c	/^void list_remove(list_t* lst, ...) {$/;"	f
-list_reverse	src\fnutil\clist.c	/^void list_reverse(list_t* lst) {$/;"	f
-EPS	src\fnutil\ctypes.c	41;"	d	file:
-_CTYPE_FUNC_COPY	src\fnutil\ctypes.c	43;"	d	file:
-_CTYPE_FUNC_DBLLESS	src\fnutil\ctypes.c	53;"	d	file:
-_CTYPE_FUNC_INTLESS	src\fnutil\ctypes.c	48;"	d	file:
-_CTYPE_PROPERTY_DECLARE	src\fnutil\ctypes.c	58;"	d	file:
+_init_pair	src\fnutil\cpair.c	/^int _init_pair(pair_t *pair, const char* tpstr) {$/;"	f
+_new_pair	src\fnutil\cpair.c	/^pair_t* _new_pair(const char* tpstr) {$/;"	f
+_pair_get	src\fnutil\cpair.c	/^void* _pair_get(pair_t* pair, int index) {$/;"	f
+_pair_get_value	src\fnutil\cpair.c	/^void _pair_get_value(pair_t *pair, int index, void* elmp) {$/;"	f
+_pair_make_elem	src\fnutil\cpair.c	/^void _pair_make_elem(pair_t *pair, int index, ...) {$/;"	f
+delete_pair	src\fnutil\cpair.c	/^void delete_pair(pair_t *pair) {$/;"	f
+destroy_pair	src\fnutil\cpair.c	/^void destroy_pair(pair_t *pair) {$/;"	f
+pair_assign	src\fnutil\cpair.c	/^void pair_assign(pair_t *pair1, pair_t *pair2) {$/;"	f
+pair_less	src\fnutil\cpair.c	/^bool_t pair_less(pair_t *pair1, pair_t *pair2) {$/;"	f
+EPS	src\fnutil\ctypes.c	88;"	d	file:
+_CBUILTIN_TYEP_DECLARE	src\fnutil\ctypes.c	131;"	d	file:
+_FUNC_CBUILTIN_ALL	src\fnutil\ctypes.c	111;"	d	file:
+_FUNC_CBUILTIN_COPY	src\fnutil\ctypes.c	106;"	d	file:
+_FUNC_CBUILTIN_DESTROY	src\fnutil\ctypes.c	96;"	d	file:
+_FUNC_CBUILTIN_INIT	src\fnutil\ctypes.c	90;"	d	file:
+_FUNC_CBUILTIN_LESS	src\fnutil\ctypes.c	101;"	d	file:
+_FUNC_CBUILTIN_VARG_COPY	src\fnutil\ctypes.c	52;"	d	file:
+_FUNC_NAME_CBUILTIN_VARG_COPY	src\fnutil\ctypes.c	51;"	d	file:
+_builtin_type_text_mapping	src\fnutil\ctypes.c	/^_type_text_mapping_t _builtin_type_text_mapping[] = {$/;"	v
 _builtin_types	src\fnutil\ctypes.c	/^_type_t _builtin_types[] = {$/;"	v
-_ctype_text_mapping	src\fnutil\ctypes.c	/^_type_text_mapping_t _ctype_text_mapping[] = {$/;"	v
+_cbuiltin_varg_copy	src\fnutil\ctypes.c	/^typedef void (*_cbuiltin_varg_copy)(void*, va_list);$/;"	t	file:
+_cbuiltin_varg_copy_funcs	src\fnutil\ctypes.c	/^_cbuiltin_varg_copy _cbuiltin_varg_copy_funcs[11] = {$/;"	v
+_free_type_node	src\fnutil\ctypes.c	/^void _free_type_node(type_node *node) {$/;"	f
 _get_type_bystr	src\fnutil\ctypes.c	/^_type_t* _get_type_bystr(const char* typestr) {$/;"	f
-_get_varg_value_bytype	src\fnutil\ctypes.c	/^void _get_varg_value_bytype(_type_t *type, va_list varg, void *p_ret) {$/;"	f
+_get_type_node	src\fnutil\ctypes.c	/^type_node* _get_type_node(_type_t *type, const char* str) {$/;"	f
+_get_type_node_find_part	src\fnutil\ctypes.c	/^char* _get_type_node_find_part(char *strp) {$/;"	f
+_get_type_node_recur	src\fnutil\ctypes.c	/^type_node* _get_type_node_recur(type_node *parent, char* str) {$/;"	f
+_get_varg_value_bytype	src\fnutil\ctypes.c	/^void _get_varg_value_bytype(_type_t *type, va_list varg, void *retp) {$/;"	f
+_pair_t_copy	src\fnutil\ctypes.c	/^static bool_t _pair_t_copy(const void* ptr1, const void* ptr2) {$/;"	f	file:
+_pair_t_destroy	src\fnutil\ctypes.c	/^static bool_t _pair_t_destroy(const void* ptr) {$/;"	f	file:
+_pair_t_init	src\fnutil\ctypes.c	/^static bool_t _pair_t_init(const void* ptr, const type_node* ipr) {$/;"	f	file:
+_pair_t_less	src\fnutil\ctypes.c	/^static bool_t _pair_t_less(const void* ptr1, const void* ptr2) {$/;"	f	file:
 _tag_type_text_mapping	src\fnutil\ctypes.c	/^typedef struct _tag_type_text_mapping {$/;"	s	file:
 _type_copy	src\fnutil\ctypes.c	/^bool_t _type_copy(_type_t* type, const void *t1, const void *t2) {$/;"	f
 _type_destroy	src\fnutil\ctypes.c	/^bool_t _type_destroy(_type_t* type, const void* t1) {$/;"	f
-_type_init	src\fnutil\ctypes.c	/^bool_t _type_init(_type_t* type, const void *t1) {$/;"	f
+_type_equal	src\fnutil\ctypes.c	/^bool_t _type_equal(_type_t* type, const void *t1, const void *t2) {$/;"	f
+_type_great	src\fnutil\ctypes.c	/^bool_t _type_great(_type_t* type, const void *t1, const void *t2) {$/;"	f
+_type_init	src\fnutil\ctypes.c	/^bool_t _type_init(_type_t* type, const void *t1, const type_node* node) {$/;"	f
 _type_less	src\fnutil\ctypes.c	/^bool_t _type_less(_type_t* type, const void *t1, const void *t2) {$/;"	f
+_type_node_debug	src\fnutil\ctypes.c	/^void _type_node_debug(type_node* node, int level) {$/;"	f
 _type_regist	src\fnutil\ctypes.c	/^void _type_regist(const char *name, size_t size,$/;"	f
 _type_text_mapping_t	src\fnutil\ctypes.c	/^} _type_text_mapping_t;$/;"	t	typeref:struct:_tag_type_text_mapping	file:
 _type_unregist	src\fnutil\ctypes.c	/^void _type_unregist(const char *name) {$/;"	f
 _userdef_types	src\fnutil\ctypes.c	/^_type_lst *_userdef_types = NULL;$/;"	v
-int16_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_COPY(int16_t);$/;"	v
-int16_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_INTLESS(int16_t);$/;"	v
-int32_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_COPY(int32_t);$/;"	v
-int32_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_INTLESS(int32_t);$/;"	v
-int64_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_COPY(int64_t);$/;"	v
-int64_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_INTLESS(int64_t);$/;"	v
-int8_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_COPY(int8_t);$/;"	v
-int8_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_INTLESS(int8_t);$/;"	v
 map_text	src\fnutil\ctypes.c	/^    const char *map_text;$/;"	m	struct:_tag_type_text_mapping	file:
 ori_text	src\fnutil\ctypes.c	/^    const char *ori_text;$/;"	m	struct:_tag_type_text_mapping	file:
-pointer	src\fnutil\ctypes.c	/^_CTYPE_FUNC_COPY(pointer);$/;"	v
-pointer	src\fnutil\ctypes.c	/^_CTYPE_FUNC_INTLESS(pointer);$/;"	v
-uint16_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_COPY(uint16_t);$/;"	v
-uint16_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_INTLESS(uint16_t);$/;"	v
-uint32_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_COPY(uint32_t);$/;"	v
-uint32_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_INTLESS(uint32_t);$/;"	v
-uint64_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_COPY(uint64_t);$/;"	v
-uint64_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_INTLESS(uint64_t);$/;"	v
-uint8_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_COPY(uint8_t);$/;"	v
-uint8_t	src\fnutil\ctypes.c	/^_CTYPE_FUNC_INTLESS(uint8_t);$/;"	v
+_default_vector_iter_if	src\fnutil\cvector.c	/^static _iterator_if _default_vector_iter_if = {$/;"	v	file:
+_init_vector	src\fnutil\cvector.c	/^int _init_vector(vector_t* vec, const char* typestr) {$/;"	f
 _new_vector	src\fnutil\cvector.c	/^vector_t* _new_vector(const char* typestr) {$/;"	f
-_vector_iter_advance	src\fnutil\cvector.c	/^iterator_t _vector_iter_advance(iterator_t iter, int step) {}$/;"	f
-_vector_iter_distance	src\fnutil\cvector.c	/^int   _vector_iter_distance(iterator_t iter0, iterator_t iter1) {}$/;"	f
-_vector_iter_equal	src\fnutil\cvector.c	/^iterator_t _vector_iter_equal(iterator_t iter0, iterator_t iter1) {}$/;"	f
-_vector_iter_get_pointer	src\fnutil\cvector.c	/^void* _vector_iter_get_pointer(iterator_t iter) {}$/;"	f
-_vector_iter_get_value	src\fnutil\cvector.c	/^void  _vector_iter_get_value(iterator_t iter, void* elmp) {}$/;"	f
-_vector_iter_next	src\fnutil\cvector.c	/^iterator_t _vector_iter_next(iterator_t iter) {}$/;"	f
-_vector_iter_next_n	src\fnutil\cvector.c	/^iterator_t _vector_iter_next_n(iterator_t iter, int step) {}$/;"	f
-_vector_iter_pre	src\fnutil\cvector.c	/^iterator_t _vector_iter_pre(iterator_t iter) {}$/;"	f
-_vector_iter_pre_n	src\fnutil\cvector.c	/^iterator_t _vector_iter_pre_n(iterator_t iter, int step) {}$/;"	f
-_vector_iter_set_value	src\fnutil\cvector.c	/^void  _vector_iter_set_value(iterator_t iter, void* elmp) {}/;"	f
+_vector_erase	src\fnutil\cvector.c	/^void _vector_erase(vector_t *vec, char *eraptr) {$/;"	f
+_vector_insert_varg	src\fnutil\cvector.c	/^void _vector_insert_varg(vector_t *vec, char* insptr, va_list arg) {$/;"	f
+_vector_iter_distance	src\fnutil\cvector.c	/^int _vector_iter_distance(iterator_t iter0, iterator_t iter1) {$/;"	f
+_vector_iter_equal	src\fnutil\cvector.c	/^bool_t _vector_iter_equal(iterator_t iter0, iterator_t iter1) {$/;"	f
+_vector_iter_get_pointer	src\fnutil\cvector.c	/^void* _vector_iter_get_pointer(iterator_t iter) {$/;"	f
+_vector_iter_get_value	src\fnutil\cvector.c	/^void  _vector_iter_get_value(iterator_t iter, void* elmp) {$/;"	f
+_vector_iter_is_vaild	src\fnutil\cvector.c	/^bool_t _vector_iter_is_vaild(iterator_t iter) {$/;"	f
+_vector_iter_next	src\fnutil\cvector.c	/^iterator_t _vector_iter_next(iterator_t iter) {$/;"	f
+_vector_iter_next_n	src\fnutil\cvector.c	/^iterator_t _vector_iter_next_n(iterator_t iter, int step) {$/;"	f
+_vector_iter_pre	src\fnutil\cvector.c	/^iterator_t _vector_iter_pre(iterator_t iter) {$/;"	f
+_vector_iter_pre_n	src\fnutil\cvector.c	/^iterator_t _vector_iter_pre_n(iterator_t iter, int step) {$/;"	f
+_vector_iter_set_value	src\fnutil\cvector.c	/^void  _vector_iter_set_value(iterator_t iter, void* elmp) {$/;"	f
+_vector_swap_elem	src\fnutil\cvector.c	/^void _vector_swap_elem(vector_t* vec, int p1, int p2) {$/;"	f
 delete_vector	src\fnutil\cvector.c	/^void delete_vector(vector_t* vec) {$/;"	f
+destroy_vector	src\fnutil\cvector.c	/^void destroy_vector(vector_t* vec) {$/;"	f
 vector_at	src\fnutil\cvector.c	/^void* vector_at(vector_t* vec, int pos) {$/;"	f
 vector_back	src\fnutil\cvector.c	/^void* vector_back(vector_t* vec) {$/;"	f
 vector_begin	src\fnutil\cvector.c	/^iterator_t vector_begin(vector_t* vec) {$/;"	f
 vector_clear	src\fnutil\cvector.c	/^void vector_clear(vector_t* vec) {$/;"	f
 vector_end	src\fnutil\cvector.c	/^iterator_t vector_end(vector_t* vec) {$/;"	f
-vector_erase	src\fnutil\cvector.c	/^void vector_erase(vector_t* vec, int pos) {$/;"	f
+vector_erase	src\fnutil\cvector.c	/^iterator_t vector_erase(vector_t* vec, iterator_t iter) {$/;"	f
+vector_erase_pos	src\fnutil\cvector.c	/^void vector_erase_pos(vector_t* vec, int pos) {$/;"	f
 vector_front	src\fnutil\cvector.c	/^void* vector_front(vector_t* vec) {$/;"	f
-vector_insert	src\fnutil\cvector.c	/^void vector_insert(vector_t* vec, int pos, ...) {$/;"	f
+vector_insert	src\fnutil\cvector.c	/^iterator_t vector_insert(vector_t* vec, iterator_t iter, ...) {$/;"	f
+vector_insert_pos	src\fnutil\cvector.c	/^void vector_insert_pos(vector_t* vec, int pos, ...) {$/;"	f
 vector_pop_back	src\fnutil\cvector.c	/^void vector_pop_back(vector_t* vec) {$/;"	f
 vector_push_back	src\fnutil\cvector.c	/^void vector_push_back(vector_t* vec, ...) {$/;"	f
 vector_reserve	src\fnutil\cvector.c	/^void vector_reserve(vector_t* vec, size_t newcap) {$/;"	f
@@ -586,19 +748,30 @@ timespec_to_fntime	src\fnutil\util.c	/^fntime_t timespec_to_fntime(struct timesp
 timeval_to_fntime	src\fnutil\util.c	/^fntime_t timeval_to_fntime(struct timeval *valtime) {$/;"	f
 update_catime	src\fnutil\util.c	/^fntime_t update_catime() {$/;"	f
 using_cond_if	src\fnutil\util.c	/^cond_if *using_cond_if = &_default_cond_if;$/;"	v
+START_TEST	tests\cheap_check.cpp	/^START_TEST(test_heaop_userdef)$/;"	f
+START_TEST	tests\cheap_check.cpp	/^START_TEST(test_heapeffec)$/;"	f
+START_TEST	tests\cheap_check.cpp	/^START_TEST(test_heapop_cbuiltin)$/;"	f
+START_TEST	tests\cheap_check.cpp	/^START_TEST(test_newheap)$/;"	f
+cheap_test_suite	tests\cheap_check.cpp	/^Suite *cheap_test_suite() {$/;"	f
+START_TEST	tests\clist_check.cpp	/^START_TEST(test_listeffec)$/;"	f
 START_TEST	tests\clist_check.cpp	/^START_TEST(test_listop_cbuiltin)$/;"	f
+START_TEST	tests\clist_check.cpp	/^START_TEST(test_listop_iterator)$/;"	f
 START_TEST	tests\clist_check.cpp	/^START_TEST(test_listop_userdef)$/;"	f
 START_TEST	tests\clist_check.cpp	/^START_TEST(test_newlist)$/;"	f
-START_TEST	tests\clist_check.cpp	/^START_TEST(test_vectoreffec)$/;"	f
 clist_test_suite	tests\clist_check.cpp	/^Suite *clist_test_suite() {$/;"	f
 START_TEST	tests\ctypes_check.c	/^START_TEST(test_gettype)$/;"	f
+START_TEST	tests\ctypes_check.c	/^START_TEST(test_gettypenode)$/;"	f
 START_TEST	tests\ctypes_check.c	/^START_TEST(test_getvargvalue)$/;"	f
 ctypes_test_suite	tests\ctypes_check.c	/^Suite *ctypes_test_suite() {$/;"	f
 test_getvargvalue_func	tests\ctypes_check.c	/^void test_getvargvalue_func(_type_t *type, ...) {$/;"	f
 START_TEST	tests\cvector_check.cpp	/^START_TEST(test_newvector)$/;"	f
+START_TEST	tests\cvector_check.cpp	/^START_TEST(test_vector_iterator)$/;"	f
+START_TEST	tests\cvector_check.cpp	/^START_TEST(test_vector_swapelem) {$/;"	f
 START_TEST	tests\cvector_check.cpp	/^START_TEST(test_vectoreffec)$/;"	f
 START_TEST	tests\cvector_check.cpp	/^START_TEST(test_vectorop_cbuiltin)$/;"	f
+_int_t_greater_func	tests\cvector_check.cpp	/^bool_t _int_t_greater_func(const void *t1, const void *t2) {$/;"	f
 _op_t_copy_func	tests\cvector_check.cpp	/^bool_t _op_t_copy_func(const void* t1, const void* t2) {$/;"	f
+_op_t_less_func	tests\cvector_check.cpp	/^bool_t _op_t_less_func(const void *t1, const void* t2) {$/;"	f
 cvector_test_suite	tests\cvector_check.cpp	/^Suite *cvector_test_suite() {$/;"	f
 FNTEST_H	tests\fntest.h	2;"	d
 _op_t	tests\fntest.h	/^typedef struct _op_t {long long type; int num;} op_t;$/;"	s

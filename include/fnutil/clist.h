@@ -16,7 +16,7 @@ typedef struct _tag_listnode_t {
     struct _tag_list_t* lst;
     struct _tag_listnode_t* pre;
     struct _tag_listnode_t* next;
-    char _data[0];
+    char data[0];
 } _listnode_t;
 
 typedef struct _tag_list_t {
@@ -29,8 +29,8 @@ typedef struct _tag_list_t {
 #define _LIST_SIZE(lst) ((lst)->size)
 #define _LIST_GUARD(lst) ((lst)->guard)
 
-#define _LISTNODE_DATAP(node_p) ((char*)(node_p) + offsetof(_listnode_t, _data))
-#define _LISTNDDE_BEGINP(data_p) (container_of((data_p), _listnode_t, _data))
+#define _LISTNODE_DATAP(node_p) ((char*)(node_p) + offsetof(_listnode_t, data))
+#define _LISTNDDE_BEGINP(data_p) (container_of((data_p), _listnode_t, data))
 #define _LISTNODE_SIZE(type) (sizeof(_listnode_t) + (type)->size)
 
 #define _ITER_CONTAIN_LIST(iter) ((list_t*)((iter).container))

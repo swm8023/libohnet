@@ -8,7 +8,7 @@
 #include <vector>
 using namespace std;
 
-bool_t _op_t_copy_func(const void* t1, const void* t2) {
+bool_t _op_t_copy_func(void* t1, const void* t2) {
     memcpy((void*)t1, (void*)t2, sizeof(op_t));
     return true;
 }
@@ -91,7 +91,7 @@ END_TEST
 START_TEST(test_vectoreffec)
 {
     srand((unsigned)time(NULL));
-    int num = 1000000, i;
+    int num = 200000, i;
 
     op_t *op;
     op = (op_t*)fn_malloc(num * sizeof(op_t));
