@@ -62,7 +62,7 @@ int _init_vector(vector_t* vec, const char* typestr) {
 
     return _VECT_DATA(vec) ? 0 : -1;
 }
-#include <stdio.h>
+
 void vector_reserve(vector_t* vec, size_t newcap) {
     assert (vec != NULL);
 

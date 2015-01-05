@@ -15,6 +15,8 @@ int main(int argc, char* argv[]) {
     srunner_add_suite(sr, clist_test_suite());
     srunner_add_suite(sr, cheap_test_suite());
     srunner_add_suite(sr, cpair_test_suite());
+    srunner_add_suite(sr, cset_test_suite());
+    srunner_add_suite(sr, cmap_test_suite());
 
 
     srunner_set_fork_status(sr, CK_NOFORK);

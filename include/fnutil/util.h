@@ -17,6 +17,7 @@ extern "C" {
 #define DBG_PARAM , __FILE__, __LINE__
 #define DBG_PDEF , const char* const file, int line
 #define IFIND_USED 1
+#define printd(fmt, ...) printf("%s:%d "fmt"\n" DBG_PARAM, __VA_ARGS__)
 #else
 #define DBG_PARAM
 #define DBG_PDEF
@@ -37,6 +38,12 @@ typedef struct _tag_source_location {
 #define min(x, y) ((x) < (y) ? (x) : (y))
 int max_int(int x, int y);
 int min_int(int x, int y);
+
+#define fnswap(a, b) do {   \
+    typeof(a) _temp_ = (a); \
+    (a) = (b);              \
+    (b) = _temp_;           \
+} while(0)
 
 typedef size_t bool_t;
 #define true   1

@@ -11,6 +11,8 @@ extern "C" {
 #include <fnutil/clist.h>
 #include <fnutil/cheap.h>
 #include <fnutil/cpair.h>
+#include <fnutil/cset.h>
+#include <fnutil/cmap.h>
 
 #ifdef __cplusplus
 }

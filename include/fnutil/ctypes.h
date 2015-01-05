@@ -154,3 +154,4 @@ bool_t _type_equal(_type_t*, const void*, const void*);
 }
 #endif
 #endif  //FNUTIL_CTYPES_H
+

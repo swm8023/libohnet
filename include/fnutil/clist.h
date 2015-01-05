@@ -13,7 +13,7 @@ extern "C" {
 struct _tag_list_t;
 
 typedef struct _tag_listnode_t {
-    struct _tag_list_t* lst;
+    //struct _tag_list_t* lst;
     struct _tag_listnode_t* pre;
     struct _tag_listnode_t* next;
     char data[0];

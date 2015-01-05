@@ -24,8 +24,8 @@ typedef struct _tag_pair_t {
 #define _PAIR_LPTR(pr)  ((pr)->ptr[0])
 #define _PAIR_RPTR(pr)  ((pr)->ptr[1])
 
-#define new_pair(...) _new_pair(#__VA_ARGS__)
-#define init_pair(pr, ...) _init_pair(pr, #__VA_ARGS__)
+#define pair_new(...) _pair_new(#__VA_ARGS__)
+#define pair_init(pr, ...) _pair_init(pr, #__VA_ARGS__)
 
 
 
@@ -48,15 +48,18 @@ typedef struct _tag_pair_t {
 #define pair_first(pr)  _pair_get(pr, 0)
 #define pair_second(pr) _pair_get(pr, 1)
 
-pair_t* _new_pair(const char*);
-int _init_pair(pair_t*, const char*);
+pair_t* _pair_new(const char*);
+int _pair_init(pair_t*, const char*);
 
-void destroy_pair(pair_t*);
-void delete_pair(pair_t*);
+void pair_destroy(pair_t*);
+void pair_delete(pair_t*);
 
-void _pair_init_node(pair_t*, type_node *);
+void _pair_destroy_aux(pair_t*);
+void _pair_init_aux(pair_t*, type_node *);
+
 void pair_assign(pair_t *,const pair_t *);
 bool_t _pair_less(const pair_t *,const pair_t *);
+bool_t _pair_key_less(const pair_t *, const pair_t *);
 
 /* private function */
 void* _pair_get(pair_t*, int);

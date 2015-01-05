@@ -8,7 +8,7 @@
 
 START_TEST(test_pairfunc)
 {
-    pair_t *pair = new_pair(int, double);
+    pair_t *pair = pair_new(int, double);
     int vali;
     double vald;
     assert(_PAIR_STNODE(pair)->type == _get_type_bystr(_PAIR_TYPE_NAME));
@@ -28,7 +28,7 @@ START_TEST(test_pairfunc)
     ck_assert_int_eq(vali, 2);
     ck_assert_int_eq(vald == 4.5, true);
 
-    pair_t *pair2 = new_pair(int, double);
+    pair_t *pair2 = pair_new(int, double);
     pair_assign(pair2, pair);
     ck_assert_int_eq(*(int*)pair_first(pair2), 2);
     ck_assert_int_eq(*(double*)pair_second(pair2) == 4.5, true);
@@ -49,8 +49,8 @@ START_TEST(test_pairfunc)
     pair_make(pair2, 2, 4.3);
     ck_assert_int_eq(_pair_less(pair, pair2), false);
 
-    delete_pair(pair);
-    delete_pair(pair2);
+    pair_delete(pair);
+    pair_delete(pair2);
 
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }

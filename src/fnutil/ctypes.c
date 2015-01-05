@@ -7,6 +7,8 @@
 #include <fnutil/clist.h>
 #include <fnutil/cheap.h>
 #include <fnutil/cpair.h>
+#include <fnutil/cset.h>
+#include <fnutil/cmap.h>
 
 /* for mappint type name to standard name*/
 typedef struct _tag_type_text_mapping {
@@ -43,6 +45,12 @@ _type_text_mapping_t _builtin_type_text_mapping[] = {
     {"pair_t",             "pair_t"},
 
 
+    {"vector",             "vector_t"},
+    {"list",               "list_t"},
+    {"heap",               "heap_t"},
+    {"set",                "set_t"},
+    {"map",                "map_t"},
+    {"pair",               "pair_t"},
     /* end with NULL*/
     {NULL, NULL},
 };
@@ -143,12 +151,12 @@ static bool_t _pair_t_less(const void* ptr1, const void* ptr2) {
 }
 
 static bool_t _pair_t_init(void* ptr, type_node* ipr) {
-    _pair_init_node((pair_t*)ptr, ipr);
+    _pair_init_aux((pair_t*)ptr, ipr);
     return true;
 }
 
 static bool_t _pair_t_destroy(void* ptr) {
-    destroy_pair((pair_t*)ptr);
+    _pair_destroy_aux((pair_t*)ptr);
     return true;
 }
 
@@ -171,8 +179,8 @@ _type_t _builtin_types[] = {
     {"list_t",   _typeid_list_t,   sizeof(list_t),   _TYPE_FN, NULL, NULL, NULL, NULL},
     {"heap_t",   _typeid_heap_t,   sizeof(heap_t),   _TYPE_FN, NULL, NULL, NULL, NULL},
     {"pair_t",   _typeid_pair_t,   sizeof(pair_t),   _TYPE_FN, _pair_t_copy, _pair_t_less, _pair_t_init, _pair_t_destroy},
-    //{"set_t",    _typeid_set_t,    sizeof(set_t),    _TYPE_FN, NULL, NULL, NULL, NULL},
-    //{"map_t",    _typeid_map_t,    sizeof(map_t),    _TYPE_FN, NULL, NULL, NULL, NULL},
+    {"set_t",    _typeid_set_t,    sizeof(set_t),    _TYPE_FN, NULL, NULL, NULL, NULL},
+    {"map_t",    _typeid_map_t,    sizeof(map_t),    _TYPE_FN, NULL, NULL, NULL, NULL},
 
     /* End with NULL*/
     {NULL, _typeid_invaild, 0, 0, NULL, NULL, NULL, NULL},

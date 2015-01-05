@@ -61,7 +61,7 @@ int _init_list(list_t* lst, const char* typestr) {
         fn_free(lst);
         return -1;
     }
-    lst->guard->lst  = lst;
+    //lst->guard->lst  = lst;
     lst->guard->pre  = lst->guard;
     lst->guard->next = lst->guard;
 }
@@ -148,7 +148,7 @@ void _list_append_node_varg(list_t *lst, _listnode_t *prenode, va_list arg) {
     RETURN_IF_NULL(newnode);
 
     /* set attrbution of newnode*/
-    newnode->lst = lst;
+    //newnode->lst = lst;
     newnode->pre  = prenode;
     newnode->next = prenode->next;
     newnode->next->pre = newnode;
@@ -340,10 +340,11 @@ bool_t _list_iter_is_vaild(iterator_t iter) {
     /* !! can't call iter_is_vaild here*/
     list_t *lst = _ITER_CONTAIN_LIST(iter);
     _listnode_t *node;
-    for (node = lst->guard->next;
-        node != lst->guard; node = node->next) {
-        if ((char*)node == _ITER_LPTR(iter))
-            return true;
-    }
-    return node == lst->guard ? true : false;
+    return true;
+    // for (node = lst->guard->next;
+    //     node != lst->guard; node = node->next) {
+    //     if ((char*)node == _ITER_LPTR(iter))
+    //         return true;
+    // }
+    // return node == lst->guard ? true : false;
 }

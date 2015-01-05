@@ -2,29 +2,43 @@
 #include <fnutil/cpair.h>
 
 
-pair_t* _new_pair(const char* tpstr) {
+pair_t* _pair_new(const char* tpstr) {
     assert(tpstr != NULL);
 
     pair_t *pair = (pair_t*)fn_malloc(sizeof(pair_t));
     RETURN_IF_NULL(pair, NULL);
 
-    if (_init_pair(pair, tpstr) < 0) {
+    if (_pair_init(pair, tpstr) < 0) {
         fn_free(pair);
         return NULL;
     }
     return pair;
 }
 
-int _init_pair(pair_t *pair, const char* tpstr) {
+int _pair_init(pair_t *pair, const char* tpstr) {
     assert(pair   != NULL);
     assert(tpstr != NULL);
 
-    _pair_init_node(pair, _get_type_node(_get_type_bystr(_PAIR_TYPE_NAME), tpstr));
+    _pair_init_aux(pair, _get_type_node(_get_type_bystr(_PAIR_TYPE_NAME), tpstr));
 
     return 0;
 }
 
-void destroy_pair(pair_t *pair) {
+void pair_destroy(pair_t *pair) {
+    assert(pair != NULL);
+
+    _pair_destroy_aux(pair);
+    _free_type_node(pair->tpnode);
+}
+
+void pair_delete(pair_t *pair) {
+    assert(pair != NULL);
+
+    pair_destroy(pair);
+    fn_free(pair);
+}
+
+void _pair_destroy_aux(pair_t *pair) {
     assert(pair != NULL);
 
     int i;
@@ -37,17 +51,9 @@ void destroy_pair(pair_t *pair) {
             fn_free(_PAIR_CPTR(pair, i));
         }
     }
-    _free_type_node(pair->tpnode);
 }
 
-void delete_pair(pair_t *pair) {
-    assert(pair != NULL);
-
-    destroy_pair(pair);
-    fn_free(pair);
-}
-
-void _pair_init_node(pair_t *pair, type_node *node) {
+void _pair_init_aux(pair_t *pair, type_node *node) {
     assert(pair != NULL);
     assert(_TPNODE_TYPE(node) == _get_type_bystr(_PAIR_TYPE_NAME));
     assert(_TPNODE_LCNODE(node) != NULL);
@@ -85,6 +91,15 @@ bool_t _pair_less(const pair_t *pair1, const pair_t *pair2) {
            _type_equal(_PAIR_CTYPE(pair1, 0), _PAIR_LPTR(pair1), _PAIR_LPTR(pair2)) &&
            _type_less(_PAIR_CTYPE(pair1, 1), _PAIR_RPTR(pair1), _PAIR_RPTR(pair2)));
 
+}
+
+bool_t _pair_key_less(const pair_t *pair1, const pair_t *pair2) {
+    assert(pair1 != NULL);
+    assert(pair2 != NULL);
+    assert(_PAIR_CTYPE(pair1, 0) == _PAIR_CTYPE(pair2, 0));
+    assert(_PAIR_CTYPE(pair1, 1) == _PAIR_CTYPE(pair2, 1));
+
+    return _type_less(_PAIR_CTYPE(pair1, 0), _PAIR_LPTR(pair1), _PAIR_LPTR(pair2));
 }
 
 

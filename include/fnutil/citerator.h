@@ -12,13 +12,14 @@ extern "C" {
 /* container base class */
 struct _tag_iterator_if;
 
-#define _CONTAINER_BASE                 \
+#define _CONTAINER_BASE                \
     type_node* tpnode;                 \
     struct _tag_iterator_if *iter_if;  \
 
 
 typedef struct _tag_container_base {
     _CONTAINER_BASE;
+    char data[0];
 } _container_base;
 
 /* marcos to access main attributes of container
@@ -83,7 +84,8 @@ typedef struct _tag_iterator_if {
 #define _ITER_IF(iter)             _CTR_ITERIF(_ITER_CONTAINER_BASE(iter))
 #define _ITER_VPTR(iter)           ((iter).itpos.ptr)
 #define _ITER_LPTR(iter)           ((iter).itpos.ptr)
-
+#define _ITER_RBTPTR(iter)         ((iter).itpos.ptr)
+#define _ITER_RBTREE(iter)         ((_rbtree_t*)(_ITER_CONTAINER_BASE(iter)->data))
 
 /* public functions */
 #define _ITER_INIT(iter) memset(&(iter), 0, sizeof(iter))
