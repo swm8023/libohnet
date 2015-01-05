@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
-#include <fnutil/cvector.h>
+#include <fnstl/cvector.h>
 
 
 /* vector iterator interface */

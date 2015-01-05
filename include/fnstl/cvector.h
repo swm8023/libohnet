@@ -5,9 +5,9 @@
 extern "C" {
 #endif
 
-#include <fnutil/ctypes.h>
-#include <fnutil/util.h>
-#include <fnutil/citerator.h>
+#include <fnstl/ctypes.h>
+#include <fnstl/util.h>
+#include <fnstl/citerator.h>
 
 
 #define _VECT_INIT_CAPACITY 16

@@ -234,7 +234,7 @@ Suite *cheap_test_suite() {
     tcase_add_test(tc_core, test_heapop_cbuiltin);
     tcase_add_test(tc_core, test_heaop_userdef);
 #ifdef ENEFFTEST
-    //tcase_add_test(tc_core, test_heapeffec);
+    tcase_add_test(tc_core, test_heapeffec);
 #endif
     suite_add_tcase(s, tc_core);
     return s;

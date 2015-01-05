@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include <fnutil/citerator.h>
-#include <fnutil/ctypes.h>
-#include <fnutil/cvector.h>
+#include <fnstl/citerator.h>
+#include <fnstl/ctypes.h>
+#include <fnstl/cvector.h>
 
 
 /* public functions */

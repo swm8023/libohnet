@@ -2,13 +2,13 @@
 #include <float.h>
 #include <assert.h>
 
-#include <fnutil/ctypes.h>
-#include <fnutil/cvector.h>
-#include <fnutil/clist.h>
-#include <fnutil/cheap.h>
-#include <fnutil/cpair.h>
-#include <fnutil/cset.h>
-#include <fnutil/cmap.h>
+#include <fnstl/ctypes.h>
+#include <fnstl/cvector.h>
+#include <fnstl/clist.h>
+#include <fnstl/cheap.h>
+#include <fnstl/cpair.h>
+#include <fnstl/cset.h>
+#include <fnstl/cmap.h>
 
 /* for mappint type name to standard name*/
 typedef struct _tag_type_text_mapping {

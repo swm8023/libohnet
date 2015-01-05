@@ -4,18 +4,18 @@
 #include <check.h>
 #include "fntest.h"
 
-#include <set>
+#include <map>
 using namespace std;
 
 
 
-START_TEST(test_setcreate_cbuiltin)
+START_TEST(test_mapcreate_cbuiltin)
 {
     int i;
     map_t *st0 = map_new(int, int);
     pair_t *pr = pair_new(int, int);
-    ck_assert_int_eq(set_size(st0),  0);
-    ck_assert_int_eq(set_empty(st0), 1);
+    ck_assert_int_eq(map_size(st0),  0);
+    ck_assert_int_eq(map_empty(st0), 1);
 
     int arr0[][2] = {{3, 1}, {1, 2}, {2, 3}, {0, 4}, {7, 5}, {6, 9} ,{8, 4}, {5, 6}, {9, 7}, {4, 2}};
     int arr1[][2] = {{6, 8}, {5, 6}, {9, 7}, {2, 9}, {8, 4}, {3, 1}, {0, 4}, {7, 5}, {4, 2}, {1, 3}};
@@ -30,7 +30,7 @@ START_TEST(test_setcreate_cbuiltin)
     map_put(st0, 2, 9);
     pair_make(pr, 6, 8);
     map_insert(st0, pr);
-    ck_assert_int_eq(set_size(st0), 10);
+    ck_assert_int_eq(map_size(st0), 10);
 
     // /* test count */
     for (i = 0;i < 10; i++) {
@@ -88,30 +88,30 @@ START_TEST(test_setcreate_cbuiltin)
 }
 END_TEST
 
-START_TEST(test_setrandomdata)
+START_TEST(test_maprandomdata)
 {
-    set_t *st = set_new(int);
+    map_t *st = map_new(int, int);
     int i, j;
     srand((unsigned)time(NULL));
 
     /* check insert */
     for (i = 0; i < 100; i++) {
-        ck_assert_int_eq(set_size(st),  0);
-        ck_assert_int_eq(set_empty(st), 1);
+        ck_assert_int_eq(map_size(st),  0);
+        ck_assert_int_eq(map_empty(st), 1);
         for (j = 0; j < 1000; j++) {
             if (rand() % 3) {
-                set_insert(st, rand() % 10000);
+                map_put(st, rand() % 10000, rand() % 10000);
             } else {
-                set_erase_val(st, rand() % 10000);
+                map_erase(st, map_find(st, rand() % 10000));
             }
         }
-        set_clear(st);
+        map_clear(st);
     }
-    set_delete(st);
+    map_delete(st);
 }
 END_TEST
 
-START_TEST(test_seteffect)
+START_TEST(test_mapeffect)
 {
     int i;
     int num = 5000000, base = 1000;
@@ -124,45 +124,45 @@ START_TEST(test_seteffect)
     for (i = base; i < num; i ++) {
         x[i] = x[i-base] + base;
     }
-    // test c set insert
+    // test c map insert
     fntime_t delta = get_time();
-    set_t *st0 = set_new(int);
+    map_t *st0 = map_new(int, int);
     for (int i = 0; i < num; i++) {
-        set_insert(st0, x[i]);
+        map_put(st0, x[i], x[i]);
     }
     delta = get_time() - delta;
-    printf("C Set Insert Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
+    printf("C Map Insert Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
 
-    // test stl set insert
+    // test stl map insert
     delta = get_time();
-    set<int> st;
+    map<int, int> st;
     for (int i = 0; i < num; i++) {
-        st.insert(x[i]);
+        st.insert(std::pair<int,int>(x[i], x[i]));
     }
     delta = get_time() - delta;
-    printf("STL Set Insert Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
+    printf("STL Map Insert Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
 
-    ck_assert_int_eq(set_size(st0), st.size());
-    ck_assert_int_eq(set_size(st0), num);
+    ck_assert_int_eq(map_size(st0), st.size());
+    ck_assert_int_eq(map_size(st0), num);
     ck_assert_int_eq(st.size(), num);
 
-    // test c set erase
+    // test c map erase
     delta = get_time();
     for (int i = 0; i < num; i++) {
-        set_erase_val(st0, x[i]);
+        map_erase_val(st0, x[i]);
     }
     delta = get_time() - delta;
-    printf("C Set erase Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
+    printf("C Map erase Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
 
-    // test c++ set erase
+    // test c++ map erase
     delta = get_time();
     for (int i = 0; i < num; i++) {
         st.erase(x[i]);
     }
     delta = get_time() - delta;
-    printf("STL Set erase Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
+    printf("STL Map erase Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
 
-    ck_assert_int_eq(set_size(st0), 0);
+    ck_assert_int_eq(map_size(st0), 0);
     ck_assert_int_eq(st.size(), 0);
 }
 END_TEST
@@ -173,10 +173,10 @@ Suite *cmap_test_suite() {
     TCase *tc_core = tcase_create("TC core");
     tcase_set_timeout(tc_core, 10);
 
-    tcase_add_test(tc_core, test_setcreate_cbuiltin);
-    tcase_add_test(tc_core, test_setrandomdata);
+    tcase_add_test(tc_core, test_mapcreate_cbuiltin);
+    tcase_add_test(tc_core, test_maprandomdata);
 #ifdef ENEFFTEST
-    tcase_add_test(tc_core, test_seteffect);
+    tcase_add_test(tc_core, test_mapeffect);
 #endif
     suite_add_tcase(s, tc_core);
     return s;

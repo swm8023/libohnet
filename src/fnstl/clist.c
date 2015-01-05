@@ -1,6 +1,6 @@
 #include <stddef.h>
 #include <assert.h>
-#include <fnutil/clist.h>
+#include <fnstl/clist.h>
 
 /* list  iterator interface */
 

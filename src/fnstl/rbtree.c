@@ -2,8 +2,8 @@
 #include <stddef.h>
 #include <assert.h>
 
-#include <fnutil/rbtree.h>
-#include <fnutil/cpair.h>
+#include <fnstl/rbtree.h>
+#include <fnstl/cpair.h>
 
 /* rbtree iteartor interface */
 static iterator_t _rbt_iter_next(iterator_t);
@@ -212,6 +212,7 @@ int _rbt_erase_val(_rbtree_t* rbt, const void* val) {
 int _rbt_erase_node(_rbtree_t *rbt, _rbtreenode_t* node) {
     assert(rbt  != NULL);
     assert(node != NULL);
+    assert(node != _RBT_GUARD(rbt));
 
     /* case 1: l[z] and r[z] is NULL, delete directly
      * case 2: one of l[z] and r[z] is NULL, connect p[z] and the not NULL node

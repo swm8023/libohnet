@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     }
     printf("\n");
 
-    *(double*)map_at(mp, 2) = 17.0;
+    map_put(mp, 2, 17.0);
     map_erase(mp, map_find(mp, 10));
 
     it = map_begin(mp);

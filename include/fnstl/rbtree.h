@@ -7,9 +7,9 @@ extern "C" {
 
 #include <stddef.h>
 
-#include <fnutil/ctypes.h>
-#include <fnutil/util.h>
-#include <fnutil/citerator.h>
+#include <fnstl/ctypes.h>
+#include <fnstl/util.h>
+#include <fnstl/citerator.h>
 
 
 

@@ -1,5 +1,5 @@
 
-file(GLOB libfnsrc fnutil/*.c)
+file(GLOB libfnsrc fnstl/*.c fnutil/*.c)
 
 add_library(fastnet STATIC ${libfnsrc})
 add_library(fastnet_so SHARED ${libfnsrc})

@@ -9,7 +9,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdarg.h>
 
-#include <fnutil/util.h>
+#include <fnstl/util.h>
 
 #define _TYPE_NAME_SIZE 255
 

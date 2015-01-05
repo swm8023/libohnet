@@ -5,10 +5,10 @@
 extern "C" {
 #endif
 
-#include <fnutil/ctypes.h>
-#include <fnutil/util.h>
-#include <fnutil/citerator.h>
-#include <fnutil/rbtree.h>
+#include <fnstl/ctypes.h>
+#include <fnstl/util.h>
+#include <fnstl/citerator.h>
+#include <fnstl/rbtree.h>
 
 
 typedef struct _tag_set_t {

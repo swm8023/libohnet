@@ -1,5 +1,5 @@
 #include <assert.h>
-#include <fnutil/cheap.h>
+#include <fnstl/cheap.h>
 
 heap_t* _new_heap(const char* typestr, _heap_less lessfunc) {
     assert(typestr != NULL);

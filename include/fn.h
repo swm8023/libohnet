@@ -5,14 +5,14 @@
 extern "C" {
 #endif
 
-#include <fnutil/util.h>
-#include <fnutil/citerator.h>
-#include <fnutil/cvector.h>
-#include <fnutil/clist.h>
-#include <fnutil/cheap.h>
-#include <fnutil/cpair.h>
-#include <fnutil/cset.h>
-#include <fnutil/cmap.h>
+#include <fnstl/util.h>
+#include <fnstl/citerator.h>
+#include <fnstl/cvector.h>
+#include <fnstl/clist.h>
+#include <fnstl/cheap.h>
+#include <fnstl/cpair.h>
+#include <fnstl/cset.h>
+#include <fnstl/cmap.h>
 
 #ifdef __cplusplus
 }

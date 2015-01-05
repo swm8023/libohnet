@@ -5,10 +5,10 @@
 extern "C" {
 #endif
 
-#include <fnutil/util.h>
-#include <fnutil/ctypes.h>
-#include <fnutil/cvector.h>
-#include <fnutil/citerator.h>
+#include <fnstl/util.h>
+#include <fnstl/ctypes.h>
+#include <fnstl/cvector.h>
+#include <fnstl/citerator.h>
 
 
 typedef bool_t (*_heap_less)(const void*, const void*);

@@ -6,7 +6,7 @@
 #include <pthread.h>
 
 #include <sys/select.h>
-#include <fnutil/util.h>
+#include <fnstl/util.h>
 
 
 /* === normal function === */

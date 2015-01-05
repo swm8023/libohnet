@@ -5,11 +5,11 @@
 extern "C" {
 #endif
 
-#include <fnutil/ctypes.h>
-#include <fnutil/util.h>
-#include <fnutil/citerator.h>
-#include <fnutil/rbtree.h>
-#include <fnutil/cpair.h>
+#include <fnstl/ctypes.h>
+#include <fnstl/util.h>
+#include <fnstl/citerator.h>
+#include <fnstl/rbtree.h>
+#include <fnstl/cpair.h>
 
 
 typedef struct _tag_map_t {
@@ -59,6 +59,7 @@ int map_count(map_t*, ...);
 void map_clear(map_t*);
 
 void map_erase(map_t*, iterator_t);
+void map_erase_val(map_t*, ...);
 
 void* map_at(map_t*, ...);
 int map_at_val(map_t*, void*, ...);

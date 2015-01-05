@@ -1,6 +1,6 @@
 #include <assert.h>
-#include <fnutil/cmap.h>
-#include <fnutil/cpair.h>
+#include <fnstl/cmap.h>
+#include <fnstl/cpair.h>
 
 
 map_t* _map_new(const char* typestr) {
@@ -140,7 +140,20 @@ void map_erase(map_t* mp, iterator_t iter) {
     assert(mp != NULL);
     assert(_iter_is_vaild(iter));
 
+    RETURN_IF(iter_equal(iter, map_end(mp)));
+
     _rbt_erase_node(_MAP_RBT(mp), (_rbtreenode_t*)_ITER_RBTPTR(iter));
+}
+
+void map_erase_val(map_t* mp, ...) {
+    assert(mp != NULL);
+
+    va_list arg;
+    va_start(arg, mp);
+    _get_varg_value_bytype(_MAP_LTYPE(mp), arg, _MAP_LTMPMEM(mp));
+    va_end(arg);
+
+    _rbt_erase_val(_MAP_RBT(mp), _MAP_TMPMEM(mp));
 }
 
 iterator_t map_insert(map_t* mp, pair_t* pr) {

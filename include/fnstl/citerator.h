@@ -5,8 +5,8 @@
 extern "C" {
 #endif
 
-#include <fnutil/ctypes.h>
-#include <fnutil/util.h>
+#include <fnstl/ctypes.h>
+#include <fnstl/util.h>
 
 
 /* container base class */
