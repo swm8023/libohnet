@@ -21,39 +21,11 @@ bool_t _op_t_less_func(const void *t1, const void* t2) {
 #define fff(x) ggg(x)
 int main(int argc, char *argv[]) {
 
-    map_t *mp = map_new(int, double);
+    void *a = _default_cmem_if->alloc(20);
+    void *b = _default_cmem_if->alloc(90);
+    _default_cmem_if->free(a);
+    _default_cmem_if->free(b);
+    printf("%d\n", get_memory_leak_num());
 
-    map_put(mp, 1, 3.4);
-    map_put(mp, 2, 5.77);
-    map_put(mp, 10, 4.6);
-    map_put(mp, -1, 23.0);
-    map_put(mp, 5, -4.3);
-    map_put(mp, 3, 5.0);
-
-    iterator_t it = map_begin(mp);
-    while (!iter_equal(it, map_end(mp))) {
-        pair_t *pr = (pair_t*)iter_get_pointer(it);
-        printf("{%d, %f}\n", *(int*)pair_first(pr), *(double*)pair_second(pr));
-
-        it = iter_next(it);
-    }
-    printf("\n");
-
-    map_put(mp, 2, 17.0);
-    map_erase(mp, map_find(mp, 10));
-
-    it = map_begin(mp);
-    while (!iter_equal(it, map_end(mp))) {
-        pair_t *pr = (pair_t*)iter_get_pointer(it);
-        printf("{%d, %f}\n", *(int*)pair_first(pr), *(double*)pair_second(pr));
-
-        it = iter_next(it);
-    }
-
-    map_delete(mp);
-
-
-
-    fn_memdbg_print_rec();
 	return 0;
 }

@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 2.8.9)
 project(libfastnet C CXX)
 
 set(ENTEST true)
-set(ENEFFTEST true)
-set(DEBUG  false)
+set(ENEFFTEST false)
+set(DEBUG  true)
 set(ENGPROF false)
 
 

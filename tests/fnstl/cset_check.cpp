@@ -234,6 +234,7 @@ START_TEST(test_seteffect)
 
     ck_assert_int_eq(set_size(st0), 0);
     ck_assert_int_eq(st.size(), 0);
+    free(x);
 }
 END_TEST
 

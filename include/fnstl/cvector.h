@@ -31,14 +31,14 @@ typedef struct _tag_vector_t {
 #define _ITER_CONTAIN_VECT(iter)    ((vector_t*)((iter).container))
 
 /* public functions */
-#define new_vector(x) _new_vector(#x)
-#define init_vector(vec, x) _init_vector((vec), #x)
+#define vector_new(x) _vector_new(#x)
+#define vector_init(vec, x) _vector_init((vec), #x)
 
-vector_t* _new_vector(const char* typestr);
-int _init_vector(vector_t*, const char*);
+vector_t* _vector_new(const char* typestr);
+int _vector_init(vector_t*, const char*);
 
-void destroy_vector(vector_t*);
-void delete_vector(vector_t*);
+void vector_destroy(vector_t*);
+void vector_delete(vector_t*);
 
 #define vector_empty(vec)       (_VECT_SIZE(vec) == 0)
 #define vector_size(vec)        _VECT_SIZE(vec)

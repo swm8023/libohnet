@@ -12,6 +12,7 @@ extern "C" {
 
 
 typedef struct _tag_pair_t {
+    _alloc_if *allocif;
     type_node *tpnode;
     void *ptr[2];
 } pair_t;

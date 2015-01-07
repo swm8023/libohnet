@@ -42,10 +42,11 @@ bool_t _rbt_key_less(const void* ptr1, const void* ptr2) {
 
 
 /* rbtree opertaion functions */
-void _rbt_init(_rbtree_t *rbt, type_node *tpnode, bool_t comp_val, bool_t is_multi) {
+void _rbt_init(_rbtree_t *rbt, type_node *tpnode, bool_t comp_val, bool_t is_multi, _alloc_if *aif) {
     assert(tpnode != NULL);
     assert(rbt    != NULL);
 
+    rbt->allocif      = aif;
     rbt->tpnode       = tpnode;
     rbt->is_multi     = is_multi;
     rbt->size         = 0;
@@ -438,7 +439,7 @@ _rbtreenode_t* _rbt_new_treenode(_rbtree_t* rbt, const void *valp) {
 
     /* alloc and init new node, the init color is RED*/
     _type_t *type = _RBT_TYPE(rbt);
-    _rbtreenode_t *newnode = (_rbtreenode_t*)fn_malloc(_RBTNODE_SIZE(type));
+    _rbtreenode_t *newnode = (_rbtreenode_t*)_RBT_ALLOC(rbt, _RBTNODE_SIZE(type));
     memset(newnode, 0, sizeof(_rbtreenode_t));
     _type_init(type, _RBTNODE_DATAP(newnode), rbt->tpnode);
     _type_copy(type, _RBTNODE_DATAP(newnode), valp);
@@ -452,7 +453,7 @@ void _rbt_free_treenode(_rbtree_t *rbt, _rbtreenode_t* delnode) {
     /* alloc and init new node, the init color is RED*/
     _type_t *type = _RBT_TYPE(rbt);
     _type_destroy(type, _RBTNODE_DATAP(delnode));
-    fn_free(delnode);
+    _RBT_FREE(rbt, delnode);
 }
 
 void _rbt_tree_print_dfs(_rbtreenode_t *node, int depth) {

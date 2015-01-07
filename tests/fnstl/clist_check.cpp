@@ -13,12 +13,12 @@ START_TEST(test_newlist)
 {
     list_t *lst;
 
-    lst = new_list(int);
+    lst = list_new(int);
     ck_assert_str_eq(_CTR_CTYPE(lst)->name, "int32_t");
-    delete_list(lst);
-    lst = new_list(vector_t<int>);
+    list_delete(lst);
+    lst = list_new(vector_t<int>);
     ck_assert_str_eq(_CTR_CTYPE(lst)->name, "vector_t");
-    delete_list(lst);
+    list_delete(lst);
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
@@ -27,7 +27,7 @@ START_TEST(test_listop_cbuiltin)
 {
     list_t *lst;
     int i = 0;
-    lst = new_list(int);
+    lst = list_new(int);
     ck_assert_int_eq(list_empty(lst), true);
     ck_assert_int_eq(list_size(lst), 0);
 
@@ -67,7 +67,7 @@ START_TEST(test_listop_cbuiltin)
     ck_assert_int_eq(list_empty(lst), true);
     ck_assert_int_eq(list_size(lst), 0);
 
-    delete_list(lst);
+    list_delete(lst);
 
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
@@ -78,7 +78,7 @@ START_TEST(test_listop_userdef)
     type_regist(op_t, _op_t_copy_func, NULL, NULL, NULL);
     list_t *lst;
     int i = 0;
-    lst = new_list(op_t);
+    lst = list_new(op_t);
     iterator_t it;
     ck_assert_int_eq(list_empty(lst), true);
     ck_assert_int_eq(list_size(lst), 0);
@@ -123,10 +123,10 @@ START_TEST(test_listop_userdef)
     ck_assert_int_eq(list_empty(lst), true);
     ck_assert_int_eq(list_size(lst), 0);
 
-    delete_list(lst);
+    list_delete(lst);
 
 
-    list_t *lstp = new_list(op_t*);
+    list_t *lstp = list_new(op_t*);
 
     for (i = 0; i < 10; i++) {
         op_t *op = (op_t*)fn_malloc(sizeof(op_t));
@@ -149,7 +149,7 @@ START_TEST(test_listop_userdef)
     }
 
 
-    delete_list(lstp);
+    list_delete(lstp);
 
     type_unregist(op_t);
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
@@ -189,7 +189,7 @@ START_TEST(test_listeffec)
     type_regist(op_t, _op_t_copy_func, NULL, NULL, NULL);
     // test c list
     fntime_t delta = get_time();
-    list_t *lst = new_list(op_t);
+    list_t *lst = list_new(op_t);
 
     int ssize = 0;
     for (i = 0; i < num; i++) {
@@ -233,6 +233,8 @@ START_TEST(test_listeffec)
     delta = get_time() - delta;
     printf("STL List Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
 
+    fn_free(op);
+
     // check
     ck_assert_int_eq(list_size(lst), slist.size());
     iterator_t it0 = list_begin(lst);
@@ -245,8 +247,10 @@ START_TEST(test_listeffec)
         ck_assert_int_eq(opp.num, (*it1).num);
     }
 
+    list_delete(lst);
+
     // read time
-    list_t *lst2 = new_list(int);
+    list_t *lst2 = list_new(int);
     list<int> sslist;
     list<int>::iterator it2;
 
@@ -283,6 +287,11 @@ START_TEST(test_listeffec)
     // for (i = 0 ;i < pnum; i++) {
     //     ck_assert_int_eq(xnums[i], ynums[i]);
     // }
+    list_delete(lst2);
+
+    fn_free(pnums);
+    fn_free(xnums);
+    fn_free(ynums);
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
@@ -291,7 +300,7 @@ START_TEST(test_listop_iterator)
 {
     list_t *lst;
     int i = 0;
-    lst = new_list(int);
+    lst = list_new(int);
     ck_assert_int_eq(list_empty(lst), true);
 
     for (i = 0;i < 10; i++) {
@@ -367,7 +376,7 @@ START_TEST(test_listop_iterator)
         ind++;
     }
 
-    delete_list(lst);
+    list_delete(lst);
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST

@@ -9,6 +9,7 @@
 #include <fnstl/cpair.h>
 #include <fnstl/cset.h>
 #include <fnstl/cmap.h>
+#include <fnstl/cstring.h>
 
 /* for mappint type name to standard name*/
 typedef struct _tag_type_text_mapping {
@@ -43,14 +44,16 @@ _type_text_mapping_t _builtin_type_text_mapping[] = {
     {"set_t",              "set_t"},
     {"map_t",              "map_t"},
     {"pair_t",             "pair_t"},
+    {"string_t",           "string_t"},
 
 
-    {"vector",             "vector_t"},
-    {"list",               "list_t"},
-    {"heap",               "heap_t"},
-    {"set",                "set_t"},
-    {"map",                "map_t"},
-    {"pair",               "pair_t"},
+    // {"vector",             "vector_t"},
+    // {"list",               "list_t"},
+    // {"heap",               "heap_t"},
+    // {"set",                "set_t"},
+    // {"map",                "map_t"},
+    // {"pair",               "pair_t"},
+    // {"string",             "string_t"},
     /* end with NULL*/
     {NULL, NULL},
 };
@@ -160,6 +163,26 @@ static bool_t _pair_t_destroy(void* ptr) {
     return true;
 }
 
+/* string */
+static bool_t _string_t_copy(void* ptr1, const void* ptr2) {
+    string_assign((string_t*)ptr1, (string_t*)ptr2);
+    return true;
+}
+
+static bool_t _string_t_less(const void* ptr1, const void* ptr2) {
+    return string_less((string_t*)ptr1, (string_t*)ptr2);
+}
+
+static bool_t _string_t_init(void* ptr, type_node* ipr) {
+    _string_init((string_t*)ptr, 0);
+    return true;
+}
+
+static bool_t _string_t_destroy(void* ptr) {
+    string_destroy((string_t*)ptr);
+    return true;
+}
+
 _type_t _builtin_types[] = {
     /* C-Builtin types */
     _CBUILTIN_TYEP_DECLARE(int8_t),
@@ -181,6 +204,7 @@ _type_t _builtin_types[] = {
     {"pair_t",   _typeid_pair_t,   sizeof(pair_t),   _TYPE_FN, _pair_t_copy, _pair_t_less, _pair_t_init, _pair_t_destroy},
     {"set_t",    _typeid_set_t,    sizeof(set_t),    _TYPE_FN, NULL, NULL, NULL, NULL},
     {"map_t",    _typeid_map_t,    sizeof(map_t),    _TYPE_FN, NULL, NULL, NULL, NULL},
+    {"string_t", _typeid_string_t, sizeof(string_t), _TYPE_FN, _string_t_copy, _string_t_less, _string_t_init, _string_t_destroy},
 
     /* End with NULL*/
     {NULL, _typeid_invaild, 0, 0, NULL, NULL, NULL, NULL},

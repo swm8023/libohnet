@@ -13,7 +13,6 @@ extern "C" {
 struct _tag_list_t;
 
 typedef struct _tag_listnode_t {
-    //struct _tag_list_t* lst;
     struct _tag_listnode_t* pre;
     struct _tag_listnode_t* next;
     char data[0];
@@ -35,14 +34,14 @@ typedef struct _tag_list_t {
 
 #define _ITER_CONTAIN_LIST(iter) ((list_t*)((iter).container))
 
-#define new_list(x) _new_list(#x)
-#define init_list(lst, x) _init_list((lst), #x)
+#define list_new(x) _list_new(#x)
+#define list_init(lst, x) _list_init((lst), #x)
 
-list_t* _new_list(const char* typestr);
-int _init_list(list_t*, const char*);
+list_t* _list_new(const char* typestr);
+int _list_init(list_t*, const char*);
 
-void destroy_list(list_t*);
-void delete_list(list_t*);
+void list_destroy(list_t*);
+void list_delete(list_t*);
 
 #define list_empty(lst) (_LIST_SIZE(lst) == 0)
 #define list_size(lst)  _LIST_SIZE(lst)

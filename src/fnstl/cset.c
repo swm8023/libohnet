@@ -24,15 +24,17 @@ int _set_init(set_t* st, const char* typestr) {
     /* init container base attr*/
     _CTR_INIT(st, _get_type_bystr(_SET_TYPE_NAME), typestr, &_default_rbt_iter_if);
 
+    _CTR_MEMIF(st) =  _default_cmem_if;
+
     /* check if type rigth*/
     assert(_CTR_STYPE(st) != NULL);
     assert(_CTR_CTYPE(st) != NULL);
 
     /* set attr */
-    _rbt_init(_SET_RBT(st), _CTR_CTNODE(st), true, false);
+    _rbt_init(_SET_RBT(st), _CTR_CTNODE(st), true, false, _CTR_MEMIF(st));
 
     /* alloc temp memory */
-    st->tmp_memory = fn_malloc(_CTR_CTYPE_SIZE(st));
+    st->tmp_memory = _CTR_ALLOC(st, _CTR_CTYPE_SIZE(st));
     _type_init(_CTR_CTYPE(st), st->tmp_memory, _CTR_CTNODE(st));
     return 0;
 }
@@ -41,7 +43,7 @@ void set_clear(set_t* st) {
     assert(st != NULL);
 
     _rbt_destroy(_SET_RBT(st));
-    _rbt_init(_SET_RBT(st), _CTR_CTNODE(st), true, false);
+    _rbt_init(_SET_RBT(st), _CTR_CTNODE(st), true, false, _CTR_MEMIF(st));
 }
 
 void set_destroy(set_t* st) {
@@ -58,7 +60,7 @@ void _set_destroy_aux(set_t* st) {
 
     /* free temp memory */
     _type_destroy(_CTR_CTYPE(st), _SET_TMPMEM(st));
-    fn_free(_SET_TMPMEM(st));
+    _CTR_FREE(st, _SET_TMPMEM(st));
 }
 
 void set_delete(set_t* st) {

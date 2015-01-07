@@ -18,6 +18,9 @@ Suite *cheap_test_suite();
 Suite *cpair_test_suite();
 Suite *cset_test_suite();
 Suite *cmap_test_suite();
+Suite *ctypes_test_suite();
+Suite *util_test_suite();
+Suite *cstring_test_suite();
 
 
 typedef struct _op_t {long long type; int num;} op_t;

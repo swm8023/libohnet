@@ -27,12 +27,12 @@ START_TEST(test_newvector)
 {
     vector_t *vec;
 
-    vec = new_vector(int);
+    vec = vector_new(int);
     ck_assert_str_eq(_CTR_CTYPE(vec)->name, "int32_t");
-    delete_vector(vec);
-    vec = new_vector(vector_t<int>);
+    vector_delete(vec);
+    vec = vector_new(vector_t<int>);
     ck_assert_str_eq(_CTR_CTYPE(vec)->name, "vector_t");
-    delete_vector(vec);
+    vector_delete(vec);
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
 END_TEST
@@ -41,7 +41,7 @@ START_TEST(test_vectorop_cbuiltin)
 {
     vector_t *vec;
     int i = 0;
-    vec = new_vector(int);
+    vec = vector_new(int);
     ck_assert_int_eq(vector_empty(vec), true);
 
     int aft_erase[] =  {-1, 1, 2, 4, 5, 6, 7, 8, 9};
@@ -78,7 +78,7 @@ START_TEST(test_vectorop_cbuiltin)
     ck_assert_int_eq(vector_size(vec), 0);
     ck_assert_int_eq(vector_empty(vec), true);
 
-    delete_vector(vec);
+    vector_delete(vec);
 
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
@@ -114,7 +114,7 @@ START_TEST(test_vectoreffec)
     type_regist(op_t, _op_t_copy_func, NULL, NULL, NULL);
     // test c vector
     fntime_t delta = get_time();
-    vector_t *vec = new_vector(op_t);
+    vector_t *vec = vector_new(op_t);
 
     for (i = 0; i < num; i++) {
         switch(op[i].type) {
@@ -151,7 +151,12 @@ START_TEST(test_vectoreffec)
         ck_assert_int_eq(opp.num, svec[i].num);
     }
 
+    fn_free(op);
+    vector_delete(vec);
+    
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
+
+    
 }
 END_TEST
 
@@ -159,7 +164,7 @@ START_TEST(test_vector_iterator)
 {
     vector_t *vec;
     int i = 0;
-    vec = new_vector(int);
+    vec = vector_new(int);
     ck_assert_int_eq(vector_empty(vec), true);
 
     for (i = 0;i < 10; i++) {
@@ -225,7 +230,7 @@ START_TEST(test_vector_iterator)
         ck_assert_int_eq(*(int*)vector_at(vec, i), aft_insert[i]);
     }
 
-    delete_vector(vec);
+    vector_delete(vec);
 
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
@@ -235,7 +240,7 @@ END_TEST
 START_TEST(test_vector_swapelem) {
     int i;
     vector_t *vec;
-    vec = new_vector(int);
+    vec = vector_new(int);
     int arr0[] = {1, 2, 3, 4 , 5, 6, 7, 8, 9, 10};
     int arr1[] = {1, 2, 5, 4, 3, 6, 7, 10, 9, 8};
     for (i = 0; i < 10; i++) vector_push_back(vec, arr0[i]);
@@ -245,11 +250,11 @@ START_TEST(test_vector_swapelem) {
     for (i = 0; i < 10; i++) {
         ck_assert_int_eq(arr1[i], *(int*)vector_at(vec, i));
     }
-    delete_vector(vec);
+    vector_delete(vec);
 
 
     type_regist(op_t, _op_t_copy_func, NULL, NULL, NULL);
-    vec = new_vector(op_t);
+    vec = vector_new(op_t);
     op_t op0[] = {{1, 2}, {3, 4}, {5, 6}};
     op_t op1[] = {{5, 6}, {3, 4}, {1, 2}};
     for (i = 0;i < 3; i++) {
@@ -262,7 +267,7 @@ START_TEST(test_vector_swapelem) {
         ck_assert_int_eq(op->type, op1[i].type);
         ck_assert_int_eq(op->num, op1[i].num);
     }
-    delete_vector(vec);
+    vector_delete(vec);
 
     type_unregist(op_t);
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);

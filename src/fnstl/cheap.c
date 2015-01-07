@@ -1,20 +1,20 @@
 #include <assert.h>
 #include <fnstl/cheap.h>
 
-heap_t* _new_heap(const char* typestr, _heap_less lessfunc) {
+heap_t* _heap_new(const char* typestr, _heap_less lessfunc) {
     assert(typestr != NULL);
 
     heap_t* heap = (heap_t*)fn_malloc(sizeof(heap_t));
     RETURN_IF_NULL(heap, NULL);
 
-    if (_init_heap(heap, typestr, lessfunc) < 0) {
+    if (_heap_init(heap, typestr, lessfunc) < 0) {
         fn_free(heap);
         return NULL;
     }
     return heap;
 }
 
-int _init_heap(heap_t* heap, const char* typestr, _heap_less lessfunc) {
+int _heap_init(heap_t* heap, const char* typestr, _heap_less lessfunc) {
     assert(heap != NULL);
     assert(typestr != NULL);
     assert(_get_type_bystr(typestr) != NULL);
@@ -26,21 +26,21 @@ int _init_heap(heap_t* heap, const char* typestr, _heap_less lessfunc) {
     RETURN_IF_NULL(heap->less, -1);
 
     /* init contain vector */
-    RETURN_IF(_init_vector(_HEAP_CVEC(heap), typestr) < 0, -1);
+    RETURN_IF(_vector_init(_HEAP_CVEC(heap), typestr) < 0, -1);
 
     return 0;
 }
 
-void destroy_heap(heap_t* heap) {
+void heap_destroy(heap_t* heap) {
     assert(heap != NULL);
 
-    destroy_vector(_HEAP_CVEC(heap));
+    vector_destroy(_HEAP_CVEC(heap));
 }
 
-void delete_heap(heap_t* heap) {
+void heap_delete(heap_t* heap) {
     assert(heap != NULL);
 
-    destroy_vector(_HEAP_CVEC(heap));
+    vector_destroy(_HEAP_CVEC(heap));
     fn_free(heap);
 }
 

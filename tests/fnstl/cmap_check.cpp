@@ -127,8 +127,10 @@ START_TEST(test_mapeffect)
     // test c map insert
     fntime_t delta = get_time();
     map_t *st0 = map_new(int, int);
+    pair_t *pr = pair_new(int, int);
     for (int i = 0; i < num; i++) {
-        map_put(st0, x[i], x[i]);
+        pair_make(pr, x[i], x[i]);
+        map_insert(st0, pr);
     }
     delta = get_time() - delta;
     printf("C Map Insert Runtime: %d.%ds\n", (int)delta/US_ONE_SEC, (int)delta%US_ONE_SEC);
@@ -164,6 +166,8 @@ START_TEST(test_mapeffect)
 
     ck_assert_int_eq(map_size(st0), 0);
     ck_assert_int_eq(st.size(), 0);
+
+    free(x);
 }
 END_TEST
 

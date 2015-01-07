@@ -13,6 +13,8 @@ extern "C" {
 #include <pthread.h>
 #include <assert.h>
 
+#include <fnstl/memory.h>
+
 #ifdef DEBUG
 #define DBG_PARAM , __FILE__, __LINE__
 #define DBG_PDEF , const char* const file, int line
@@ -34,8 +36,8 @@ typedef struct _tag_source_location {
 #define STRING(x) #x
 #define DEFINE_TEST(x) STRING(x)
 
-#define max(x, y) ((x) > (y) ? (x) : (y))
-#define min(x, y) ((x) < (y) ? (x) : (y))
+// #define max(x, y) ((x) > (y) ? (x) : (y))
+// #define min(x, y) ((x) < (y) ? (x) : (y))
 int max_int(int x, int y);
 int min_int(int x, int y);
 
@@ -44,6 +46,18 @@ int min_int(int x, int y);
     (a) = (b);              \
     (b) = _temp_;           \
 } while(0)
+
+#define min(a, b) ({        \
+    typeof(a) _ta = (a);    \
+    typeof(b) _tb = (b);    \
+    _ta < _tb ? _ta : _tb;  \
+})
+
+#define max(a, b) ({        \
+    typeof(a) _ta = (a);    \
+    typeof(b) _tb = (b);    \
+    _ta > _tb ? _ta : _tb;  \
+})
 
 typedef size_t bool_t;
 #define true   1
@@ -190,6 +204,9 @@ extern mem_if *global_mem_if;
 #define fn_realloc(p, size)  global_mem_if->alloc((p),(size),0 DBG_PARAM)
 #define fn_calloc(num, size) global_mem_if->alloc(NULL,(num)*(size),1 DBG_PARAM)
 #define fn_free(p)           global_mem_if->free((p) DBG_PARAM)
+
+// #define fn_malloc(size) _cmem_if->alloc(size)
+// #define fn_free(ptr)    _cmem_if->free(ptr)
 
 #define MEM_ALIGNSIZE sizeof(size_t)
 

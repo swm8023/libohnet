@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <fn.h>
 #include <assert.h>
-#include "fntest.h"
 
 #include <check.h>
 
-Suite *ctypes_test_suite();
-Suite *util_test_suite();
+#include "fnstl/fntest.h"
+
+
 
 int main(int argc, char* argv[]) {
 	SRunner *sr = srunner_create (util_test_suite());
@@ -17,6 +17,7 @@ int main(int argc, char* argv[]) {
     srunner_add_suite(sr, cpair_test_suite());
     srunner_add_suite(sr, cset_test_suite());
     srunner_add_suite(sr, cmap_test_suite());
+    srunner_add_suite(sr, cstring_test_suite());
 
 
     srunner_set_fork_status(sr, CK_NOFORK);

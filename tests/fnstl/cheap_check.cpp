@@ -14,13 +14,13 @@ START_TEST(test_newheap)
 {
     heap_t *hp, hp2;
 
-    hp = new_heap(int);
+    hp = heap_new(int);
     ck_assert_str_eq(_HEAP_CTYPE(hp)->name, "int32_t");
-    delete_heap(hp);
+    heap_delete(hp);
 
-    init_heap(&hp2, int);
+    heap_init(&hp2, int);
     ck_assert_str_eq(_HEAP_CTYPE(&hp2)->name, "int32_t");
-    destroy_heap(&hp2);
+    heap_destroy(&hp2);
 
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
@@ -30,7 +30,7 @@ START_TEST(test_heapop_cbuiltin)
 {
     heap_t *hp;
     int i = 0, val;
-    hp = new_heap(int);
+    hp = heap_new(int);
     ck_assert_int_eq(heap_empty(hp), true);
     ck_assert_int_eq(heap_size(hp), 0);
 
@@ -57,10 +57,10 @@ START_TEST(test_heapop_cbuiltin)
 
     ck_assert_int_eq(heap_empty(hp), true);
     ck_assert_int_eq(heap_size(hp), 0);
-    delete_heap(hp);
+    heap_delete(hp);
 
 
-    hp = new_heap_if(int, _int_t_greater_func);
+    hp = heap_new_if(int, _int_t_greater_func);
 
     for (i = 0; i < 10; i++) {
         heap_push(hp, arr0[i]);
@@ -79,7 +79,7 @@ START_TEST(test_heapop_cbuiltin)
 
     ck_assert_int_eq(heap_empty(hp), true);
     ck_assert_int_eq(heap_size(hp), 0);
-    delete_heap(hp);
+    heap_delete(hp);
 
     ck_assert_int_eq(fn_memdbg_get_recnum(), 0);
 }
@@ -91,7 +91,7 @@ START_TEST(test_heaop_userdef)
     type_regist(op_t, _op_t_copy_func, _op_t_less_func, NULL, NULL);
     heap_t *hp;
     int i = 0;
-    hp = new_heap(op_t);
+    hp = heap_new(op_t);
     ck_assert_int_eq(heap_empty(hp), true);
     ck_assert_int_eq(heap_size(hp), 0);
 
@@ -110,7 +110,7 @@ START_TEST(test_heaop_userdef)
         heap_pop(hp);
     }
 
-    delete_heap(hp);
+    heap_delete(hp);
 
     type_unregist(op_t);
 
@@ -142,7 +142,7 @@ START_TEST(test_heapeffec)
     // test c heap
     fntime_t delta = get_time();
     heap_t hp;
-    init_heap(&hp, int);
+    heap_init(&hp, int);
 
     for (i = 0; i < num; i++) {
         switch(op[i].type) {
@@ -180,7 +180,7 @@ START_TEST(test_heapeffec)
     ck_assert_int_eq(heap_empty(&hp), true);
 
     fn_free(op);
-    destroy_heap(&hp);
+    heap_destroy(&hp);
     // read time
     // list_t *lst2 = new_list(int);
     // list<int> sslist;

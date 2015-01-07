@@ -28,17 +28,17 @@ typedef struct _tag_heap_t {
 #define _HEAP_RCHILD(pos)   (((pos) << 1) + 2)
 #define _HEAP_AT(hp, pos)   vector_at(_HEAP_CVEC(hp), pos)
 
-#define new_heap(tp)                _new_heap(#tp, NULL)
-#define new_heap_if(tp, ifc)        _new_heap(#tp, (ifc))
-#define init_heap(hp, tp)           _init_heap((hp), #tp, NULL)
-#define init_heap_if(hp, tp, ifc)   _init_heap((hp), #tp, (ifc))
+#define heap_new(tp)                _heap_new(#tp, NULL)
+#define heap_new_if(tp, ifc)        _heap_new(#tp, (ifc))
+#define heap_init(hp, tp)           _heap_init((hp), #tp, NULL)
+#define heap_init_if(hp, tp, ifc)   _heap_init((hp), #tp, (ifc))
 
 
-heap_t* _new_heap(const char* , _heap_less);
-int _init_heap(heap_t*, const char*, _heap_less);
+heap_t* _heap_new(const char* , _heap_less);
+int _heap_init(heap_t*, const char*, _heap_less);
 
-void destroy_heap(heap_t*);
-void delete_heap(heap_t*);
+void heap_destroy(heap_t*);
+void heap_delete(heap_t*);
 
 #define heap_empty(hp) (_HEAP_SIZE(hp) == 0)
 #define heap_size(hp)  _HEAP_SIZE(hp)

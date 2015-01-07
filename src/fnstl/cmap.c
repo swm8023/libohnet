@@ -24,6 +24,8 @@ int _map_init(map_t* mp, const char* typestr) {
     /* init container base attr*/
     _CTR_INIT(mp, _get_type_bystr(_MAP_TYPE_NAME), typestr, &_default_rbt_iter_if);
 
+    _CTR_MEMIF(mp) =  _default_cmem_if;
+
     /* check if type rigth*/
     assert(_CTR_STYPE(mp) != NULL);
     assert(_CTR_CTYPE(mp) != NULL);
@@ -34,7 +36,7 @@ int _map_init(map_t* mp, const char* typestr) {
     mp->prnode.conttype[1] = _CTR_RTNODE(mp);
 
     /* map attr */
-    _rbt_init(_MAP_RBT(mp), &mp->prnode, false, false);
+    _rbt_init(_MAP_RBT(mp), &mp->prnode, false, false, _CTR_MEMIF(mp));
 
     /* alloc temp memory */
     _type_init(_MAP_PTYPE(mp), _MAP_TMPMEM(mp), &mp->prnode);
@@ -45,7 +47,7 @@ void map_clear(map_t* mp) {
     assert(mp != NULL);
 
     _rbt_destroy(_MAP_RBT(mp));
-    _rbt_init(_MAP_RBT(mp), &mp->prnode, false, false);
+    _rbt_init(_MAP_RBT(mp), &mp->prnode, false, false, _CTR_MEMIF(mp));
 }
 
 void map_destroy(map_t* mp) {

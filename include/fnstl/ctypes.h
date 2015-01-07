@@ -43,6 +43,7 @@ typedef enum _tag_typeid_t {
     _typeid_set_t,
     _typeid_map_t,
     _typeid_pair_t,
+    _typeid_string_t,
 
 
     /* user define type */
@@ -56,14 +57,15 @@ typedef enum _tag_typeid_t {
 #define _TYPEID_CBUILTIN_END   _typeid_pointer
 
 #define _TYPEID_FNBUILTIN_START _typeid_vector_t
-#define _TYPEID_FNBUILTIN_END   _typeid_pair_t
+#define _TYPEID_FNBUILTIN_END   _typeid_string_t
 
-#define _VECT_TYPE_NAME "vector_t"
+#define _VECT_TYPE_NAME   "vector_t"
 #define _LIST_TYPE_NAME   "list_t"
 #define _HEAP_TYPE_NAME   "heap_t"
 #define _SET_TYPE_NAME    "set_t"
 #define _MAP_TYPE_NAME    "map_t"
 #define _PAIR_TYPE_NAME   "pair_t"
+#define _STR_TYPE_NAME    "string_t"
 
 
 /* define type tree, used to analyse nested types decalaration */
@@ -148,6 +150,8 @@ bool_t _type_destroy(_type_t*, void*);
 
 bool_t _type_greater(_type_t*, const void*, const void*);
 bool_t _type_equal(_type_t*, const void*, const void*);
+
+
 
 
 #ifdef __cplusplus

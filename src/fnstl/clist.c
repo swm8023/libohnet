@@ -33,13 +33,14 @@ static _iterator_if _default_list_iter_if = {
 
 
 
-list_t* _new_list(const char* typestr) {
+list_t* _list_new(const char* typestr) {
     assert(typestr != NULL);
 
     list_t* lst = (list_t*)fn_malloc(sizeof(list_t));
     RETURN_IF_NULL(lst, NULL);
 
-    if (_init_list(lst, typestr) < 0) {
+
+    if (_list_init(lst, typestr) < 0) {
         fn_free(lst);
         return NULL;
     }
@@ -47,38 +48,44 @@ list_t* _new_list(const char* typestr) {
     return lst;
 }
 
-int _init_list(list_t* lst, const char* typestr) {
+int _list_init(list_t* lst, const char* typestr) {
     assert(lst != NULL);
     assert(typestr != NULL);
 
     /* init container base attr */
     _CTR_INIT(lst, _get_type_bystr(_LIST_TYPE_NAME), typestr, &_default_list_iter_if);
 
+    _CTR_MEMIF(lst) =  _default_cmem_if;
+
+    /* check if type rigth*/
+    assert(_CTR_STYPE(lst) != NULL);
+    assert(_CTR_CTYPE(lst) != NULL);
     /* list attr*/
     lst->size = 0;
-    lst->guard = (_listnode_t*)fn_malloc(_LISTNODE_SIZE(_CTR_CTYPE(lst)));
+    lst->guard = (_listnode_t*)_CTR_ALLOC(lst, _LISTNODE_SIZE(_CTR_CTYPE(lst)));
     if (lst->guard == NULL) {
         fn_free(lst);
         return -1;
     }
-    //lst->guard->lst  = lst;
     lst->guard->pre  = lst->guard;
     lst->guard->next = lst->guard;
+
+    return 0;
 }
 
-void destroy_list(list_t* lst) {
+void list_destroy(list_t* lst) {
     assert(lst != NULL);
 
     list_clear(lst);
-    fn_free(lst->guard);
+    _CTR_FREE(lst, lst->guard);
 
     _CTR_DESTROY(lst);
 }
 
-void delete_list(list_t* lst) {
+void list_delete(list_t* lst) {
     assert(lst != NULL);
 
-    destroy_list(lst);
+    list_destroy(lst);
     fn_free(lst);
 }
 
@@ -144,7 +151,7 @@ void _list_append_node_varg(list_t *lst, _listnode_t *prenode, va_list arg) {
     assert(prenode  != NULL);
 
     /* allocate newnode memory */
-    _listnode_t *newnode = (_listnode_t*)fn_malloc(_LISTNODE_SIZE(_CTR_CTYPE(lst)));
+    _listnode_t *newnode = (_listnode_t*)_CTR_ALLOC(lst, _LISTNODE_SIZE(_CTR_CTYPE(lst)));
     RETURN_IF_NULL(newnode);
 
     /* set attrbution of newnode*/
@@ -171,7 +178,7 @@ void _list_erase_node(list_t *lst, _listnode_t *node) {
 
     /* destroy and free memory */
     _type_destroy(_CTR_CTYPE(lst), _LISTNODE_DATAP(node));
-    fn_free(node);
+    _CTR_FREE(lst, node);
 
     lst->size--;
 }

@@ -48,7 +48,7 @@ void _pair_destroy_aux(pair_t *pair) {
         /* not null, destroy and free this type object*/
         if (_PAIR_CPTR(pair, i) != NULL) {
             _type_destroy(_PAIR_CTYPE(pair, i), _PAIR_CPTR(pair, i));
-            fn_free(_PAIR_CPTR(pair, i));
+            pair->allocif->free(_PAIR_CPTR(pair, i));
         }
     }
 }
@@ -59,11 +59,13 @@ void _pair_init_aux(pair_t *pair, type_node *node) {
     assert(_TPNODE_LCNODE(node) != NULL);
     assert(_TPNODE_RCNODE(node) != NULL);
 
+    //_CTR_MEMIF(lst) =  _default_cmem_if;
     pair->tpnode = node;
+    pair->allocif = _default_cmem_if;
 
     int i;
     for (i = 0; i < 2; i++) {
-        pair->ptr[i]  = fn_malloc(_PAIR_CTYPE(pair, i)->size);
+        pair->ptr[i]  = pair->allocif->alloc(_PAIR_CTYPE(pair, i)->size);
         _type_init(_PAIR_CTYPE(pair, i), pair->ptr[i], _PAIR_CTNODE(pair, i));
     }
 

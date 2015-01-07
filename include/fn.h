@@ -6,6 +6,8 @@ extern "C" {
 #endif
 
 #include <fnstl/util.h>
+
+#include <fnstl/memory.h>
 #include <fnstl/citerator.h>
 #include <fnstl/cvector.h>
 #include <fnstl/clist.h>
@@ -13,6 +15,7 @@ extern "C" {
 #include <fnstl/cpair.h>
 #include <fnstl/cset.h>
 #include <fnstl/cmap.h>
+#include <fnstl/cstring.h>
 
 #ifdef __cplusplus
 }

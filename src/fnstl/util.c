@@ -301,7 +301,7 @@ void _fn_memd_free(void *ptr, ...) {
 }
 
 int fn_memdbg_get_recnum() {
-    return splst_len(memdbg_rec_head);
+    return splst_len(memdbg_rec_head) + get_memory_leak_num();
 }
 
 void fn_memdbg_print_rec() {

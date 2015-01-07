@@ -7,6 +7,7 @@ extern "C" {
 
 #include <fnstl/ctypes.h>
 #include <fnstl/util.h>
+#include <fnstl/memory.h>
 
 
 /* container base class */
@@ -15,6 +16,7 @@ struct _tag_iterator_if;
 #define _CONTAINER_BASE                \
     type_node* tpnode;                 \
     struct _tag_iterator_if *iter_if;  \
+    _alloc_if *allocif;
 
 
 typedef struct _tag_container_base {
@@ -42,6 +44,11 @@ typedef struct _tag_container_base {
 #define _CTR_RTYPE_SIZE(cont_p) (_CTR_RTYPE((cont_p))->size)
 
 #define _CTR_ITERIF(cont_p)     ((cont_p)->iter_if)
+
+#define _CTR_MEMIF(cont_p)              ((cont_p)->allocif)
+#define _CTR_ALLOC(cont_p, sz)          ((cont_p)->allocif->alloc(sz))
+#define _CTR_REALLOC(cont_p, ptr, sz)   ((cont_p)->allocif->realloc(ptr, sz))
+#define _CTR_FREE(cont_p, ptr)          ((cont_p)->allocif->free(ptr))
 
 #define _CTR_INIT(cont_p, tp, tpstr, it) do {              \
     _CTR_STNODE((cont_p)) = _get_type_node((tp), (tpstr)); \

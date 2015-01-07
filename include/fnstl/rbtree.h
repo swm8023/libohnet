@@ -25,6 +25,7 @@ typedef struct _tag_rbtreenode_t {
 
 /* about guard node g: l[g]->min, r[g]->max, p[g]->root */
 typedef struct _tag_rbtree_t {
+    _alloc_if *allocif;
     type_node *tpnode;
     size_t size;
     bool_t is_multi;
@@ -41,6 +42,8 @@ extern _iterator_if _default_rbt_iter_if;
 #define _RBT_GUARD(rbt)     (&(rbt)->guard)
 #define _RBT_ROOT(rbt)      (_RBT_GUARD((rbt))->parent)
 
+#define _RBT_ALLOC(rbt, sz) ((rbt)->allocif->alloc(sz))
+#define _RBT_FREE(rbt, ptr) ((rbt)->allocif->free(ptr))
 
 #define _RBTNODE_ISROOT(rbt, node)  ((node) == _RBT_ROOT(rbt))
 
@@ -71,7 +74,7 @@ extern _iterator_if _default_rbt_iter_if;
 
 
 
-void _rbt_init(_rbtree_t*, type_node *, bool_t, bool_t);
+void _rbt_init(_rbtree_t*, type_node *, bool_t, bool_t, _alloc_if*);
 
 // int _rbt_init_if_node(_rbtree_t*, type_node *, _func_less);
 

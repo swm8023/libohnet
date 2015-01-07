@@ -30,13 +30,13 @@ static _iterator_if _default_vector_iter_if = {
 };
 
 /* vector opertion functions */
-vector_t* _new_vector(const char* typestr) {
+vector_t* _vector_new(const char* typestr) {
     assert(typestr != NULL);
 
     vector_t* vec = (vector_t*)fn_malloc(sizeof(vector_t));
     RETURN_IF_NULL(vec, NULL);
 
-    if (_init_vector(vec, typestr) < 0) {
+    if (_vector_init(vec, typestr) < 0) {
         fn_free(vec);
         return NULL;
     }
@@ -44,12 +44,14 @@ vector_t* _new_vector(const char* typestr) {
     return vec;
 }
 
-int _init_vector(vector_t* vec, const char* typestr) {
+int _vector_init(vector_t* vec, const char* typestr) {
     assert(vec != NULL);
     assert(typestr != NULL);
 
     /* init container base attr*/
     _CTR_INIT(vec, _get_type_bystr(_VECT_TYPE_NAME), typestr, &_default_vector_iter_if);
+
+    _CTR_MEMIF(vec) =  _default_cmem_if;
 
     /* check if type rigth*/
     assert(_CTR_STYPE(vec) != NULL);
@@ -58,7 +60,7 @@ int _init_vector(vector_t* vec, const char* typestr) {
     /* vector attr */
     vec->capacity   = _VECT_INIT_CAPACITY;
     vec->size       = 0;
-    vec->data       = (char*)fn_malloc(_VECT_CAPACITY(vec) * _VECT_TYPE_SIZE(vec));
+    vec->data       = (char*)_CTR_ALLOC(vec, _VECT_CAPACITY(vec) * _VECT_TYPE_SIZE(vec));
 
     return _VECT_DATA(vec) ? 0 : -1;
 }
@@ -73,7 +75,7 @@ void vector_reserve(vector_t* vec, size_t newcap) {
         vec->capacity *= 2;
     }
 
-    vec->data = fn_realloc(vec->data, _VECT_CAPACITY(vec) * _VECT_TYPE_SIZE(vec));
+    vec->data = _CTR_REALLOC(vec, vec->data, _VECT_CAPACITY(vec) * _VECT_TYPE_SIZE(vec));
 
 }
 
@@ -84,21 +86,21 @@ void vector_clear(vector_t* vec) {
         vector_pop_back(vec);
 }
 
-void destroy_vector(vector_t* vec) {
+void vector_destroy(vector_t* vec) {
     assert(vec != NULL);
 
     vector_clear(vec);
     if (_VECT_DATA(vec)) {
-        fn_free(_VECT_DATA(vec));
+        _CTR_FREE(vec, _VECT_DATA(vec));
     }
 
     _CTR_DESTROY(vec);
 }
 
-void delete_vector(vector_t* vec) {
+void vector_delete(vector_t* vec) {
     assert(vec != NULL);
 
-    destroy_vector(vec);
+    vector_destroy(vec);
     fn_free(vec);
 }
 
