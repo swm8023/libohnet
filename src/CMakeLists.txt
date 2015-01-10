@@ -1,8 +1,12 @@
 
-file(GLOB libfnsrc fnstl/*.c fnutil/*.c)
+# libohstl
+file(GLOB libohstlsrc ohstl/*.c ohutil/*.c)
+add_library(ohstl STATIC ${libohstlsrc})
+add_library(ohstl_so SHARED ${libohstlsrc})
+set_target_properties(ohstl_so PROPERTIES OUTPUT_NAME "ohstl")
 
-add_library(fastnet STATIC ${libfnsrc})
-add_library(fastnet_so SHARED ${libfnsrc})
-set_target_properties(fastnet_so PROPERTIES OUTPUT_NAME "fastnet")
-
-target_link_libraries(fastnet_so -O2)
+# libohnet
+file(GLOB libohevsrc ohev/*.c ohutil/*.c)
+add_library(ohev STATIC ${libohevsrc})
+add_library(ohev_so SHARED ${libohevsrc})
+set_target_properties(ohev_so PROPERTIES OUTPUT_NAME "ohev")

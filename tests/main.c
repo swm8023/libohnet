@@ -1,10 +1,11 @@
 #include <stdio.h>
-#include <fn.h>
+#include <oh.h>
 #include <assert.h>
 
 #include <check.h>
 
-#include "fnstl/fntest.h"
+#include "ohstl/fntest.h"
+#include "ohev/fntest.h"
 
 
 
@@ -18,6 +19,8 @@ int main(int argc, char* argv[]) {
     srunner_add_suite(sr, cset_test_suite());
     srunner_add_suite(sr, cmap_test_suite());
     srunner_add_suite(sr, cstring_test_suite());
+
+    srunner_add_suite(sr, log_test_suite());
 
 
     srunner_set_fork_status(sr, CK_NOFORK);

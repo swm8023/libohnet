@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8.9)
 project(libfastnet C CXX)
 
+
 set(ENTEST true)
-set(ENEFFTEST false)
-set(DEBUG  true)
-set(ENGPROF false)
+set(ENEFFTEST true)
+set(DEBUG  false)
 
 
 if (ENTEST)
@@ -23,10 +23,10 @@ else()
     add_compile_options(-O2)
 endif()
 
-if (ENGPROF)
-    add_compile_options(-pg)
-endif()
 
+if(HAVE_JEMALLOC_H)
+    add_definitions(-DHAVEJEMALLOC)
+endif()
 
 include_directories(include)
 
@@ -41,11 +41,11 @@ if (ENTEST)
 endif()
 
 set(extra_libs
-	libfastnet.so
+	libohev.a
+    libohstl.a
 )
-
 
 link_directories(${PROJECT_BINARY_DIR}/lib)
 add_executable(main main.cpp)
-add_dependencies(main fastnet fastnet_so)
+add_dependencies(main ohev ohstl)
 target_link_libraries(main ${extra_libs})
