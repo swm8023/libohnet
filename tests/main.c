@@ -21,6 +21,7 @@ int main(int argc, char* argv[]) {
     srunner_add_suite(sr, cstring_test_suite());
 
     srunner_add_suite(sr, log_test_suite());
+    srunner_add_suite(sr, evt_test_suite());
 
 
     srunner_set_fork_status(sr, CK_NOFORK);

@@ -1,14 +1,9 @@
-#ifndef OHEV_EVUTIL_H
-#define OHEV_EVUTIL_H
+#ifndef OHEV_FDOPER_H
+#define OHEV_FDOPER_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-
-#define evmalloc fn_malloc
-#define evfree fn_free
 
 
 /* socket operation */
@@ -22,4 +17,4 @@ int ignore_sigpipe();
 #ifdef __cplusplus
 }
 #endif
-#endif  //OHEV_EVUTIL_H
+#endif  //OHEV_FDOPER_H

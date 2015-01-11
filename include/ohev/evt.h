@@ -9,7 +9,6 @@ extern "C" {
 
 #include <ohev/log.h>
 
-
 #include <ohutil/util.h>
 
 
@@ -22,22 +21,19 @@ typedef struct _tag_evt_loop evt_loop;
     uint8_t priority;               \
     int pendpos;                    \
     void *data;                     \
-    void (*cb)(evt_loop*, type*);
-
-#define _EVT_BASE_LIST(type)         \
-    _EVT_BASE(type);                 \
-    SPLST_DEFNEXT(struct _tag_evt_base_list);
+    void (*cb)(evt_loop*, type*);   \
+    SPLST_DEFNEXT(type);
 
 typedef struct _tag_evt_base {
     _EVT_BASE(struct _tag_evt_base);
 } evt_base;
 
 typedef struct _tag_evt_base_list {
-    _EVT_BASE_LIST(struct _tag_evt_base);
+    _EVT_BASE(struct _tag_evt_base);
 } evt_base_list;
 
 typedef struct _tag_evt_io {
-    _EVT_BASE_LIST(struct _tag_evt_io);
+    _EVT_BASE(struct _tag_evt_io);
 
     int fd;
     uint8_t event;
@@ -46,17 +42,17 @@ typedef struct _tag_evt_io {
 typedef struct _tag_evt_timer {
     _EVT_BASE(struct _tag_evt_timer);
 
-    int64_t repeat;
-    int64_t timestamp;
+    ohtime_t repeat;
+    ohtime_t timestamp;
+    int heap_pos;
 } evt_timer;
 
+
 typedef struct _tag_evt_before {
-    _EVT_BASE_LIST(struct _tag_evt_before);
+    _EVT_BASE(struct _tag_evt_before);
 } evt_before;
 
-typedef struct _tag_evt_after {
-    _EVT_BASE_LIST(struct _tag_evt_after);
-} evt_after;
+typedef evt_before evt_after;
 
 #define evt_set_data(ev_, data_) ((ev_)->data = data_)
 
@@ -70,7 +66,7 @@ typedef struct _tag_evt_after {
 
 #define evt_io_init(ev_, cb_, fd_, event_) do { \
     evt_base_init((ev_), (cb_));                \
-    (ev_)->event = (evtnt_);                    \
+    (ev_)->event = (event_);                    \
     (ev_)->fd    = (fd_);                       \
 } while (0)
 
@@ -92,10 +88,13 @@ void evt_before_stop(evt_loop*, evt_before*);
 void evt_after_start(evt_loop*, evt_after*);
 void evt_after_stop(evt_loop*, evt_after*);
 
-typedef struct _tag_fd_info {
 
+#define _FDS_FLAG_CHANGED 0x01
+
+typedef struct _tag_fd_info {
+    evt_base *evq;
     uint8_t event;
-    uint8_t revents;
+    uint8_t revent;
     uint8_t flag;
 } fd_info;
 
@@ -108,6 +107,18 @@ typedef struct _tag_event_param {
 } event_param;
 
 
+/* io event */
+#define EVTIO_READ  _EVT_READ
+#define EVTIO_WRITE _EVT_WRITE
+
+#define _EVT_READ   0x01
+#define _EVT_WRITE  0x02
+
+/* timer event */
+#define _EVTTIMER_CMP(ta, tb) ((ta)->timestamp < (tb)->timestamp)
+
+
+
 /* evt_loop */
 #define _LOOP_STATUS_INIT    0x01
 #define _LOOP_STATUS_STARTED 0x02
@@ -116,11 +127,12 @@ typedef struct _tag_event_param {
 #define _LOOP_STATUS_QUITING 0x10
 #define _LOOP_STATUS_STOP    0x20
 
-#define _LOOP_INIT_FDS      32
-#define _LOOP_INIT_PENDSIZE 32
-#define _LOOP_INIT_EVTSIZE  32
-#define _LOOP_PRIORITY_MAX  10
-#define _LOOP_INIT_POLLUS   30000000
+#define _LOOP_INIT_FDSSIZE      32
+#define _LOOP_INIT_PENDSIZE     32
+#define _LOOP_INIT_EVTSIZE      32
+#define _LOOP_PRIORITY_MAX      10
+#define _LOOP_PRIORITY_INIT_MAX 0
+#define _LOOP_INIT_POLLUS       3000000
 
 typedef struct _tag_evt_loop {
     /* status */
@@ -131,12 +143,15 @@ typedef struct _tag_evt_loop {
     uint8_t priority_max;   /* 0 ~ max*/
 
     /* io event */
-    // vector_t *fds;          /* fd_info */
-    // vector_t *fds_mod;      /* fd_info */
+    fd_info *fds;
+    int fds_size;
+    int *fds_change;
+    int fds_change_size;
+    int fds_change_cnt;
 
-    //  before event && after event 
-    // list_t *bofore_evts;    /* evt_before */
-    // list_t *after_evts;     /* evt_after */
+    /* before event && after event */
+    evt_before *before_evtq;
+    evt_after  *after_evtq;
 
     /* timer event */
     evt_timer** timer_heap;
@@ -144,15 +159,17 @@ typedef struct _tag_evt_loop {
     int timer_heap_size;
 
     /* event pending to run */
-    // vector_t *pending[_LOOP_PRIORITY_MAX];
+    evt_base **pending[_LOOP_PRIORITY_MAX];
+    int pending_cnt[_LOOP_PRIORITY_MAX];
+    int pending_size[_LOOP_PRIORITY_MAX];
 
     /* queue of callback from other thread */
-    // list_t *asyncq;
-    mutex_t asyncq_lock;
-    int asyncq_size;
-    int asyncq_cnt;
-    int eventfd;
-    evt_io* eventio;
+    // event_param* asyncq;
+    // mutex_t asyncq_lock;
+    // int asyncq_size;
+    // int asyncq_cnt;
+    // int eventfd;
+    // evt_io* eventio;
 
     /* backend */
     int poll_feature;
@@ -164,11 +181,13 @@ typedef struct _tag_evt_loop {
     int (*poll_update)(evt_loop*, int, uint8_t, uint8_t);
 
     /* quit lock */
-    mutex_t quit_lock;
-    cond_t quit_cond;
+    // mutex_t quit_lock;
+    // cond_t quit_cond;
 
     /* some default callback */
-    evt_base *empty_ev;   /* be used when stop a pending event */
+    /* be used when stop a pending event */
+    evt_base *empty_ev;
+
 } evt_loop;
 
 evt_loop* evt_loop_init_flag(int);
@@ -177,8 +196,11 @@ int evt_loop_quit();
 int evt_loop_destroy(evt_loop*);
 int evt_loop_run(evt_loop*);
 
-void evt_append_pending(evt_loop*, void*);
-void evt_execute_pending(evt_loop*);
+void _evt_fd_change(evt_loop*, int);
+void _evt_append_pending(evt_loop*, evt_base*);
+void _evt_execute_pending(evt_loop*);
+void _evt_update_fdchanges(evt_loop*);
+
 
 #ifdef __cplusplus
 }

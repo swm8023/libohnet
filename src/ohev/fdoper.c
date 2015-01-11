@@ -5,7 +5,7 @@
 #include <fcntl.h>
 #include <sys/socket.h>
 
-#include <ohev/util.h>
+#include <ohev/fdoper.h>
 #include <ohev/log.h>
 
 

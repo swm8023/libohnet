@@ -60,10 +60,10 @@ int oh_memdbg_get_recnum() {
 void oh_memdbg_print_rec() {
     _memdbg_rec *rec = NULL;
     int tot = 0;
-    FOR_SPLST_START(_memdbg_rec_head, rec)
+    for_splst_each(_memdbg_rec_head, rec) {
         printf("memory leak at %p, size %zu. (%s:%d)\n", rec->ptr,
             rec->size, rec->file, rec->line);
+    }
     tot++;
-    FOR_SPLST_END()
     printf("totol %d memory leak.\n", tot);
 }

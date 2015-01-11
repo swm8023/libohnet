@@ -16,7 +16,8 @@ extern "C" {
 #define STRING(x) #x
 #define DEFINE_TEST(x) STRING(x)
 
-#define fnswap(a, b) do {   \
+#define fnswap swap
+#define ohswap(a, b) do {   \
     typeof(a) _temp_ = (a); \
     (a) = (b);              \
     (b) = _temp_;           \
@@ -33,6 +34,13 @@ extern "C" {
     typeof(b) _tb = (b);    \
     _ta > _tb ? _ta : _tb;  \
 })
+
+#define adj_between(param, minv, maxv) ({   \
+    if ((param) < (minv)) (param) = (minv); \
+    if ((param) > (maxv)) (param) = (maxv); \
+    (param);                                \
+})
+
 
 typedef size_t bool_t;
 #define true   1

@@ -122,10 +122,10 @@ void _oh_mutexd_destroy(mutex_t mutex) {
 void oh_mtxdbg_print_rec() {
     _mtxdbg_rec *rec = NULL;
     int tot = 0;
-    FOR_SPLST_START(_mtxdbg_rec_head, rec)
+    for_splst_each(_mtxdbg_rec_head, rec) {
         printf("mutex status: %d. (%p)\n", rec->count - 1, rec->block);
+    }
     tot++;
-    FOR_SPLST_END()
     printf("total %d lock allocated.\n", tot);
 }
 

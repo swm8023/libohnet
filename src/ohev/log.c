@@ -65,6 +65,9 @@ void _log_append(log_if *logif, uint8_t level_index, const char *fmt, ...) {
     char buf[LOG_BUFSIZE + 1], timebuf[30];
     size_t buflen = 0;
 
+    /* here use cached time, because we only use the log system  in event loop,
+     * otherwise update_catime should be called before log function.
+     */
     get_catime_str(timebuf, sizeof timebuf);
     buflen = snprintf(buf, LOG_BUFSIZE, "%s%5d %s ", log_level_name[level_index],
         thread_id(), timebuf);

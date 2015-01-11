@@ -13,6 +13,7 @@ extern "C" {
 
 
 Suite *log_test_suite();
+Suite *evt_test_suite();
 
 
 #ifdef __cplusplus

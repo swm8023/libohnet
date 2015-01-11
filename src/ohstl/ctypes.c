@@ -274,9 +274,9 @@ void _type_regist(const char *name, size_t size,
     _tfunc_copy fcopy, _tfunc_less fless, _tfunc_init finit, _tfunc_destroy fdestroy) {
     _type_lst *type_new, *elml;
     /* already regist */
-    FOR_SPLST_START(_userdef_types, elml)
+    for_splst_each(_userdef_types, elml) {
         RETURN_IF(0 == strcmp(_TYPE_NAME(&elml->type), name))
-    FOR_SPLST_END()
+    }
 
     /* same with builtin type */
     _type_t *elm = &_builtin_types[0];

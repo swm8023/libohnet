@@ -12,14 +12,14 @@ extern "C" {
 
 
 #define _EPOLL_INIT_NEVENT   32
-#define _EPOLL_MAX_NEVENT    4069
+#define _EPOLL_MAX_NEVENT    4096
 
-typedef struct epoll_event EP_EVT;
+typedef struct epoll_event epoll_event;
 typedef struct _tag_epoll_data {
     int fd;
     int feature;
     int nevent;
-    struct epoll_event *events;
+    epoll_event *events;
 } _epoll_data;
 
 
