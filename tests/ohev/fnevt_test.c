@@ -32,15 +32,46 @@ void evt_timer_cb1(evt_loop *loop, evt_timer* ev) {
 void evt_timer_cb2(evt_loop *loop, evt_timer* ev) {
     log_debug("timer_cb2");
     evt_timer* ev2 = (evt_timer*)ev->data;
-    evt_timer_stop(loop, ev2);
+    if (ev2->active)
+        evt_timer_stop(loop, ev2);
     //evt_after_stop(loop, ev);
 }
 void evt_timer_cb3(evt_loop *loop, evt_timer* ev) {
     log_debug("timer_cb3");
     //evt_after_stop(loop, ev);
+    evt_timer* ev2 = (evt_timer*)ev->data;
+    evt_timer_stop(loop, ev2);
+    evt_loop_destroy(loop);
+
 }
 
-START_TEST(test_evt_io)
+void evt_async_clean_cb(evt_async *ev) {
+    log_debug("evt_async_clean_cb");
+    ohfree(ev);
+}
+
+void evt_async_cb(evt_loop *loop, evt_async *ev) {
+    log_debug("evt_async_cb");
+}
+
+THREAD_FUNC_START(thread_func1, arg) {
+    evt_loop* loop = (evt_loop*)arg;
+
+    ohusleep(SECOND(4.9));
+    evt_async *ev = ohmalloc(sizeof(evt_async));
+    evt_async_init(ev, evt_async_cb, evt_async_clean_cb);
+    evt_async_start(loop, ev);
+    evt_loop_wakeup(loop);
+
+    ohusleep(SECOND(1.7));
+    evt_async *ev2 = ohmalloc(sizeof(evt_async));
+    evt_async_init(ev2, evt_async_cb, evt_async_clean_cb);
+    evt_async_start(loop, ev2);
+    evt_loop_wakeup(loop);
+}
+THREAD_FUNC_END
+
+START_TEST(test_evt_single)
 {
     int i;
     evt_loop* loop = evt_loop_init();
@@ -64,13 +95,19 @@ START_TEST(test_evt_io)
     evt_timer evtm[3];
     evt_timer_init(&evtm[0], evt_timer_cb1, SECOND(2), SECOND(1));
     evt_timer_init(&evtm[1], evt_timer_cb2, SECOND(5), SECOND(3));
-    evt_timer_init(&evtm[2], evt_timer_cb3, SECOND(10), SECOND(1.5));
+    evt_timer_init(&evtm[2], evt_timer_cb3, SECOND(15), SECOND(1));
     evt_set_data(&evtm[1], &evtm[0]);
+    evt_set_data(&evtm[2], &evtm[1]);
     evt_timer_start(loop, &evtm[0]);
     evt_timer_start(loop, &evtm[1]);
     evt_timer_start(loop, &evtm[2]);
 
+    thread_t thid;
+    thread_start(thid, thread_func1, loop);
+
     evt_loop_run(loop);
+
+    oh_memdbg_print_rec();
 }
 END_TEST
 
@@ -81,7 +118,7 @@ Suite *evt_test_suite() {
     TCase *tc_core = tcase_create("TC core");
     tcase_set_timeout(tc_core, 1000);
 
-    tcase_add_test(tc_core, test_evt_io);
+    tcase_add_test(tc_core, test_evt_single);
     suite_add_tcase(s, tc_core);
     return s;
 }

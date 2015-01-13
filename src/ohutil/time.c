@@ -75,7 +75,7 @@ ohtime_t timeval_to_ohtime(struct timeval *valtime) {
     return valtime->tv_sec + valtime->tv_usec;
 }
 
-ohtime_t fnusleep(ohtime_t sleepus) {
+ohtime_t ohusleep(ohtime_t sleepus) {
     struct timeval tv;
     ohtime_t sleepus_real;
     int ret;

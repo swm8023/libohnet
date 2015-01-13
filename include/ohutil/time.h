@@ -23,7 +23,7 @@ ohtime_t update_catime();
 
 ohtime_t get_time_str(char *, int);
 ohtime_t get_catime_str(char *, int);
-ohtime_t fnusleep(ohtime_t);
+ohtime_t ohusleep(ohtime_t);
 void ohtime_to_str(ohtime_t, char *, int);
 void ohtime_to_timespec(ohtime_t , struct timespec *);
 void ohtime_to_timeval(ohtime_t,struct timeval *);

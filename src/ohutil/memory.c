@@ -63,7 +63,7 @@ void oh_memdbg_print_rec() {
     for_splst_each(_memdbg_rec_head, rec) {
         printf("memory leak at %p, size %zu. (%s:%d)\n", rec->ptr,
             rec->size, rec->file, rec->line);
+        tot++;
     }
-    tot++;
     printf("totol %d memory leak.\n", tot);
 }

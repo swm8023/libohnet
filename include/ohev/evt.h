@@ -54,6 +54,13 @@ typedef struct _tag_evt_before {
 
 typedef evt_before evt_after;
 
+typedef struct _tag_evt_async {
+    _EVT_BASE(struct _tag_evt_async);
+
+    void (*clean)(struct _tag_evt_async*);
+} evt_async;
+
+
 #define evt_set_data(ev_, data_) ((ev_)->data = data_)
 
 #define evt_base_init(ev_, cb_) do { \
@@ -77,7 +84,13 @@ typedef evt_before evt_after;
 } while (0)
 
 #define evt_before_init(ev_, cb_) evt_base_init((ev_), (cb_))
+
 #define evt_after_init(ev_, cb_)  evt_base_init((ev_), (cb_))
+
+#define evt_async_init(ev_, cb_, clean_) do {   \
+    evt_base_init((ev_), (cb_));                \
+    (ev_)->clean = (clean_);                    \
+} while (0)
 
 void evt_io_start(evt_loop*, evt_io*);
 void evt_io_stop(evt_loop*, evt_io*);
@@ -87,6 +100,8 @@ void evt_before_start(evt_loop*, evt_before*);
 void evt_before_stop(evt_loop*, evt_before*);
 void evt_after_start(evt_loop*, evt_after*);
 void evt_after_stop(evt_loop*, evt_after*);
+void evt_async_start(evt_loop*, evt_async*);
+void evt_async_stop(evt_loop*, evt_async*);
 
 
 #define _FDS_FLAG_CHANGED 0x01
@@ -123,9 +138,10 @@ typedef struct _tag_event_param {
 #define _LOOP_STATUS_INIT    0x01
 #define _LOOP_STATUS_STARTED 0x02
 #define _LOOP_STATUS_RUNNING 0x04
-#define _LOOP_STATUS_PAUSE   0x08
+#define _LOOP_STATUS_SUSPEND 0x08
 #define _LOOP_STATUS_QUITING 0x10
 #define _LOOP_STATUS_STOP    0x20
+#define _LOOP_STATUS_WAITDESTROY 0x40
 
 #define _LOOP_INIT_FDSSIZE      32
 #define _LOOP_INIT_PENDSIZE     32
@@ -163,17 +179,15 @@ typedef struct _tag_evt_loop {
     int pending_cnt[_LOOP_PRIORITY_MAX];
     int pending_size[_LOOP_PRIORITY_MAX];
 
-    /* queue of callback from other thread */
-    // event_param* asyncq;
-    // mutex_t asyncq_lock;
-    // int asyncq_size;
-    // int asyncq_cnt;
-    // int eventfd;
-    // evt_io* eventio;
+    /* async evnet */
+    int evtfd;
+    evt_io* evtfd_ev;
+    evt_async *async_evtq;
+    mutex_t async_mutex;
 
     /* backend */
     int poll_feature;
-    int64_t poll_time_us;      /*in microsecond*/
+    int64_t poll_time_us;      /* in microsecond */
     void *poll_data;
     void *(*poll_init)(evt_loop*);
     void (*poll_destroy)(evt_loop*);
@@ -181,8 +195,7 @@ typedef struct _tag_evt_loop {
     int (*poll_update)(evt_loop*, int, uint8_t, uint8_t);
 
     /* quit lock */
-    // mutex_t quit_lock;
-    // cond_t quit_cond;
+    cond_t quit_cond;
 
     /* some default callback */
     /* be used when stop a pending event */
@@ -192,10 +205,15 @@ typedef struct _tag_evt_loop {
 
 evt_loop* evt_loop_init_flag(int);
 evt_loop* evt_loop_init();
-int evt_loop_quit();
+int evt_loop_quit(evt_loop*);;
 int evt_loop_destroy(evt_loop*);
 int evt_loop_run(evt_loop*);
+int evt_loop_wakeup(evt_loop*);
+/* not implement */
+int evt_loop_suspend(evt_loop*);
+int evt_loop_ready(evt_loop*);
 
+void _evt_do_wakeup(evt_loop*, evt_io*);
 void _evt_fd_change(evt_loop*, int);
 void _evt_append_pending(evt_loop*, evt_base*);
 void _evt_execute_pending(evt_loop*);

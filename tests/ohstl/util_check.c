@@ -31,7 +31,7 @@ START_TEST(test_time)
 	ck_assert_str_eq(buf1, buf2);
 
 
-	ck_assert_int_eq(fnusleep(500), 0);
+	ck_assert_int_eq(ohusleep(500), 0);
 }
 END_TEST
 

@@ -1,4 +1,5 @@
 #include <string.h>
+#include <sys/eventfd.h>
 #include <ohev/evt.h>
 #include <ohev/log.h>
 #include <ohev/bkepoll.h>
@@ -43,6 +44,28 @@ evt_loop* evt_loop_init_flag(int flag) {
     loop->timer_heap_size = _LOOP_INIT_EVTSIZE;
     loop->timer_heap = (evt_timer**)ohmalloc(sizeof(evt_timer*) * _LOOP_INIT_EVTSIZE);
 
+    /* event fd, used to wake up poll_wait to do sth. */
+#if (defined(EFD_CLOEXEC) && defined(EFD_NONBLOCK))
+    loop->evtfd = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK);
+#else
+    loop->evtfd = eventfd(0, 0);
+    if (loop->evtfd >= 0) {
+        fd_cloexec(loop->evtfd);
+        fd_nonblock(loop->evtfd);
+    }
+#endif
+
+    if (loop->evtfd < 0) {
+        goto evt_loop_init_failed;
+    }
+    loop->evtfd_ev = (evt_io*)ohmalloc(sizeof(evt_io));
+    evt_io_init(loop->evtfd_ev, _evt_do_wakeup, loop->evtfd, EVTIO_READ);
+    evt_io_start(loop, loop->evtfd_ev);
+
+    /* async event */
+    loop->async_evtq = NULL;
+    loop->async_mutex = mutex_init(NULL);
+
     /* init backend poll */
     if (0) {
         /* only support epoll now */
@@ -52,6 +75,9 @@ evt_loop* evt_loop_init_flag(int flag) {
     }
     loop->poll_time_us = _LOOP_INIT_POLLUS;
     loop->poll_data    = loop->poll_init(loop);
+
+    /* quit lock*/
+    loop->quit_cond = cond_init(NULL);
 
     /* pending queue, only one queue on init  */
     loop->priority_max = _LOOP_PRIORITY_INIT_MAX;
@@ -65,17 +91,26 @@ evt_loop* evt_loop_init_flag(int flag) {
     loop->empty_ev = (evt_base*)ohmalloc(sizeof(evt_base));
     evt_base_init(loop->empty_ev, NULL);
 
+    log_inner("event loop(%d) init.", thread_id());
     return loop;
 
 evt_loop_init_failed:
+    log_error("event loop(%d) init failed!", thread_id());
     if (loop != NULL) {
         evt_loop_destroy(loop);
     }
     return NULL;
 }
 
-int evt_loop_quit() {
+int evt_loop_quit(evt_loop* loop) {
+    loop->status |= _LOOP_STATUS_QUITING;
 
+    /* wake up loop when not quit in loop thread */
+    if (loop->owner_thread != thread_id()) {
+        evt_loop_wakeup(loop);
+    }
+
+    return 0;
 }
 
 int evt_loop_destroy(evt_loop* loop) {
@@ -84,7 +119,43 @@ int evt_loop_destroy(evt_loop* loop) {
         log_warn("destroy a NULL loop");
         return 0;
     }
+    /* if running, stop first */
+    if (loop->status & _LOOP_STATUS_RUNNING) {
+        evt_loop_quit(loop);
+        /* not stop in loop thread, wait for loop quit */
+        if (loop->owner_thread != thread_id()) {
+            cond_lock(loop->quit_cond);
+            while (loop->status & _LOOP_STATUS_RUNNING) {
+                cond_wait(loop->quit_cond);
+            }
+            cond_unlock(loop->quit_cond);
+        /* stop in loop thread, set wait destroy flag and destroy after loop quit */
+        } else {
+            loop->status |= _LOOP_STATUS_WAITDESTROY;
+            return 0;
+        }
+    }
 
+    /* free memory */
+    ohfree(loop->fds);
+    ohfree(loop->fds_change);
+    ohfree(loop->timer_heap);
+    for (i = 0; i <= loop->priority_max; i++) {
+        ohfree(loop->pending[i]);
+    }
+
+    ohfree(loop->evtfd_ev);
+    close(loop->evtfd);
+    mutex_destroy(loop->async_mutex);
+
+    loop->poll_destroy(loop);
+
+    cond_destroy(loop->quit_cond);
+    ohfree(loop->empty_ev);
+
+    ohfree(loop);
+
+    log_inner("event loop(%d) destroy.", thread_id());
     return 0;
 }
 
@@ -92,6 +163,8 @@ int evt_loop_run(evt_loop* loop) {
     loop->owner_thread = thread_id();
     loop->status = _LOOP_STATUS_STARTED | _LOOP_STATUS_RUNNING;
 
+    log_inner("event loop(%d) running.", thread_id());
+    
     /* do while util loop->status be set quiting */
     while (!(loop->status & _LOOP_STATUS_QUITING)) {
         evt_base* eb;
@@ -104,6 +177,11 @@ int evt_loop_run(evt_loop* loop) {
             _evt_append_pending(loop, eb);
         }
         _evt_execute_pending(loop);
+
+        /* maybe a quit flag is set here */
+        if (_LOOP_STATUS_QUITING & loop->status) {
+            break;
+        }
 
         /* update fd changes */
         _evt_update_fdchanges(loop);
@@ -124,19 +202,26 @@ int evt_loop_run(evt_loop* loop) {
 
         /* time point after poll_dispatch */
         update_catime();
+
+        /* maybe waken up by evt_loop_quit, then quit while */
+        if (_LOOP_STATUS_QUITING & loop->status) {
+            break;
+        }
+
+        /* append timeout timers to pending queue */
         while (loop->timer_heap_cnt > 0) {
             evt_timer *evtm = loop->timer_heap[1];
             if (evtm->timestamp > get_catime())
                 break;
             _evt_append_pending(loop, (evt_base*)evtm);
 
-            /* remove from heap */
+            /* remove event from timer heap */
             spheap_pop(loop->timer_heap, loop->timer_heap_cnt, _EVTTIMER_CMP);
 
-            /* if repeat > 0, start again */
+            /* if repeat > 0, start again, calculate timestamp carefully */
             if (evtm->repeat > 0) {
                 evtm->active = 0;
-                evtm->timestamp = evtm->repeat;
+                evtm->timestamp = evtm->timestamp - get_catime() + evtm->repeat;
                 evt_timer_start(loop, evtm);
             }
         }
@@ -148,11 +233,30 @@ int evt_loop_run(evt_loop* loop) {
         /* execute timer,io,after events */
         _evt_execute_pending(loop);
     }
+
+    log_inner("event loop(%d) quit.", thread_id());
+    /* quited */
+    loop->status &= ~_LOOP_STATUS_RUNNING;
+    loop->status &= ~_LOOP_STATUS_QUITING;
+    loop->status &= ~_LOOP_STATUS_SUSPEND;
+    loop->status |= _LOOP_STATUS_STOP;
+
+    /* if destroy in loop thread */
+    if (loop->status & _LOOP_STATUS_WAITDESTROY) {
+        evt_loop_destroy(loop);
+    /* if destroy in other thread */
+    } else {
+        cond_broadcast(loop->quit_cond);
+    }
 }
 
 void evt_io_start(evt_loop* loop, evt_io* ev) {
-    /* alredy start, avoid start again*/
+    if (loop->owner_thread && loop->owner_thread != thread_id()) {
+        log_warn("can't start an io event with a running loop in another thread!");
+        return;
+    }
     if (ev->active == 1) {
+        log_warn("start an active io event!");
         return;
     }
     ev->active = 1;
@@ -175,7 +279,12 @@ void evt_io_start(evt_loop* loop, evt_io* ev) {
 }
 
 void evt_io_stop(evt_loop* loop, evt_io* ev) {
+    if (loop->owner_thread && loop->owner_thread != thread_id()) {
+        log_warn("can't stop an io event with a running loop in another thread!");
+        return;
+    }
     if (ev->active == 0) {
+        log_warn("stop an inactive io event!");
         return;
     }
     ev->active = 0;
@@ -195,7 +304,12 @@ void evt_io_stop(evt_loop* loop, evt_io* ev) {
 }
 
 void evt_timer_start(evt_loop* loop, evt_timer* ev) {
+    if (loop->owner_thread && loop->owner_thread != thread_id()) {
+        log_warn("can't start a timer event with a running loop in another thread!");
+        return;
+    }
     if (ev->active == 1) {
+        log_warn("start an active timer event!");
         return;
     }
     ev->active = 1;
@@ -212,9 +326,15 @@ void evt_timer_start(evt_loop* loop, evt_timer* ev) {
 }
 
 void evt_timer_stop(evt_loop* loop, evt_timer* ev) {
-    if (ev->active == 0) {
-        ev->active = 0;
+    if (loop->owner_thread && loop->owner_thread != thread_id()) {
+        log_warn("can't stop a timer event with a running loop in another thread!");
+        return;
     }
+    if (ev->active == 0) {
+        log_warn("stop an inactive timer event!");
+        return;
+    }
+    ev->active = 0;
 
     if (ev->pendpos) {
         loop->pending[ev->priority][ev->pendpos - 1] = loop->empty_ev;
@@ -228,7 +348,12 @@ void evt_timer_stop(evt_loop* loop, evt_timer* ev) {
 }
 
 void evt_before_start(evt_loop* loop, evt_before* ev) {
+    if (loop->owner_thread && loop->owner_thread != thread_id()) {
+        log_warn("can't start a before event with a running loop in another thread!");
+        return;
+    }
     if (ev->active == 1) {
+        log_warn("start an active before event!");
         return;
     }
     ev->active = 1;
@@ -238,7 +363,12 @@ void evt_before_start(evt_loop* loop, evt_before* ev) {
 }
 
 void evt_before_stop(evt_loop* loop, evt_before* ev) {
+    if (loop->owner_thread && loop->owner_thread != thread_id()) {
+        log_warn("can't stop a before event with a running loop in another thread!");
+        return;
+    }
     if (ev->active == 0) {
+        log_warn("stop an inactive before event!");
         return;
     }
     ev->active = 0;
@@ -251,7 +381,12 @@ void evt_before_stop(evt_loop* loop, evt_before* ev) {
 }
 
 void evt_after_start(evt_loop* loop, evt_after* ev) {
+    if (loop->owner_thread && loop->owner_thread != thread_id()) {
+        log_warn("can't start a after event with a running loop in another thread!");
+        return;
+    }
     if (ev->active == 1) {
+        log_warn("start an active after event!");
         return;
     }
     ev->active = 1;
@@ -261,7 +396,12 @@ void evt_after_start(evt_loop* loop, evt_after* ev) {
 }
 
 void evt_after_stop(evt_loop* loop, evt_after* ev) {
+    if (loop->owner_thread && loop->owner_thread != thread_id()) {
+        log_warn("can't stop a after event with a running loop in another thread!");
+        return;
+    }
     if (ev->active == 0) {
+        log_warn("stop an inactive after event!");
         return;
     }
     ev->active = 0;
@@ -271,6 +411,84 @@ void evt_after_stop(evt_loop* loop, evt_after* ev) {
     }
 
     splst_del(loop->after_evtq, ev);
+}
+
+int evt_loop_wakeup(evt_loop* loop) {
+    /* just write data to evtfd to wake up epoll_dispatch */
+    uint64_t val = 1;
+    ssize_t wsize = write(loop->evtfd, &val, sizeof(uint64_t));
+    if (wsize != sizeof(eventfd_t)) {
+        log_error("eventfd_write error(%d)", wsize);
+        return -1;
+    }
+    return 0;
+}
+
+void _evt_do_wakeup(evt_loop* loop, evt_io* ev) {
+    if (loop->status & _LOOP_STATUS_QUITING) {
+        return;
+    }
+    uint64_t val = 0;
+    ssize_t rsize = read(loop->evtfd, &val, sizeof(uint64_t));
+    log_inner("event loop(%d) wake up by %lld caller.", thread_id(), val);
+    if (rsize != sizeof(eventfd_t)) {
+        log_error("eventfd_read error(%d)", rsize);
+        return;
+    }
+
+    /* empty async event list */
+    mutex_lock(loop->async_mutex);
+    evt_async *async_head = loop->async_evtq;
+    loop->async_evtq = NULL;
+    mutex_unlock(loop->async_mutex);
+
+    while (async_head) {
+        /* async_head may be free in evt_async->clean, so let it be next element now */
+        evt_async *async_now = async_head;
+        async_head = async_head->next;
+
+        /* call event callback and clean callback */
+        if (async_now->cb) {
+            async_now->cb(loop, async_now);
+        }
+        if (async_now->clean) {
+            async_now->clean(async_now);
+        }
+    }
+}
+
+void evt_async_start(evt_loop* loop, evt_async* ev) {
+    if (ev->active == 1) {
+        log_warn("start an active async event!");
+        return;
+    }
+    ev->active = 1;
+    /* just inited or run in loop thread, add with no lock */
+    if (loop->owner_thread == 0 || loop->owner_thread == thread_id()) {
+        splst_add(loop->async_evtq, ev);
+    /* else add with lock */
+    } else {
+        mutex_lock(loop->async_mutex);
+        splst_add(loop->async_evtq, ev);
+        mutex_unlock(loop->async_mutex);
+    }
+}
+
+void evt_async_stop(evt_loop* loop, evt_async* ev) {
+    if (ev->active == 0) {
+        log_warn("stop an inactive async event!");
+        return;
+    }
+    ev->active = 0;
+    /* just inited or run in loop thread, remove with no lock */
+    if (loop->owner_thread == 0 || loop->owner_thread == thread_id()) {
+        splst_del(loop->async_evtq, ev);
+    /* else remove with lock */
+    } else {
+        mutex_lock(loop->async_mutex);
+        splst_del(loop->async_evtq, ev);
+        mutex_unlock(loop->async_mutex);
+    }
 }
 
 
