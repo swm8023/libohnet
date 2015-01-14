@@ -17,6 +17,7 @@ extern "C" {
 
 #include <ohev/log.h>
 #include <ohev/evt.h>
+#include <ohev/evtpool.h>
 
 #include <ohutil/util.h>
 

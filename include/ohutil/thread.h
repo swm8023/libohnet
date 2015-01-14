@@ -14,11 +14,14 @@ extern "C" {
 #include <ohutil/util.h>
 
 /* === thread function === */
-int thread_id();
+/* just the tid,  can't instead of pthread_t*/
+int thread_tid();
+
 typedef pthread_t thread_t;
 #define THREAD_FUNC_START(fn, val) void* fn(void *(val)) {
 #define THREAD_FUNC_END return NULL; }
 
+#define thread_pid() pthread_self()
 #define thread_start(pt, fn, arg) pthread_create(&(pt), NULL, fn, arg)
 #define thread_join(pt) pthread_join((pt), NULL)
 #define thread_detach(pt) pthread_detach(pt)

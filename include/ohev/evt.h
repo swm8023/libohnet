@@ -152,7 +152,7 @@ typedef struct _tag_event_param {
 
 typedef struct _tag_evt_loop {
     /* status */
-    int owner_thread;
+    int owner_tid;
     uint8_t status;
 
     /* config */
@@ -181,8 +181,10 @@ typedef struct _tag_evt_loop {
 
     /* async evnet */
     int evtfd;
+    uint8_t evtfd_ref;
     evt_io* evtfd_ev;
     evt_async *async_evtq;
+    evt_async *async_evtq_last;
     mutex_t async_mutex;
 
     /* backend */

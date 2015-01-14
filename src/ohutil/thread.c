@@ -4,10 +4,10 @@
 #include <ohutil/thread.h>
 
 /* === thread function === */
-__thread int cr_thread_id = 0;
-int thread_id() {
-    return cr_thread_id ? cr_thread_id :
-        (cr_thread_id = syscall(SYS_gettid));
+__thread int cr_thread_tid = 0;
+int thread_tid() {
+    return cr_thread_tid ? cr_thread_tid :
+        (cr_thread_tid = syscall(SYS_gettid));
 }
 
 static mutex_t _oh_mutex_init(void *);

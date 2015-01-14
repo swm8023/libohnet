@@ -114,7 +114,7 @@ END_TEST
 
 
 Suite *evt_test_suite() {
-    Suite *s = suite_create("=== EVT Test ===");
+    Suite *s = suite_create("=== Evt Test ===");
     TCase *tc_core = tcase_create("TC core");
     tcase_set_timeout(tc_core, 1000);
 

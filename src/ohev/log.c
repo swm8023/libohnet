@@ -70,7 +70,7 @@ void _log_append(log_if *logif, uint8_t level_index, const char *fmt, ...) {
      */
     get_catime_str(timebuf, sizeof timebuf);
     buflen = snprintf(buf, LOG_BUFSIZE, "%s%5d %s ", log_level_name[level_index],
-        thread_id(), timebuf);
+        thread_tid(), timebuf);
 
     va_list ap;
     va_start(ap, fmt);
