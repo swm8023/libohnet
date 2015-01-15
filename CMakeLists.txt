@@ -41,11 +41,11 @@ if (ENTEST)
 endif()
 
 set(extra_libs
-	libohev.a
-    libohstl.a
+	ohev
+    ohstl
 )
 
 link_directories(${PROJECT_BINARY_DIR}/lib)
 add_executable(main main.cpp)
-add_dependencies(main ohev ohstl)
+add_dependencies(main ohev_so ohstl_so)
 target_link_libraries(main ${extra_libs})

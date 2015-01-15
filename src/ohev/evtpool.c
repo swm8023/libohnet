@@ -120,7 +120,7 @@ void evt_pool_run(evt_pool* pool) {
     }
 
     log_inner("event loops pool(%d) quit.", thread_tid());
-    
+
     /* quited */
     pool->status &= ~_POOL_STATUS_RUNNING;
     pool->status &= ~_POOL_STATUS_QUITING;

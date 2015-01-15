@@ -2,6 +2,7 @@
 #define OHEV_LOG_H
 
 #include <stdint.h>
+#include <unistd.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,6 +80,9 @@ extern log_if *default_log_if;
 
 /* log function */
 void _log_append(log_if *logif, uint8_t level_index, const char *fmt, ...);
+
+/* for file log */
+int log_file_init(const char* name);
 
 
 #ifdef __cplusplus

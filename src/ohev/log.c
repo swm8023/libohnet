@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <errno.h>
 
+#include <ohutil/thread.h>
 #include <ohev/log.h>
 
 static void _log_console_output_cb(const char *, size_t);
@@ -107,15 +108,40 @@ void _log_console_fatal_cb() {
     _exit(-1);
 }
 
+#define MAX_FILEPATH_LEN 255
+#define FILEINFO_BUFSZ  4096
+typedef struct _tag_ohlog_fileinfo {
+    char filepath[MAX_FILEPATH_LEN];
+    FILE *fp;
+    mutex_t mutex;
+} _ohlog_fileinfo;
+static _ohlog_fileinfo _log_fileinfo;
+
+int log_file_init(const char* filepath) {
+    if (strlen(filepath) >= MAX_FILEPATH_LEN) {
+        return -1;
+    }
+    strcpy(_log_fileinfo.filepath, filepath);
+    if ((_log_fileinfo.fp = fopen(filepath, "a")) == NULL) {
+        printf("....%s\n", strerror(errno));
+        return -1;
+    }
+    default_log_if = &_log_if_file;
+    return 0;
+}
 
 static void _log_file_output_cb(const char *str, size_t size) {
-
+    fwrite(str, size, 1, _log_fileinfo.fp);
 }
 
 static void _log_file_flush_cb() {
-
+    fflush(_log_fileinfo.fp);
 }
 
 static void _log_file_fatal_cb() {
-
+    fflush(_log_fileinfo.fp);
+    fclose(_log_fileinfo.fp);
+    _exit(-1);
 }
+
+

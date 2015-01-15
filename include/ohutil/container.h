@@ -134,6 +134,8 @@ extern "C" {
     spheap_delete(heap, 1, size, comp)
 
 
+
+
 #ifdef __cplusplus
 }
 #endif

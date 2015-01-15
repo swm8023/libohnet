@@ -18,8 +18,11 @@ extern "C" {
 #include <ohev/log.h>
 #include <ohev/evt.h>
 #include <ohev/evtpool.h>
+#include <ohev/tcpsrv.h>
+#include <ohev/buffer.h>
 
 #include <ohutil/util.h>
+#include <ohutil/objpool.h>
 
 #ifdef __cplusplus
 }

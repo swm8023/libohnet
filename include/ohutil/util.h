@@ -10,8 +10,9 @@ extern "C" {
 
 #include <ohutil/memory.h>
 #include <ohutil/thread.h>
-#include <ohutil/spcontainer.h>
+#include <ohutil/container.h>
 #include <ohutil/time.h>
+#include <ohutil/objpool.h>
 
 #define STRING(x) #x
 #define DEFINE_TEST(x) STRING(x)
@@ -53,7 +54,8 @@ typedef size_t bool_t;
     if ((x) == NULL) return arg;
 
 #define container_of(ptr, type, member) ({                      \
-        (type *)( (char *)(ptr) - offsetof(type,member) );})
+        (type *)((char *)(ptr) - offsetof(type,member) );})
+
 
 
 #ifdef __cplusplus
