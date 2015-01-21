@@ -2,6 +2,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <ohutil/thread.h>
+#include <ohutil/container.h>
 
 /* === thread function === */
 __thread int cr_thread_tid = 0;

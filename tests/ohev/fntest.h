@@ -16,6 +16,7 @@ Suite *log_test_suite();
 Suite *evt_test_suite();
 Suite *evtpool_test_suite();
 Suite *objpool_test_suite();
+Suite *buffer_test_suite();
 
 
 #ifdef __cplusplus

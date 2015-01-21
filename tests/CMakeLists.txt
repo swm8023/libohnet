@@ -18,6 +18,12 @@ if(HAVE_CHECK_H)
 	    target_link_libraries(test -pg)
 	endif()
 
+	add_executable(testtcpsrv1 testtcpsrv1.c)
+	target_link_libraries(testtcpsrv1 ${TEST_LIB})
+
+	add_executable(perftestserver perftestserver.c)
+	target_link_libraries(perftestserver ${TEST_LIB})
+
 	# add_executable(testlibcstl testlibcstl.c)
 	# target_link_libraries(testlibcstl cstl fastnet)
 

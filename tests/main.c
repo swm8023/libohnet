@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
     // srunner_add_suite(sr, evt_test_suite());
     // srunner_add_suite(sr, evtpool_test_suite());
     srunner_add_suite(sr, objpool_test_suite());
+    srunner_add_suite(sr, buffer_test_suite());
 
     srunner_set_fork_status(sr, CK_NOFORK);
 	srunner_run_all (sr, CK_NORMAL);

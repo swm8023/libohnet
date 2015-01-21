@@ -7,12 +7,14 @@ void objpool_init(objpool_base *opool, int blksize, int objsize) {
     opool->blksize = blksize;
     opool->blkcnt  = 0;
     opool->blks    = NULL;
+    opool->mutex   = mutex_init(NULL);
 }
 
 void objpool_destroy(objpool_base *opool) {
 
     /* free blocks */
     objpool_blk *blk = opool->blks;
+    mutex_destroy(opool->mutex);
     while (blk) {
         /* block will be destroy, so get next block ahead of destroy it*/
         objpool_blk *ublk = blk;
@@ -53,6 +55,7 @@ objpool_obj_base *objpool_get_obj(objpool_base* opool) {
     /* remove from free list and append to busy list */
     objpool_obj_base *robj = opool->free_elem;
     splst_del(opool->free_elem, robj);
+    robj->next = NULL;
 
     return robj;
 }
@@ -60,3 +63,17 @@ objpool_obj_base *objpool_get_obj(objpool_base* opool) {
 objpool_obj_base *objpool_free_obj(objpool_base* opool, void *elem) {
     splst_add(opool->free_elem, (objpool_obj_base*)elem);
 }
+
+objpool_obj_base *objpool_get_obj_lock(objpool_base* opool) {
+    mutex_lock(opool->mutex);
+    objpool_obj_base *robj = objpool_get_obj(opool);
+    mutex_unlock(opool->mutex);
+    return robj;
+}
+
+objpool_obj_base *objpool_free_obj_lock(objpool_base* opool,  void *elem) {
+    mutex_lock(opool->mutex);
+    objpool_obj_base *robj = objpool_free_obj(opool, elem);
+    mutex_unlock(opool->mutex);
+}
+

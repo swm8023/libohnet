@@ -148,7 +148,7 @@ typedef struct _tag_event_param {
 #define _LOOP_INIT_EVTSIZE      32
 #define _LOOP_PRIORITY_MAX      10
 #define _LOOP_PRIORITY_INIT_MAX 0
-#define _LOOP_INIT_POLLUS       3000000
+#define _LOOP_INIT_POLLUS       30000000
 
 typedef struct _tag_evt_loop {
     /* status */

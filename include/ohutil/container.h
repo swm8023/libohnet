@@ -25,10 +25,10 @@ extern "C" {
 } while (0)
 
 #define splst_del(head, elm) do {   \
-    typeof(head) *_spe = &head;     \
+    typeof(head) *_spe = &(head);   \
     for (;*_spe && *_spe != (elm);  \
         _spe = &(*_spe)->next);     \
-    if(*_spe) *_spe = elm->next;    \
+    if(*_spe) *_spe = (elm)->next;  \
 } while (0)
 
 #define splst_len(head) ({                          \

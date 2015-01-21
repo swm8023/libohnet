@@ -148,6 +148,17 @@ int evt_loop_destroy(evt_loop* loop) {
 
     ohfree(loop->evtfd_ev);
     close(loop->evtfd);
+
+    /* clean all async event */
+    evt_async *async_head = loop->async_evtq;
+    while (async_head) {
+        /* async_head may be free in evt_async->clean, so let it be next element now */
+        evt_async *async_now = async_head;
+        async_head = async_head->next;
+        if (async_now->clean) {
+            async_now->clean(async_now);
+        }
+    }
     mutex_destroy(loop->async_mutex);
 
     if (loop->poll_destroy) {
@@ -261,7 +272,7 @@ void evt_io_start(evt_loop* loop, evt_io* ev) {
         return;
     }
     if (ev->active == 1) {
-        log_warn("start an active io event!");
+        //log_warn("start an active io event!");
         return;
     }
     ev->active = 1;
@@ -289,7 +300,7 @@ void evt_io_stop(evt_loop* loop, evt_io* ev) {
         return;
     }
     if (ev->active == 0) {
-        log_warn("stop an inactive io event!");
+        //log_warn("stop an inactive io event!");
         return;
     }
     ev->active = 0;

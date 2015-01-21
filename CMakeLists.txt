@@ -4,7 +4,7 @@ project(libfastnet C CXX)
 
 set(ENTEST true)
 set(ENEFFTEST false)
-set(DEBUG  true)
+set(DEBUG  false)
 
 
 if (ENTEST)

@@ -64,6 +64,11 @@ void _epoll_destroy(evt_loop* loop) {
 }
 
 int _epoll_update(evt_loop* loop, int fd, uint8_t oev, uint8_t nev) {
+    /* needn't delete */
+    if (nev == 0) {
+        return;
+    }
+
     _epoll_data *epd = (_epoll_data*)loop->poll_data;
     epoll_event evt;
     evt.data.fd = fd;
@@ -86,7 +91,7 @@ int _epoll_update(evt_loop* loop, int fd, uint8_t oev, uint8_t nev) {
             (errno == EEXIST && !epoll_ctl(epd->fd, EPOLL_CTL_MOD, fd, &evt))) {
             return 0;
         } else {
-            log_error("epoll(%d) update on fd:%d failed.", epd->fd, fd);
+            log_warn("epoll(%d) update on fd:%d failed.", epd->fd, fd);
             return -1;
         }
     }

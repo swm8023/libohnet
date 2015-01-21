@@ -11,7 +11,7 @@ extern "C" {
 #include <sys/syscall.h>
 #include <pthread.h>
 #include <ohutil/time.h>
-#include <ohutil/util.h>
+#include <ohutil/memory.h>
 
 /* === thread function === */
 /* just the tid,  can't instead of pthread_t*/

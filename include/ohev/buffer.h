@@ -9,59 +9,93 @@ extern "C" {
 
 #include <ohutil/util.h>
 
-#define OHBUFFER_OBJPOOL_BLOCKSZ 32
-#define OHBUFFER_INIT_SIZE       4096
+#define OHBUFFER_OBJPOOL_BLOCKSZ        32
+#define OHBUFFER_UNIT_DEFAULT_SIZE      4096
+
+#define OHBUFFER_UNITPOOL_LOCK   1
+#define OHBUFFER_UNITPOOL_NOLOCK 0
+
+typedef struct _tag_ohbuffer_unit_objpool ohbuffer_unit_objpool;
 /* !! the next pointer !!
  * when in object pool, next point to next free buffer
  * when in connection , next point to next buffer of same connection
  */
-typedef struct _tag_ohbuffer {
-    OBJPOOL_OBJ_BASE(struct _tag_ohbuffer);
+typedef struct _tag_ohbuffer_unit {
+    OBJPOOL_OBJ_BASE(struct _tag_ohbuffer_unit);
 
-    char *start;
-    char *end;
     char *rptr;
     char *wptr;
+    int size;
+    char data[0];
+} ohbuffer_unit;
+
+/* operation on buff unit */
+#define bufunit_size(bufu)      ((bufu)->size)
+#define bufunit_start(bufu)     ((bufu)->data)
+#define bufunit_end(bufu)       ((bufu)->data + bufunit_size(bufu))
+#define bufunit_rptr(bufu)      ((bufu)->rptr)
+#define bufunit_wptr(bufu)      ((bufu)->wptr)
+#define bufunit_empty(bufu)     (bufunit_rptr(bufu) == bufunit_wptr(bufu))
+#define bufunit_clear(bufu)     ((bufu)->rptr = (bufu)->wptr = bufunit_start(bufu))
+#define bufunit_left(bufu)      (bufunit_end(bufu) - bufunit_wptr(bufu))
+#define bufunit_used(bufu)      (bufunit_wptr(bufu) - bufunit_rptr(bufu))
+#define bufunit_real_left(bufu) (bufunit_size(bufu) - bufunit_used(bufu))
+
+#define bufunit_set_rptr(bufu, pos) (buffunit_rptr(buf) = (pos))
+#define bufunit_set_wptr(bufu, pos) (buffunit_wptr(buf) = (pos))
+
+int bufunit_read(ohbuffer_unit*, int, char*, int);
+int bufunit_write(ohbuffer_unit*, const char*, int);
+
+
+
+/* ohbuffer is composed of buffer unit */
+typedef struct _tag_ohbuffer {
+    ohbuffer_unit_objpool *pool;
+    int uselock;
+    int unit_size;
+    int unit_cnt;
+    ohbuffer_unit *unit_head;
+    ohbuffer_unit *unit_tail;
 } ohbuffer;
 
-#define buff_size(buf)      ((buf)->end - (buf)->start)
-#define buff_start(buf)     ((buf)->start)
-#define buff_end(buf)       ((buf)->end)
-#define buff_rptr(buf)      ((buf)->rptr)
-#define buff_wptr(buf)      ((buf)->wptr)
-#define buff_empty(buf)     (buff_rptr(buf) == buff_wptr(buf))
-#define buff_clear(buf)     ((buf)->rptr = (buf)->wptr = (buf)->start)
-#define buff_left(buf)      (buff_end(buf) - buff_wptr(buf))
-#define buff_used(buf)      (buff_wptr(buf) - buff_rptr(buf))
-#define buff_real_left(buf) (buff_size(buf) - buff_used(buf))
 
-#define buff_set_rptr(buf, pos) (buff_rptr(buf) = (pos))
-#define buff_set_wptr(buf, pos) (buff_wptr(buf) = (pos))
+void buf_remove_unit(ohbuffer*, ohbuffer_unit*);
+ohbuffer_unit* buf_get_unit(ohbuffer*);
 
-ohbuffer* buff_new();
-ohbuffer* buff_new_size(int);
-void buff_init(ohbuffer*, int);
-void buff_destroy(ohbuffer*);
+ohbuffer* buf_new(int, ohbuffer_unit_objpool*, int);
+void buf_init(ohbuffer*, int, ohbuffer_unit_objpool*, int);
+void buf_destroy(ohbuffer*);
+void buf_delete(ohbuffer*);
 
-int buff_read(ohbuffer*, int, char*, int);
-int buff_readall(ohbuffer*, char*, int);
-int buff_write(ohbuffer*, const char*, int);
+int buf_read(ohbuffer*, int, char*, int);
+int buf_readall(ohbuffer*, char*, int);
+int buf_write(ohbuffer*, const char*, int);
 
+int buf_fd_read(ohbuffer*, int);
+int buf_fd_write(ohbuffer*, int);
 
-
+int buf_used(ohbuffer*);
 
 /* buffer pool */
-typedef struct _tag_ohbuffer_objpool {
-    OBJPOOL_BASE(struct _tag_ohbuffer);
-} ohbuffer_objpool;
+typedef struct _tag_ohbuffer_unit_objpool {
+    OBJPOOL_BASE(struct _tag_ohbuffer_unit);
+} ohbuffer_unit_objpool;
 
-#define ohbufferpool_init(pool, bsz, osz)   \
+#define bufunitpool_init(pool, bsz, osz)                 \
     objpool_init((objpool_base*)(pool), (bsz), (osz))
-#define obhufferpool_get(pool)              \
-    (ohbuffer*)objpool_get_obj((objpool_base*)pool)
-#define obhufferpool_free(pool, elem)       \
+#define bufunitpool_destroy(pool)                        \
+    objpool_destroy((objpool_base*)(pool))
+
+#define bufunitpool_get(pool)                            \
+    (ohbuffer_unit*)objpool_get_obj((objpool_base*)pool);
+#define bufunitpool_free(pool, elem)                     \
     objpool_free_obj((objpool_base*)pool, elem)
 
+#define bufunitpool_get_lock(pool)                       \
+    (ohbuffer_unit*)objpool_get_obj_lock((objpool_base*)pool);
+#define bufunitpool_free_lock(pool, elem)                \
+    objpool_free_obj_lock((objpool_base*)pool, elem)
 
 
 

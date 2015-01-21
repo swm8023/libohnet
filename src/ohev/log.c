@@ -78,7 +78,7 @@ void _log_append(log_if *logif, uint8_t level_index, const char *fmt, ...) {
     buflen += vsnprintf(buf + buflen, LOG_BUFSIZE - buflen, fmt, ap);
     va_end(ap);
 
-    if (errno != 0) {
+    if (level_index >= LOG_WARN_INDEX && errno != 0) {
         buflen += snprintf(buf + buflen, LOG_BUFSIZE - buflen, "(%s)", strerror(errno));
     }
 
