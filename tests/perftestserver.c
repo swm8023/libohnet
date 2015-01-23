@@ -8,7 +8,8 @@ void write_cb(tcp_client* client) {
 }
 
 void read_cb(tcp_client* client) {
-    // atomic_add_get(ll, n);
+    log_info("== %d read", client->fd);
+    // atomic_add_get(ll, buf_used(&client->rbuf));
     // tcp_send_buffer(client, &client->rbuf);
     ohbuffer *rbuf = &client->rbuf;
     char buf[65536];
@@ -26,29 +27,52 @@ void accept_cb(tcp_client* client) {
 }
 
 void calll_cb(evt_loop* loop, evt_timer* ev) {
-    tcp_server *server = (tcp_server*)ev->data;
-    log_warn("ttl => %lfMb/s client => %d", atomic_get(ll)/1024.0/1024.0/sec, 
-        atomic_get(server->clt_cnt));
+    tcp_server_hub *sh = (tcp_server_hub*)ev->data;
+    log_warn("ttl => %lfMb/s client => %d %d %d %d", atomic_get(ll)/1024.0/1024.0/sec, 
+        atomic_get(sh->servers[0]->conn_cnt),
+        atomic_get(sh->servers[1]->conn_cnt),
+        atomic_get(sh->servers[2]->conn_cnt),
+        atomic_get(sh->servers[3]->conn_cnt));
 
     atomic_add_get(ll, -ll);
 }
 
 int main() {
     set_default_logif_level(LOG_WARN);
-    tcp_server *server = tcp_server_init_anyv4(8887, 0);
-    tcp_server_set_on_write(server, write_cb);
-    tcp_server_set_on_read(server, read_cb);
-    tcp_server_set_on_close(server, close_cb);
-    tcp_server_set_on_accept(server, accept_cb);
+    evt_loop *loop = evt_loop_init();
 
-    evt_pool* pool = evt_pool_init(8);
+    net_addr addr;
+    netaddr_init_v4(&addr, "0.0.0.0", 8887);
+
+    // tcp_server *server = tcp_server_init(&addr, loop, 0);
+    // tcp_connection_set_on_write(server, write_cb);
+    // tcp_connection_set_on_read(server, read_cb);
+    // tcp_connection_set_on_close(server, close_cb);
+    // tcp_connection_set_on_accept(server, accept_cb);
+
+
+    // evt_timer calll;
+    // evt_timer_init(&calll, calll_cb, SECOND(sec), SECOND(sec));
+    // evt_set_data(&calll, server);
+    // evt_timer_start(loop, &calll);
+
+    // tcp_server_start(server);
+    // evt_loop_run(loop);
+
+
+    int i, n = 4;
+    evt_pool *pool = evt_pool_init(n);
+    tcp_server_hub *serverh = tcp_server_hub_init(&addr, pool, 0);
+    tcp_server_hub_set_on_write(serverh, write_cb);
+    tcp_server_hub_set_on_read(serverh, read_cb);
+    tcp_server_hub_set_on_close(serverh, close_cb);
+    tcp_server_hub_set_on_accept(serverh, accept_cb);
+    tcp_server_hub_start(serverh);
 
     evt_timer calll;
     evt_timer_init(&calll, calll_cb, SECOND(sec), SECOND(sec));
-    evt_set_data(&calll, server);
+    evt_set_data(&calll, serverh);
     evt_timer_start(pool->loops[0], &calll);
-
-    tcp_server_bind_pool(server, pool, TCPSRV_FLG_POOL_EACH);
     evt_pool_run(pool);
 
     return 0;

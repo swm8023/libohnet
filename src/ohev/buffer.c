@@ -57,11 +57,7 @@ int bufunit_write(ohbuffer_unit* bufu, const char* dst, int dstsz) {
 ohbuffer_unit* buf_get_unit(ohbuffer *buf) {
     ohbuffer_unit *unit = NULL;
     if (buf->pool) {
-        if (buf->uselock) {
-            unit = bufunitpool_get_lock(buf->pool)
-        } else {
-            unit = bufunitpool_get(buf->pool);
-        }
+        unit = bufunit_pool_get(buf->pool, buf->uselock);
     } else {
         unit = (ohbuffer_unit*)ohmalloc(sizeof(ohbuffer_unit) + buf->unit_size);
     }
@@ -79,11 +75,7 @@ ohbuffer_unit* buf_get_unit(ohbuffer *buf) {
 void buf_remove_unit(ohbuffer *buf, ohbuffer_unit *unit) {
     if (buf->pool) {
         unit->next = NULL;
-        if (buf->uselock) {
-            bufunitpool_free_lock(buf->pool, unit);
-        } else {
-            bufunitpool_free(buf->pool, unit);
-        }
+        bufunit_pool_free(buf->pool, unit, buf->uselock);
     } else {
         ohfree(unit);
     }

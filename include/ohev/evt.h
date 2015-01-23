@@ -44,6 +44,7 @@ typedef struct _tag_evt_timer {
 
     ohtime_t repeat;
     ohtime_t timestamp;
+
     int heap_pos;
 } evt_timer;
 

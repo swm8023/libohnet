@@ -25,11 +25,6 @@ typedef struct _tag_evt_pool {
     evt_loop** loops;
     int loops_num;
     thread_t *loops_pid;
-
-    void *lb_data;
-    evt_loop* (*lb_next_loop)(struct _tag_evt_pool*);
-    void (*lb_next_loop_init)(struct _tag_evt_pool*);
-    void (*lb_next_loop_destroy)(struct _tag_evt_pool*);
 } evt_pool;
 
 
@@ -38,10 +33,6 @@ evt_pool* evt_pool_init(int);
 void evt_pool_destroy(evt_pool*);
 void evt_pool_quit(evt_pool*);
 void evt_pool_run(evt_pool*);
-
-void lb_roundrobin_next_loop_init(evt_pool*);
-void lb_roundrobin_next_loop_destroy(evt_pool*);
-evt_loop* lb_roundrobin_next_loop(evt_pool*);
 
 
 

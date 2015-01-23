@@ -30,7 +30,7 @@ START_TEST(test_buffer_pool)
 {
     ohbuffer_unit_objpool *pool = (ohbuffer_unit_objpool*)ohmalloc(sizeof(ohbuffer_unit_objpool));
 
-    bufunitpool_init(pool,
+    bufunit_pool_init(pool,
         32, 1 + sizeof(ohbuffer_unit));
     char rbuf[20];
     ohbuffer buf;
@@ -49,7 +49,7 @@ START_TEST(test_buffer_pool)
     ck_assert_str_eq(" world", rbuf);
 
     buf_destroy(&buf);
-    bufunitpool_destroy(pool);
+    bufunit_pool_destroy(pool);
     ohfree(pool);
 }
 END_TEST

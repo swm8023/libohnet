@@ -64,7 +64,7 @@ void _epoll_destroy(evt_loop* loop) {
 }
 
 int _epoll_update(evt_loop* loop, int fd, uint8_t oev, uint8_t nev) {
-    /* needn't delete */
+    /* don't delete here */
     if (nev == 0) {
         return;
     }
@@ -133,6 +133,18 @@ int _epoll_dispatch(evt_loop* loop) {
                        ((evt->events & (EPOLLOUT | EPOLLERR | EPOLLHUP)) ? _EVT_WRITE : 0));
         fdi->revent = rev;
 
+        /* if focue rev not in focus ev, fix it */
+        int want = fdi->event;
+        if (rev & ~want) {
+            evt->events = (((want & _EVT_READ)  ? EPOLLIN : 0)
+                        | ((want & _EVT_WRITE) ? EPOLLOUT : 0));
+            if (epoll_ctl(epd->fd, want ? EPOLL_CTL_MOD : EPOLL_CTL_DEL, fd, evt)) {
+                log_warn("epoll(%d) update on fd:%d failed.", epd->fd, fd);
+            } else {
+                log_inner("epoll(%d) %s fd(%d)", epd->fd, want ? "mod" : "del", fd);
+            }
+        }
+
         evt_base *eb;
         for_splst_each(fdi->evq, eb) {
             evt_io *eio = (evt_io*)eb;
@@ -140,6 +152,8 @@ int _epoll_dispatch(evt_loop* loop) {
                 _evt_append_pending(loop, (evt_base*)eio);
             }
         }
+
+
     }
 
     /* if evtcnt == nevent, expand events array */

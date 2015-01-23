@@ -37,13 +37,6 @@ evt_pool* evt_pool_init_flag(int size, int flag) {
         }
     }
 
-    /* default way to load balance */
-    pool->lb_next_loop_init = lb_roundrobin_next_loop_init;
-
-    if (pool->lb_next_loop_init) {
-        pool->lb_next_loop_init(pool);
-    }
-
     log_inner("event loops pool(%d) init, total(%d).", thread_tid(), size);
     return pool;
 
@@ -54,8 +47,6 @@ evt_pool_init_failed:
     }
     return NULL;
 }
-
-
 
 void evt_pool_destroy(evt_pool* pool) {
     if (pool == NULL) {
@@ -77,10 +68,6 @@ void evt_pool_destroy(evt_pool* pool) {
 
     ohfree(pool->loops);
     ohfree(pool->loops_pid);
-
-    if (pool->lb_next_loop_destroy) {
-        pool->lb_next_loop_destroy(pool);
-    }
 
     ohfree(pool);
 
@@ -133,20 +120,3 @@ void evt_pool_run(evt_pool* pool) {
     }
 }
 
-/* round-robin way to get next loop int pool */
-void lb_roundrobin_next_loop_init(evt_pool* pool) {
-    pool->lb_data = ohmalloc(sizeof(int));
-    pool->lb_next_loop = lb_roundrobin_next_loop;
-    pool->lb_next_loop_destroy = lb_roundrobin_next_loop_destroy;
-    *(int*)(pool->lb_data) = pool->loops_num - 1;;
-}
-
-void lb_roundrobin_next_loop_destroy(evt_pool* pool) {
-    ohfree(pool->lb_data);
-}
-
-evt_loop* lb_roundrobin_next_loop(evt_pool* pool) {
-    int pre_loop_ind = *(int*)(pool->lb_data);
-    *(int*)(pool->lb_data) = (pre_loop_ind + 1) % pool->loops_num;
-    return pool->loops[*(int*)(pool->lb_data)];
-}

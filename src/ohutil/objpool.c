@@ -1,6 +1,10 @@
 #include <ohutil/objpool.h>
 #include <ohutil/memory.h>
 
+
+static objpool_obj_base *objpool_get_obj_nolock(objpool_base*);
+static void objpool_free_obj_nolock(objpool_base*, void*);
+
 void objpool_init(objpool_base *opool, int blksize, int objsize) {
     opool->free_elem = NULL;
     opool->objsize = objsize;
@@ -11,7 +15,6 @@ void objpool_init(objpool_base *opool, int blksize, int objsize) {
 }
 
 void objpool_destroy(objpool_base *opool) {
-
     /* free blocks */
     objpool_blk *blk = opool->blks;
     mutex_destroy(opool->mutex);
@@ -25,8 +28,7 @@ void objpool_destroy(objpool_base *opool) {
     }
 }
 
-
-objpool_obj_base *objpool_get_obj(objpool_base* opool) {
+objpool_obj_base *objpool_get_obj_nolock(objpool_base* opool) {
     int i;
     /* no free element, create a new obj block */
     if (opool->free_elem == NULL) {
@@ -60,20 +62,28 @@ objpool_obj_base *objpool_get_obj(objpool_base* opool) {
     return robj;
 }
 
-objpool_obj_base *objpool_free_obj(objpool_base* opool, void *elem) {
+void objpool_free_obj_nolock(objpool_base* opool, void *elem) {
     splst_add(opool->free_elem, (objpool_obj_base*)elem);
 }
 
-objpool_obj_base *objpool_get_obj_lock(objpool_base* opool) {
-    mutex_lock(opool->mutex);
-    objpool_obj_base *robj = objpool_get_obj(opool);
-    mutex_unlock(opool->mutex);
-    return robj;
+objpool_obj_base *objpool_get_obj(objpool_base* opool, int lock) {
+    if (lock == OBJPOOL_LOCK) {
+        mutex_lock(opool->mutex);
+        objpool_obj_base *robj = objpool_get_obj_nolock(opool);
+        mutex_unlock(opool->mutex);
+        return robj;
+    } else {
+        return objpool_get_obj_nolock(opool);
+    }
 }
 
-objpool_obj_base *objpool_free_obj_lock(objpool_base* opool,  void *elem) {
-    mutex_lock(opool->mutex);
-    objpool_obj_base *robj = objpool_free_obj(opool, elem);
-    mutex_unlock(opool->mutex);
+void objpool_free_obj(objpool_base* opool, void *elem, int lock) {
+    if (lock == OBJPOOL_LOCK) {
+        mutex_lock(opool->mutex);
+        objpool_free_obj_nolock(opool, elem);
+        mutex_unlock(opool->mutex);
+    } else {
+        objpool_free_obj_nolock(opool, elem);
+    }
 }
 

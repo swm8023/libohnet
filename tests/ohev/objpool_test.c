@@ -14,15 +14,15 @@ START_TEST(test_objpool)
     int num = 30, i;
     objpool_obj_base **base = (objpool_obj_base**)ohmalloc(num * sizeof(objpool_obj_base*));
     for (i = 0; i < num; i++) {
-        base[i] = objpool_get_obj(op);
+        base[i] = objpool_get_obj(op, OBJPOOL_NOLOCK);
     }
 
     for (i = 0; i < 10; i++) {
-        base[i] = objpool_free_obj(op, base[i]);
+        objpool_free_obj(op, base[i], OBJPOOL_NOLOCK);
     }
 
     for (i = 0; i < 13; i++) {
-        base[i] = objpool_get_obj(op);
+        base[i] = objpool_get_obj(op, OBJPOOL_NOLOCK);
     }
 
     objpool_destroy(op);

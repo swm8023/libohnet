@@ -10,6 +10,9 @@ extern "C" {
 #include <ohutil/container.h>
 #include <ohutil/thread.h>
 
+#define OBJPOOL_LOCK   1
+#define OBJPOOL_NOLOCK 0
+
 #define OBJPOOL_OBJ_BASE(tpobj)     \
     SPLST_DEFNEXT(tpobj)
 
@@ -21,7 +24,6 @@ extern "C" {
     int blksize;                    \
     int blkcnt;                     \
     mutex_t mutex;
-
 
 
 typedef struct _tag_objpool_obj_base {
@@ -39,11 +41,10 @@ typedef struct _tag_objpool_base {
 
 void objpool_init(objpool_base*, int, int);
 void objpool_destroy(objpool_base*);
-objpool_obj_base *objpool_get_obj(objpool_base*);
-objpool_obj_base *objpool_free_obj(objpool_base*,  void *);
+objpool_obj_base *objpool_get_obj(objpool_base*, int);
+void objpool_free_obj(objpool_base*,  void *, int);
 
-objpool_obj_base *objpool_get_obj_lock(objpool_base*);
-objpool_obj_base *objpool_free_obj_lock(objpool_base*,  void *);
+
 
 
 

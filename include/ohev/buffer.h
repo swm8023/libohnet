@@ -12,8 +12,8 @@ extern "C" {
 #define OHBUFFER_OBJPOOL_BLOCKSZ        32
 #define OHBUFFER_UNIT_DEFAULT_SIZE      4096
 
-#define OHBUFFER_UNITPOOL_LOCK   1
-#define OHBUFFER_UNITPOOL_NOLOCK 0
+#define OHBUFFER_UNITPOOL_LOCK   OBJPOOL_LOCK
+#define OHBUFFER_UNITPOOL_NOLOCK OBJPOOL_NOLOCK
 
 typedef struct _tag_ohbuffer_unit_objpool ohbuffer_unit_objpool;
 /* !! the next pointer !!
@@ -82,20 +82,15 @@ typedef struct _tag_ohbuffer_unit_objpool {
     OBJPOOL_BASE(struct _tag_ohbuffer_unit);
 } ohbuffer_unit_objpool;
 
-#define bufunitpool_init(pool, bsz, osz)                 \
+#define bufunit_pool_init(pool, bsz, osz)                 \
     objpool_init((objpool_base*)(pool), (bsz), (osz))
-#define bufunitpool_destroy(pool)                        \
+#define bufunit_pool_destroy(pool)                        \
     objpool_destroy((objpool_base*)(pool))
 
-#define bufunitpool_get(pool)                            \
-    (ohbuffer_unit*)objpool_get_obj((objpool_base*)pool);
-#define bufunitpool_free(pool, elem)                     \
-    objpool_free_obj((objpool_base*)pool, elem)
-
-#define bufunitpool_get_lock(pool)                       \
-    (ohbuffer_unit*)objpool_get_obj_lock((objpool_base*)pool);
-#define bufunitpool_free_lock(pool, elem)                \
-    objpool_free_obj_lock((objpool_base*)pool, elem)
+#define bufunit_pool_get(pool, lock)                            \
+    (ohbuffer_unit*)objpool_get_obj((objpool_base*)(pool), (lock));
+#define bufunit_pool_free(pool, elem, lock)                     \
+    objpool_free_obj((objpool_base*)(pool), (elem), (lock))
 
 
 

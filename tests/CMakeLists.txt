@@ -24,6 +24,9 @@ if(HAVE_CHECK_H)
 	add_executable(perftestserver perftestserver.c)
 	target_link_libraries(perftestserver ${TEST_LIB})
 
+	add_executable(perftestclient perftestclient.c)
+	target_link_libraries(perftestclient ${TEST_LIB})
+
 	# add_executable(testlibcstl testlibcstl.c)
 	# target_link_libraries(testlibcstl cstl fastnet)
 
