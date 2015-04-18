@@ -13,6 +13,7 @@ evt_loop* evt_loop_init() {
 evt_loop* evt_loop_init_flag(int flag) {
     int i;
 
+    ignore_sigpipe();
     evt_loop *loop = (evt_loop*)ohmalloc(sizeof(evt_loop));
     if (loop == NULL) {
         goto evt_loop_init_failed;
@@ -178,7 +179,7 @@ int evt_loop_run(evt_loop* loop) {
     loop->owner_tid = thread_tid();
     loop->status = _LOOP_STATUS_STARTED | _LOOP_STATUS_RUNNING;
 
-    log_inner("event loop(%d) running.", thread_tid());
+    //log_inner("event loop(%d) running.", thread_tid());
     
     /* do while util loop->status be set quiting */
     while (!(loop->status & _LOOP_STATUS_QUITING)) {

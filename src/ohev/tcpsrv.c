@@ -201,6 +201,7 @@ tcp_server_hub* tcp_server_hub_init(net_addr* addr, evt_pool* pool, int flag) {
         if (server_hub->servers[i] == NULL) {
             goto tcp_server_hub_init_failed;
         }
+        server_hub->servers[i]->hub = server_hub;
     }
 
     return server_hub;
@@ -219,10 +220,33 @@ tcp_server_hub_init_failed:
     return NULL;
 }
 
+void tcp_server_selflb_cb(evt_loop *loop, evt_before *evt) {
+    tcp_server *server = (tcp_server*)evt->data;
+    tcp_server_hub *hub = server->hub;
+
+    int i, totalc = 0, thisc = server->conn_cnt;
+    for (i = 0; i < hub->servers_num; i++) {
+        totalc += hub->servers[i]->conn_cnt;
+    }
+    if (thisc > 2.0 * totalc/ i ) {
+        evt_io_stop(loop, &server->accept_ev);
+    } else {
+        evt_io_start(loop, &server->accept_ev);
+    }
+}
+
+void tcp_server_start_selflb(tcp_server *server) {
+    evt_before *eb = (evt_before*)ohmalloc(sizeof(evt_before));
+    evt_before_init(eb, tcp_server_selflb_cb);
+    evt_set_data(eb, server);
+    evt_before_start(server->loop_on, eb);
+}
+
 int tcp_server_hub_start(tcp_server_hub* server_hub) {
     int i;
     for (i = 0; i < server_hub->servers_num; i++) {
         tcp_server_start(server_hub->servers[i]);
+        tcp_server_start_selflb(server_hub->servers[i]);
     }
 }
 
@@ -300,7 +324,7 @@ int tcp_client_init(tcp_client *client, net_addr* addr, evt_loop* loop, int flag
     evt_io_init(&client->write_ev, tcp_cb_write, clientfd, EVTIO_WRITE);
     evt_set_data(&client->write_ev, client);
 
-    log_inner("tcp client(%d) init success, listen at %d", clientfd);
+    log_inner("tcp client(%d) init success.", clientfd);
     return 0;
 }
 
@@ -319,6 +343,7 @@ int tcp_connect(tcp_client* client) {
         return 0;
     }
     /* failed */
+    log_error("tcp client(%d) connect error", client->fd);
     return -1;
 }
 
@@ -331,19 +356,19 @@ void tcp_cb_accept(evt_loop* loop, evt_io* ev) {
     tcp_server *server = (tcp_server*)ev->data;
 
     /* accept */
-    clientfd = accept(server->fd, (struct sockaddr*)&addr, &len);
+    do {
+        clientfd = accept(server->fd, (struct sockaddr*)&addr, &len);
+    } while (clientfd < 0 && errno == EINTR);
 
     if (clientfd < 0) {
-        if (errno != EAGAIN && errno != EWOULDBLOCK) {
-            log_warn("tcp server(%d) accept failed!", server->fd);
-            /* no file descriptors, stop service several seconds */
-            if (errno == EMFILE) {
-                //server->close_after_emfile = 0;
-            }
+        if (errno == EAGAIN || errno == EWOULDBLOCK) {
+            return;
         }
-        return;
-    } else {
-        log_inner("tcp server(%d) accept new client(%d)", server->fd, clientfd);
+            /* no file descriptors, stop service several seconds */
+        if (errno == EMFILE) {
+            //server->close_after_emfile = 0;
+        }
+        goto tcp_cb_accept_failed;
     }
 
     fd_nonblock(clientfd);
@@ -416,9 +441,12 @@ void tcp_cb_accept(evt_loop* loop, evt_io* ev) {
     if (server->on_accept) {
         server->on_accept(client);
     }
+
+    log_inner("tcp server(%d) accept new client(%d)", server->fd, clientfd);
     return;
 
 tcp_cb_accept_failed:
+    log_error("tcp server(%d) accept failed.", server->fd);
     if (clientfd != -1) {
         close(clientfd);
     }
@@ -427,9 +455,17 @@ tcp_cb_accept_failed:
 void tcp_cb_read(evt_loop* loop, evt_io* ev) {
     tcp_client *client = (tcp_client*)ev->data;
 
-    int len = buf_fd_read(&client->rbuf, client->fd);
+    int len = 0;
+    int ret = buf_fd_read(&client->rbuf, client->fd, &len);
+    int serrno = errno;
+    /* read data */
+    if (len > 0) {
+        if (client->on_read) {
+            client->on_read(client);
+        }
+    }
     /* read EOF */
-    if (len == 0) {
+    if (ret == 0) {
         log_inner("fd(%d) read EOF.", client->fd);
         if (buf_used(&client->wbuf) == 0) {
             evt_io_stop(client->loop_on, &client->read_ev);
@@ -443,17 +479,12 @@ void tcp_cb_read(evt_loop* loop, evt_io* ev) {
             client->flag |= TCPFLG_CLT_WAITCLS;
         }
     /* read ERROR */
-    } else if (len < 0) {
-        log_inner("fd(%d) read ERROR.", client->fd);
-        if (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR) {
+    } else if (ret < 0) {
+        if (serrno!= EAGAIN && serrno != EWOULDBLOCK && serrno != EINTR) {
+            log_error("fd(%d) read ERROR.", client->fd);
             evt_io_stop(client->loop_on, &client->read_ev);
             evt_io_stop(client->loop_on, &client->write_ev);
             tcp_cb_close(client);
-        }
-    /* call user callback */
-    } else {
-        if (client->on_read) {
-            client->on_read(client);
         }
     }
 }
@@ -486,17 +517,22 @@ void tcp_cb_write(evt_loop* loop, evt_io* ev) {
         /* if no error start read */
         if (error == 0) {
             evt_io_start(client->loop_on, &client->read_ev);
+            log_inner("tcp client(%d) connect success.", client->fd);
+        } else {
+            log_error("tcp client(%d) connect failed.", client->fd);
         }
         /* user callback */
         if (client->on_connect) {
             client->on_connect(client);
         }
+
         return;
     }
 
-    int len = buf_fd_write(&client->wbuf, client->fd);
+    int len;
+    int ret = buf_fd_write(&client->wbuf, client->fd, &len);
     /* write ERROR */
-    if (len < 0) {
+    if (ret < 0) {
         if (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR) {
             log_inner("fd(%d) write ERROR", client->fd);
             evt_io_stop(client->loop_on, &client->read_ev);
@@ -523,6 +559,8 @@ void tcp_cb_close(tcp_client* client) {
     if (client->on_close) {
         client->on_close(client);
     }
+    evt_io_stop(client->loop_on, &client->write_ev);
+    evt_io_stop(client->loop_on, &client->read_ev);
 
     close(client->fd);
     buf_destroy(&client->rbuf);
@@ -538,6 +576,8 @@ void tcp_cb_close(tcp_client* client) {
         } else {
             tcp_client_pool_free(server->clt_objpool, client, OBJPOOL_NOLOCK);
         }
+    } else {
+        log_inner("tcp client(%d) closed.", client->fd);
     }
 }
 
@@ -545,14 +585,20 @@ int tcp_send(tcp_client* client, const char* src, int srcsz) {
     /* try directly send first if no data in send buffer */
     int len = 0;
     if (buf_used(&client->wbuf) == 0) {
-        len = write(client->fd, src, srcsz);
+        do {
+            len = write(client->fd, src, srcsz);
+        } while( len == -1 && errno == EINTR);
         if (len == -1) {
-            if (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR) {
+            if (errno != EAGAIN && errno != EWOULDBLOCK) {
                 return -1;
             }
             len = tcp_send_delay(client, src, srcsz, 0);
         } else if (len < srcsz) {
             len += tcp_send_delay(client, src + len, srcsz - len, 0);
+        } else {
+            if (client->on_write) {
+                client->on_write(client);
+            }
         }
     /* use buffer */
     } else {
@@ -573,7 +619,12 @@ int tcp_send_delay(tcp_client* client, const char* src, int srcsz, int lowmask) 
 }
 
 int tcp_send_buffer(tcp_client *client, ohbuffer* buf) {
-    return buf_fd_write(buf, client->fd);
+    int len = 0;
+    int ret = buf_fd_write(buf, client->fd, &len);
+    if (ret < 0 && errno != EWOULDBLOCK && errno != EAGAIN) {
+        return -1;
+    }
+    return len;
 }
 
 void tcp_flush(tcp_client* client) {

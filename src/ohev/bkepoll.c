@@ -116,7 +116,7 @@ int _epoll_dispatch(evt_loop* loop) {
     }
 
     int evtcnt = epoll_wait(epd->fd, epd->events, epd->nevent, wait_ms);
-    log_inner("epoll(%d) return %d events.", epd->fd, evtcnt);
+    //log_inner("epoll(%d) return %d events.", epd->fd, evtcnt);
 
     if (evtcnt < 0) {
         /* return error when epoll_wait return  error and wasn't caused by interruption */

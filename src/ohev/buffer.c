@@ -2,6 +2,7 @@
 #include <errno.h>
 
 #include <ohev/buffer.h>
+#include <ohev/log.h>
 
 
 ohbuffer* buf_new(int size, ohbuffer_unit_objpool* pool, int lock) {
@@ -40,11 +41,21 @@ void buf_destroy(ohbuffer *buf) {
 int bufunit_read(ohbuffer_unit* bufu, int readsz, char* dst, int dstsz) {
     readsz = min(readsz, dstsz);
     readsz = min(readsz, bufunit_used(bufu));
-
-    memcpy(dst, bufunit_rptr(bufu), readsz);
+    if (dst != NULL){
+        memcpy(dst, bufunit_rptr(bufu), readsz);
+    }
     bufunit_rptr(bufu) += readsz;
     return readsz;
 }
+
+int bufunit_peek(ohbuffer_unit* bufu, int readsz, char* dst, int dstsz) {
+    readsz = min(readsz, dstsz);
+    readsz = min(readsz, bufunit_used(bufu));
+
+    memcpy(dst, bufunit_rptr(bufu), readsz);
+    return readsz;
+}
+
 
 int bufunit_write(ohbuffer_unit* bufu, const char* dst, int dstsz) {
     int wrtsz = min(dstsz, bufunit_left(bufu));
@@ -92,7 +103,7 @@ int buf_read(ohbuffer* buf, int readsz, char* dst, int dstsz) {
         /* leftsz <= readsz <= dstsz,  so dstz - readsz + leftsz >= leftsz,
          * it means only leftsz and bufunit_used decide how many bytes data will be read
          */
-        leftsz -= bufunit_read(bufu, leftsz, dst + readsz - leftsz, dstsz - readsz + leftsz);
+        leftsz -= bufunit_read(bufu, leftsz, dst ? dst + readsz - leftsz : NULL, dstsz - readsz + leftsz);
         /* read all data of this buffer, means bufunit_used <= leftsz */
         if (bufunit_empty(bufu)) {
             ohbuffer_unit *fbufu = bufu;
@@ -110,6 +121,18 @@ int buf_read(ohbuffer* buf, int readsz, char* dst, int dstsz) {
         }/* else leftsz == 0, will break next loop */
     }
 
+    return readsz - leftsz;
+}
+
+int buf_peek(ohbuffer* buf, int readsz, char* dst, int dstsz) {
+    readsz = min(readsz, dstsz);
+
+    ohbuffer_unit *bufu = buf->unit_head;
+    int leftsz = readsz;
+    while (bufu && leftsz) {
+        leftsz -= bufunit_peek(bufu, leftsz, dst + readsz - leftsz, dstsz - readsz + leftsz);
+        bufu = bufu->next;
+    }
     return readsz - leftsz;
 }
 
@@ -138,13 +161,22 @@ int buf_write(ohbuffer *buf, const char* src, int srcsz) {
     return wrtsz;
 }
 
-int buf_fd_read(ohbuffer *buf, int fd) {
-    int readsz = 0;
+int buf_fd_read(ohbuffer *buf, int fd, int *readsz) {
+    *readsz = 0;
 
     /* first write, allocate one buffer_unit for the buffer */
     if (buf->unit_head == NULL) {
         buf->unit_head = buf->unit_tail = buf_get_unit(buf);
     }
+    /* no buffer left, get new buffer */
+    if (bufunit_left(buf->unit_tail) == 0) {
+        ohbuffer_unit *unit = buf_get_unit(buf);
+        buf->unit_tail->next = unit;
+        buf->unit_tail = unit;
+    }
+    /* read data to tail unit */
+    ohbuffer_unit *bufu = buf->unit_tail;
+
     while (1) {
         /* no buffer left, get new buffer */
         if (bufunit_left(buf->unit_tail) == 0) {
@@ -154,38 +186,38 @@ int buf_fd_read(ohbuffer *buf, int fd) {
         }
         /* read data to tail unit */
         ohbuffer_unit *bufu = buf->unit_tail;
-        int n = read(fd, bufunit_wptr(bufu), bufunit_left(bufu));
+        int n = 0;
+        do {
+            n = read(fd, bufunit_wptr(bufu), bufunit_left(bufu));
+        } while (n == -1 && errno == EINTR);
         /* read EOF */
-        if (n == 0) {
-            return 0;
-        }
-        if (n < 0) {
-            if (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR) {
-                return -1;
-            }
-            return readsz > 0 ? readsz : -1;
+        if (n <= 0) {
+            return n;
         }
         bufunit_wptr(bufu) += n;
-        readsz += n;
+        *readsz += n;
         /* not use all buffer unit, means no data there */
         if (bufunit_left(bufu) > 0) {
             break;
         }
     }
-    return readsz;
+    return *readsz;
 }
 
-int buf_fd_write(ohbuffer *buf, int fd) {
-    int wrtsz = 0;
+int buf_fd_write(ohbuffer *buf, int fd, int *wrtsz) {
+    *wrtsz = 0;
 
     ohbuffer_unit *bufu = buf->unit_head;
     /* write all data in buffer */
     while (bufu) {
-        int n = write(fd, bufunit_rptr(bufu), bufunit_used(bufu));
+        int n = 0;
+        do {
+            n = write(fd, bufunit_rptr(bufu), bufunit_used(bufu));
+        } while (n == -1 && errno == EINTR);
         if (n < 0) {
-            return  (errno == EWOULDBLOCK || errno == EAGAIN || errno == EINTR) ? wrtsz : -1;
+            return n;
         }
-        wrtsz += n;
+        *wrtsz += n;
         bufunit_rptr(bufu) += n;
 
         /* buffer is empty, free it if not the last one */
@@ -204,7 +236,7 @@ int buf_fd_write(ohbuffer *buf, int fd) {
             }/* else bufu == NULL, will break next loop */
         }
     }
-    return wrtsz;
+    return *wrtsz;
 }
 
 int buf_used(ohbuffer* buf) {

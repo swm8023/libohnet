@@ -40,22 +40,26 @@ void calll_cb(evt_loop* loop, evt_timer* ev) {
 }
 
 int main() {
-    set_default_logif_level(LOG_WARN);
-    evt_pool *pool = evt_pool_init(10);
+   set_default_logif_level(LOG_WARN);
+
+    int n = 1;
+    evt_pool *pool = evt_pool_init(n);
 
     net_addr addr;
     netaddr_init_v4(&addr, "127.0.0.1", 8887);
 
-    ohbuffer_unit_objpool *upool[10];
+
+
+    ohbuffer_unit_objpool *upool[n];
     int i;
-    for (i = 0; i < 10; i++) {
+    for (i = 0; i < n; i++) {
         upool[i] = (ohbuffer_unit_objpool*)ohmalloc(sizeof(ohbuffer_unit_objpool));
         bufunit_pool_init(upool[i], TCPCLIENT_OBJPOOL_BLOCKSZ, OHBUFFER_UNIT_DEFAULT_SIZE + sizeof(ohbuffer_unit));
     }
     for (i = 0; i < 1000; i++) {
-        evt_loop *loop = pool->loops[i%10];
+        evt_loop *loop = pool->loops[i%n];
         tcp_client *client = (tcp_client*)ohmalloc(sizeof(tcp_client));
-        tcp_client_init(client, &addr, loop, 0, upool[i%10], OHBUFFER_UNITPOOL_NOLOCK);
+        tcp_client_init(client, &addr, loop, 0, upool[i%n], OHBUFFER_UNITPOOL_NOLOCK);
         tcp_connection_set_on_write(client, write_cb);
         tcp_connection_set_on_read(client, read_cb);
         tcp_connection_set_on_close(client, close_cb);

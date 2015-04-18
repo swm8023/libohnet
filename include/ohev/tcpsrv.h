@@ -30,8 +30,6 @@ typedef struct _tag_tcp_loop_data tcp_loop_data;
 
 typedef void (*tcp_cb)(tcp_client*);
 
-
-
 typedef struct _tag_net_addr{
     sockaddr_storage addr;
 } net_addr;

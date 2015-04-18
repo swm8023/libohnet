@@ -28,21 +28,21 @@ void accept_cb(tcp_client* client) {
 
 void calll_cb(evt_loop* loop, evt_timer* ev) {
     tcp_server_hub *sh = (tcp_server_hub*)ev->data;
-    log_warn("ttl => %lfMb/s client => %d %d %d %d", atomic_get(ll)/1024.0/1024.0/sec, 
-        atomic_get(sh->servers[0]->conn_cnt),
-        atomic_get(sh->servers[1]->conn_cnt),
-        atomic_get(sh->servers[2]->conn_cnt),
-        atomic_get(sh->servers[3]->conn_cnt));
+    log_warn("ttl => %lfMb/s client => %d", atomic_get(ll)/1024.0/1024.0/sec, 
+        atomic_get(sh->servers[0]->conn_cnt));
+    // log_warn("ttl => %lfMb/s client => %d %d %d %d", atomic_get(ll)/1024.0/1024.0/sec, 
+    //     atomic_get(sh->servers[0]->conn_cnt),
+    //     atomic_get(sh->servers[1]->conn_cnt),
+    //     atomic_get(sh->servers[2]->conn_cnt),
+    //     atomic_get(sh->servers[3]->conn_cnt));
 
     atomic_add_get(ll, -ll);
 }
 
 int main() {
-    set_default_logif_level(LOG_WARN);
-    evt_loop *loop = evt_loop_init();
+   set_default_logif_level(LOG_WARN);
 
-    net_addr addr;
-    netaddr_init_v4(&addr, "0.0.0.0", 8887);
+
 
     // tcp_server *server = tcp_server_init(&addr, loop, 0);
     // tcp_connection_set_on_write(server, write_cb);
@@ -60,8 +60,10 @@ int main() {
     // evt_loop_run(loop);
 
 
-    int i, n = 4;
+    int i, n = 3;
     evt_pool *pool = evt_pool_init(n);
+    net_addr addr;
+    netaddr_init_v4(&addr, "0.0.0.0", 8887);
     tcp_server_hub *serverh = tcp_server_hub_init(&addr, pool, 0);
     tcp_server_hub_set_on_write(serverh, write_cb);
     tcp_server_hub_set_on_read(serverh, read_cb);
@@ -69,11 +71,12 @@ int main() {
     tcp_server_hub_set_on_accept(serverh, accept_cb);
     tcp_server_hub_start(serverh);
 
-    evt_timer calll;
+    
+        evt_timer calll;
     evt_timer_init(&calll, calll_cb, SECOND(sec), SECOND(sec));
     evt_set_data(&calll, serverh);
     evt_timer_start(pool->loops[0], &calll);
-    evt_pool_run(pool);
+evt_pool_run(pool);
 
     return 0;
 }

@@ -187,3 +187,120 @@ int _oh_cond_wait(cond_t cm, ohtime_t timeout_us) {
     return pthread_cond_wait(cond, mutex);
 
 }
+
+#define THREAD_POOL_STATUS_STOP    0x00
+#define THREAD_POOL_STATUS_RUNNING 0x01
+
+
+
+
+thread_pool* thread_pool_create(int size, int threads) {
+    thread_pool* pool = (thread_pool*)ohmalloc(sizeof(thread_pool));
+    if (pool == NULL) {
+        goto thread_pool_create_failed;
+    }
+    memset(pool, 0, sizeof(thread_pool));
+    pool->q = (thread_pool_elem*)ohmalloc(sizeof(thread_pool_elem) * size);
+    if (pool->q == NULL) {
+        goto thread_pool_create_failed;
+    }
+    pool->size = size;
+    pool->rind = 0;
+    pool->wind = 0;
+    pool->used = 0;
+    pool->status = THREAD_POOL_STATUS_STOP;
+    pool->running = 0;
+    pool->threads = threads;
+    pool->lock = mutex_init(NULL);
+    pool->cond = cond_init(NULL);
+
+    return pool;
+
+thread_pool_create_failed:
+    if (pool) {
+        if (pool->q) {
+            ohfree(pool->q);
+        }
+        ohfree(pool);
+    }
+    return NULL;
+}
+
+void *thread_pool_func(void *arg) {
+    thread_pool *pool = (thread_pool*)arg;
+
+    mutex_lock(pool->lock);
+    pool->running++;
+    mutex_unlock(pool->lock);
+    thread_pool_elem elem;
+    while (pool->status == THREAD_POOL_STATUS_RUNNING) {
+        /* get an element */
+        cond_lock(pool->cond);
+        while (pool->status == THREAD_POOL_STATUS_RUNNING && pool->used == 0) {
+            cond_wait(pool->cond);
+        }
+        if (pool->status == THREAD_POOL_STATUS_STOP) {
+            cond_unlock(pool->cond);
+            break;
+        }
+        elem = pool->q[pool->rind++];
+        if (pool->rind == pool->size) {
+            pool->rind = 0;
+        }
+        pool->used--;
+        cond_unlock(pool->cond);
+
+        /* run */
+
+        if (elem.run) {
+            elem.run(elem.arg);
+        }
+        if (elem.clean) {
+            elem.clean(elem.arg);
+        }
+    }
+
+    mutex_lock(pool->lock);
+    pool->running--;
+    mutex_unlock(pool->lock);
+}
+
+void thread_pool_run(thread_pool* pool) {
+    int i;
+    pool->status = THREAD_POOL_STATUS_RUNNING;
+    for (i = 0; i < pool->threads; i++) {
+        thread_t th;
+        thread_start(th, thread_pool_func, (void*)pool);
+    }
+}
+
+int thread_pool_push(thread_pool *pool, tp_func run, tp_func clean, void* arg) {
+    cond_lock(pool->cond);
+    if (pool->used == pool->size) {
+        cond_unlock(pool->cond);
+        return -1;
+    }
+
+    pool->q[pool->wind].run = run;
+    pool->q[pool->wind].clean = clean;
+    pool->q[pool->wind].arg = arg;
+    pool->wind ++;
+    pool->used ++;
+    if (pool->wind == pool->size) {
+        pool->wind = 0;
+    }
+    cond_unlock(pool->cond);
+    cond_signal(pool->cond);
+    return 0;
+}
+
+void thread_pool_destroy(thread_pool *pool) {
+    pool->status = THREAD_POOL_STATUS_STOP;
+    while (pool->running > 0) {
+        cond_broadcast(pool->cond);
+    }
+    cond_destroy(pool->cond);
+    mutex_destroy(pool->lock);
+    ohfree(pool->q);
+    ohfree(pool);
+}

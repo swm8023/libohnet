@@ -46,6 +46,7 @@ typedef struct _tag_ohbuffer_unit {
 
 int bufunit_read(ohbuffer_unit*, int, char*, int);
 int bufunit_write(ohbuffer_unit*, const char*, int);
+int bufunit_peek(ohbuffer_unit*, int, char*, int);
 
 
 
@@ -68,12 +69,13 @@ void buf_init(ohbuffer*, int, ohbuffer_unit_objpool*, int);
 void buf_destroy(ohbuffer*);
 void buf_delete(ohbuffer*);
 
+int buf_peek(ohbuffer*, int, char*, int);
 int buf_read(ohbuffer*, int, char*, int);
 int buf_readall(ohbuffer*, char*, int);
 int buf_write(ohbuffer*, const char*, int);
 
-int buf_fd_read(ohbuffer*, int);
-int buf_fd_write(ohbuffer*, int);
+int buf_fd_read(ohbuffer*, int, int*);
+int buf_fd_write(ohbuffer*, int, int*);
 
 int buf_used(ohbuffer*);
 

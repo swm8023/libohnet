@@ -57,6 +57,7 @@ typedef size_t bool_t;
         (type *)((char *)(ptr) - offsetof(type,member) );})
 
 
+int make_daemon();
 
 #ifdef __cplusplus
 }

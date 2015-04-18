@@ -55,6 +55,7 @@ extern mutex_if  *global_mutex_if;
 
 void fn_mtxdbg_print_rec();
 
+/* thread pool */
 
 typedef void* _cond_t;
 typedef struct _tag_cond_t {
@@ -79,6 +80,33 @@ extern cond_if  *using_cond_if;
 #define cond_timedwait(p, t) using_cond_if->wait((p), (t))
 #define cond_lock(p)         mutex_lock((p)->mutex)
 #define cond_unlock(p)       mutex_unlock((p)->mutex);
+
+
+
+typedef void (*tp_func)(void*);
+typedef struct _tag_thread_pool_elem {
+    tp_func run;
+    tp_func clean;
+    void *arg;
+} thread_pool_elem;
+
+typedef struct _tag_thread_pool {
+    thread_pool_elem *q;
+    int size;
+    int used;
+    int rind;
+    int wind;
+    int status;
+    int running;
+    int threads;
+    mutex_t lock;
+    cond_t cond;
+} thread_pool;
+
+thread_pool* thread_pool_create(int size, int threads);
+void thread_pool_run(thread_pool* pool);
+int thread_pool_push(thread_pool *pool, tp_func run, tp_func clean, void* arg);
+void thread_pool_destroy(thread_pool *pool);
 
 #ifdef __cplusplus
 }
